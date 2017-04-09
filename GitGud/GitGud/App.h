@@ -21,6 +21,7 @@ class M_Window;
 class M_Input;
 class M_FileSystem;
 class M_Editor;
+class M_GoManager;
 class M_Renderer;
 
 class App
@@ -76,6 +77,7 @@ public:
 	M_Window* win = nullptr;
 	M_Input* input = nullptr;
 	M_Editor* editor = nullptr;
+	M_GoManager* goManager = nullptr;
 
 	M_Renderer* renderer = nullptr;
 

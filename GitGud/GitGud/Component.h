@@ -6,6 +6,7 @@
 
 class Transform;
 class JsonFile;
+class GameObject;
 
 enum COMPONENT_TYPE
 {
@@ -48,7 +49,7 @@ public:
 	virtual void OnDisable() {}
 
 	virtual void OnStart(){}
-	virtual void PreUpdate(float dt) {}
+	virtual void OnPreUpdate(float dt) {}
 	virtual void OnUpdate(float dt) {}
 	virtual void OnFinish() {}
 

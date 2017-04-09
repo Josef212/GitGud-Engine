@@ -61,6 +61,12 @@
     <Filter Include="3rdParty\Parson">
       <UniqueIdentifier>{394b48e8-dc60-4ec1-9e93-452bc3c7f971}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GamObjects">
+      <UniqueIdentifier>{81e61f4d-3283-4904-b07b-10de5ce8d8c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GamObjects\Components">
+      <UniqueIdentifier>{f41575a5-fcea-4581-9185-4cf3c9ffc300}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -234,7 +240,21 @@
     <ClCompile Include="Console.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="RandGen.cpp" />
+    <ClCompile Include="RandGen.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Engine\GamObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentResource.cpp">
+      <Filter>Engine\GamObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Engine\GamObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="M_GoManager.cpp">
+      <Filter>Engine\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -507,9 +527,23 @@
     <ClInclude Include="Console.h">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="RandGen.h" />
     <ClInclude Include="Math.h">
       <Filter>3rdParty\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="RandGen.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Engine\GamObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentResource.h">
+      <Filter>Engine\GamObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Engine\GamObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="M_GoManager.h">
+      <Filter>Engine\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

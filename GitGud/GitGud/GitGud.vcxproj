@@ -131,9 +131,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentResource.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="EdConfig.cpp" />
     <ClCompile Include="EdConsole.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="HrdInfo.cpp" />
     <ClCompile Include="imgui-1.49\examples\sdl_opengl3_example\imgui_impl_sdl_gl3.cpp" />
@@ -181,6 +184,7 @@
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="M_Editor.cpp" />
     <ClCompile Include="M_FileSystem.cpp" />
+    <ClCompile Include="M_GoManager.cpp" />
     <ClCompile Include="M_Input.cpp" />
     <ClCompile Include="M_Renderer.cpp" />
     <ClCompile Include="M_Window.cpp" />
@@ -191,10 +195,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentResource.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="EdConfig.h" />
     <ClInclude Include="EdConsole.h" />
     <ClInclude Include="EdWin.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="HrdInfo.h" />
     <ClInclude Include="imgui-1.49\examples\sdl_opengl3_example\imgui_impl_sdl_gl3.h" />
@@ -274,6 +281,7 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="M_Editor.h" />
     <ClInclude Include="M_FileSystem.h" />
+    <ClInclude Include="M_GoManager.h" />
     <ClInclude Include="M_Input.h" />
     <ClInclude Include="M_Renderer.h" />
     <ClInclude Include="M_Window.h" />
