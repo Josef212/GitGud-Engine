@@ -1,6 +1,7 @@
 #include "App.h"
 
 #include "HrdInfo.h"
+#include "Console.h"
 
 #include "Module.h"
 #include "M_FileSystem.h"
@@ -14,6 +15,19 @@
 
 #include <iostream>
 
+//-----------------------------------------------
+
+struct C_Quit : public Command
+{
+	C_Quit() : Command("quit", "exit", "Close app")
+	{}
+
+	void Function(std::vector< std::string>& args)override
+	{
+		if (app)app->quit = true;
+	}
+}c_Quit;
+//-----------------------------------------------
 
 App::App(int argv, char** argc)
 {
@@ -26,6 +40,9 @@ App::App(int argv, char** argc)
 	ReadArgs();
 
 	info = new HrdInfo();
+	console = new Console();
+
+	console->AddCommand(&c_Quit);
 
 	//Create modules
 	editor = new M_Editor("module_editor");
@@ -52,6 +69,9 @@ App::~App()
 	_LOG("App: Destruction  =======================");
 	for (std::vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
 		RELEASE(*it);
+
+	RELEASE(info);
+	RELEASE(console);
 }
 
 bool App::Init()
@@ -210,6 +230,12 @@ void App::Load(std::string saveFile)
 		currentConfigSaveFileDir = saveFile;
 
 	loadNextFrame = true;
+}
+
+void App::AddCommand(Command * cmd)
+{
+	if (console && cmd)
+		console->AddCommand(cmd);
 }
 
 void App::PrepareUpdate()

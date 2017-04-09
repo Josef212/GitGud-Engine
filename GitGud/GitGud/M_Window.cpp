@@ -18,6 +18,11 @@ M_Window::~M_Window()
 bool M_Window::Init()
 {
 	_LOG("Window: Init");
+
+	app->console->AddCommand(&cResize);
+	app->console->AddCommand(&cSetFlags);
+
+
 	bool ret = false;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -314,4 +319,45 @@ int M_Window::GetRefresh() const
 		ret = dm.refresh_rate;
 
 	return ret;
+}
+
+void M_Window::CResize::Function(std::vector<std::string>& args)
+{
+	std::vector<std::string>::iterator wIt = std::find(args.begin(), args.end(), "-w");
+	std::vector<std::string>::iterator hIt = std::find(args.begin(), args.end(), "-h");
+
+	if (wIt != args.end() && wIt != (args.end() - 1))
+	{
+		app->win->SetWidth(std::stoi((wIt + 1)->c_str()));
+	}
+
+	if (hIt != args.end() && hIt != (args.end() - 1))
+	{
+		app->win->SetHeight(std::stoi((hIt + 1)->c_str()));
+	}
+}
+
+void M_Window::CSetFlags::Function(std::vector<std::string>& args)
+{
+	std::vector<std::string>::iterator fIt = std::find(args.begin(), args.end(), "-f");
+	std::vector<std::string>::iterator rIt = std::find(args.begin(), args.end(), "-r");
+	std::vector<std::string>::iterator bIt = std::find(args.begin(), args.end(), "-b");
+	std::vector<std::string>::iterator fdIt = std::find(args.begin(), args.end(), "-fd");
+
+	if (fIt != args.end() && fIt != (args.end() - 1))
+	{
+		app->win->SetFullScreen((bool)std::stoi((fIt + 1)->c_str()));
+	}
+	if (rIt != args.end() && rIt != (args.end() - 1))
+	{
+		app->win->SetResizable((bool)std::stoi((rIt + 1)->c_str()));
+	}
+	if (bIt != args.end() && bIt != (args.end() - 1))
+	{
+		app->win->SetBorderless((bool)std::stoi((bIt + 1)->c_str()));
+	}
+	if (fdIt != args.end() && fdIt != (args.end() - 1))
+	{
+		app->win->SetFullScreenDesktop((bool)std::stoi((fdIt + 1)->c_str()));
+	}
 }

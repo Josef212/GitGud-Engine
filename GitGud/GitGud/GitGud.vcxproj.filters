@@ -231,6 +231,9 @@
     <ClCompile Include="parson-master\parson.c">
       <Filter>3rdParty\Parson</Filter>
     </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -499,6 +502,9 @@
     </ClInclude>
     <ClInclude Include="parson-master\parson.h">
       <Filter>3rdParty\Parson</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

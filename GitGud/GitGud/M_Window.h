@@ -3,6 +3,7 @@
 
 
 #include "Module.h"
+#include "Console.h"
 #include <SDL.h>
 
 class M_Window : public Module
@@ -70,6 +71,21 @@ private:
 	uint winScale = 1;
 	uint width = 0, height = 0;
 	bool fullscreen, resizable, borderless, fullscreenDesktop;
+
+	struct CResize : public Command
+	{
+		CResize() : Command("Resize window", "resize_win", "Resize the window: -w: width -h height")
+		{}
+		void Function(std::vector<std::string>& args)override;
+	}cResize;
+
+	struct CSetFlags : public Command
+	{
+		CSetFlags() : Command("Set win flags", "set_win_flags", "Set window flags: -f: fullscreen(1/0) -r: resizable(1/0) -b: borderless(1/0) -fd: fullscreen desktop(1/0)")
+		{}
+		void Function(std::vector<std::string>& args)override;
+	}cSetFlags;
+
 };
 
 

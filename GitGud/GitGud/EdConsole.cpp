@@ -1,6 +1,8 @@
 #include "EdConsole.h"
 
 #include "Globals.h"
+#include "App.h"
+#include "Console.h"
 
 
 
@@ -54,8 +56,7 @@ void EdConsole::Draw()
 			if (focus)
 			{
 				ImGui::SetKeyboardFocusHere();
-				//TODO: Add console
-				_LOG(input);
+				app->console->OnCmdSubmision(input);
 				*input = '\0';
 			}
 		}

@@ -9,7 +9,10 @@
 #include <string>
 #include <vector>
 
+struct Command;
+
 class HrdInfo;
+class Console;
 
 class Module;
 class M_Window;
@@ -44,6 +47,8 @@ public:
 	void Save(std::string saveFile);
 	void Load(std::string saveFile);
 
+	void AddCommand(Command* cmd);
+
 
 private:
 	void PrepareUpdate();
@@ -58,6 +63,7 @@ private:
 
 public:
 	HrdInfo* info = nullptr;
+	Console* console = nullptr;
 
 	M_FileSystem* fs = nullptr;
 	M_Window* win = nullptr;
