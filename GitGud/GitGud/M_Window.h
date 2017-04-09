@@ -1,0 +1,76 @@
+#ifndef __M_WINDOW_H__
+#define __M_WINDOW_H__
+
+
+#include "Module.h"
+#include <SDL.h>
+
+class M_Window : public Module
+{
+public:
+	M_Window(const char* name, bool startEnabled = true);
+	virtual ~M_Window();
+
+	bool Init()override;
+	bool CleanUp()override;
+
+	void SetTitle(const char* title);
+
+	SDL_Window* GetWindow()const { return window; }
+	SDL_Surface* GetSurface()const { return screenSurface; }
+	
+	void HideWindow();
+	void MaximizeWindow();
+	void MinimizaWindow();
+	void RestoreWindow();
+	void ShowWindow();
+	void RaiseWindow();
+
+	void SetScreenSaver(bool set);
+	void SetFullScreen(bool set);
+	void SetResizable(bool set);
+	void SetBorderless(bool set);
+	void SetFullScreenDesktop(bool set);
+	void SetBorder(bool set);
+	void SetGrab(bool set);
+	void SetPosition(int x, int y);
+
+	void SetSize(int w, int h);
+	void SetWidth(int width);
+	void SetHeight(int height);
+	bool SetBrightness(float bright);
+
+
+	bool IsScreenSaver()const;
+	bool IsFullScreen()const { return fullscreen; }
+	bool IsResizable() const { return resizable; }
+	bool IsBorderless() const { return borderless; }
+	bool IsFullscreenDesktop() const { return fullscreenDesktop; }
+	
+	void GetPosition(int& w, int& h)const;
+
+	uint GetWinScale()const { return winScale; }
+	void GetWindowSize(int& width, int& height) const { width = this->width; height = this->height; }
+	uint GetWidth()const { return width; }
+	uint GetHeight()const { return height; }
+
+	float GetBrightness()const;
+
+	void GetRange(int& minW, int& minH, int& maxW, int& maxH)const;
+	int GetRefresh()const;
+
+private:
+
+public:
+
+private:
+	SDL_Window* window = nullptr;
+	SDL_Surface* screenSurface = nullptr;
+
+	uint winScale = 1;
+	uint width = 0, height = 0;
+	bool fullscreen, resizable, borderless, fullscreenDesktop;
+};
+
+
+#endif // !__M_WINDOW_H__
