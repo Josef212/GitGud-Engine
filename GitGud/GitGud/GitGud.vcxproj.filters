@@ -234,6 +234,7 @@
     <ClCompile Include="Console.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="RandGen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -505,6 +506,10 @@
     </ClInclude>
     <ClInclude Include="Console.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="RandGen.h" />
+    <ClInclude Include="Math.h">
+      <Filter>3rdParty\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

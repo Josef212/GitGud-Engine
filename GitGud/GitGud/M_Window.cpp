@@ -1,6 +1,7 @@
 #include "M_Window.h"
 
 #include "App.h"
+#include "JsonFile.h"
 
 
 
@@ -15,7 +16,7 @@ M_Window::~M_Window()
 	_LOG("Window: Destroying.");
 }
 
-bool M_Window::Init()
+bool M_Window::Init(JsonFile* file)
 {
 	_LOG("Window: Init");
 
@@ -32,14 +33,14 @@ bool M_Window::Init()
 	else
 	{
 		//TODO: Config
-		winScale = 1; 
-		width = 1920;
-		height = 1080;
+		winScale = file->GetInt("screen_scale", 1);
+		width = file->GetInt("width", 1920);
+		height = file->GetInt("height", 1080);
 
-		fullscreen = false;
-		resizable = false;
-		borderless = false;
-		fullscreenDesktop = false;
+		fullscreen = file->GetBool("fullscreen", false);
+		resizable = file->GetBool("resizable", false);
+		borderless = file->GetBool("borderless", false);
+		fullscreenDesktop = file->GetBool("fullscreen_desktop", false);
 
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED;
 

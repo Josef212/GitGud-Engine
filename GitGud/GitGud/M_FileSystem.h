@@ -14,7 +14,7 @@ public:
 	M_FileSystem(const char* name, bool startEnabled = true);
 	virtual ~M_FileSystem();
 
-	bool Init()override;
+	bool Init(JsonFile* file)override;
 	bool CleanUp()override;
 
 	bool AddPath(const char* pathOrZip, const char* mountPoint = nullptr);

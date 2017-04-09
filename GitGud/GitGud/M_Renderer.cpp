@@ -23,12 +23,12 @@ M_Renderer::~M_Renderer()
 	_LOG("Renderer: Destroying.");
 }
 
-bool M_Renderer::Init()
+bool M_Renderer::Init(JsonFile* file)
 {
 	_LOG("Renderer: Init.");
 	bool ret = true;
 
-	vsync = true;//TODO: Config
+	vsync = file->GetBool("vsync", true);
 
 	context = SDL_GL_CreateContext(app->win->GetWindow());
 	if (context == nullptr)

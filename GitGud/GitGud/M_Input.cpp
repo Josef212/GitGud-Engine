@@ -24,7 +24,7 @@ M_Input::~M_Input()
 	RELEASE_ARRAY(keyboard);
 }
 
-bool M_Input::Init()
+bool M_Input::Init(JsonFile* file)
 {
 	_LOG("Input: Init.");
 

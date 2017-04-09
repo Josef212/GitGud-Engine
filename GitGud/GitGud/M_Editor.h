@@ -20,7 +20,7 @@ public:
 	M_Editor(const char* name, bool startEnabled = true);
 	virtual ~M_Editor();
 
-	bool Init()override;
+	bool Init(JsonFile* file)override;
 	bool Start()override;
 	UPDATE_RETURN PreUpdate(float dt)override;
 	UPDATE_RETURN Update(float dt)override;

@@ -186,6 +186,7 @@
     <ClCompile Include="M_Window.cpp" />
     <ClCompile Include="parson-master\parson.c" />
     <ClCompile Include="PerfTimer.cpp" />
+    <ClCompile Include="RandGen.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +205,7 @@
     <ClInclude Include="imgui-1.49\stb_textedit.h" />
     <ClInclude Include="imgui-1.49\stb_truetype.h" />
     <ClInclude Include="JsonFile.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="MathGeoLib\include\Algorithm\GJK.h" />
     <ClInclude Include="MathGeoLib\include\Algorithm\Random\LCG.h" />
     <ClInclude Include="MathGeoLib\include\Algorithm\SAT.h" />
@@ -278,6 +280,7 @@
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="parson-master\parson.h" />
     <ClInclude Include="PerfTimer.h" />
+    <ClInclude Include="RandGen.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>

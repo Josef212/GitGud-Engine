@@ -20,7 +20,7 @@ public:
 	M_Input(const char* name, bool startEnabled = true);
 	virtual ~M_Input();
 
-	bool Init()override;
+	bool Init(JsonFile* file)override;
 	UPDATE_RETURN PreUpdate(float dt)override;
 	bool CleanUp()override;
 

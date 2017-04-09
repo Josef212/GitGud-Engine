@@ -1,0 +1,21 @@
+{
+  "app": {
+    "fps_limit": 0,
+    "app_title": "GitGud",
+    "app_organitzation": "Josef21296"
+  },
+
+  "module_window": {
+    "fullscreen": false,
+    "resizable": false,
+    "borderless": false,
+    "fullscreen_desktop": false,
+    "width": 1920,
+    "height": 1080,
+    "screen_scale": 1
+  },
+
+  "module_renderer": {
+    "vsync": true
+  }
+}

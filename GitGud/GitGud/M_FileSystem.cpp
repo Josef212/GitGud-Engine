@@ -24,7 +24,7 @@ M_FileSystem::~M_FileSystem()
 	PHYSFS_deinit();
 }
 
-bool M_FileSystem::Init()
+bool M_FileSystem::Init(JsonFile* file)
 {
 	_LOG("FileSystem: Init.");
 	bool ret = true;

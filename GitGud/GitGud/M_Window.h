@@ -12,7 +12,7 @@ public:
 	M_Window(const char* name, bool startEnabled = true);
 	virtual ~M_Window();
 
-	bool Init()override;
+	bool Init(JsonFile* file)override;
 	bool CleanUp()override;
 
 	void SetTitle(const char* title);

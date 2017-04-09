@@ -40,7 +40,7 @@ M_Editor::~M_Editor()
 	ImGui_ImplSdlGL3_Shutdown();
 }
 
-bool M_Editor::Init()
+bool M_Editor::Init(JsonFile* file)
 {
 	_LOG("Editor: Init.");
 

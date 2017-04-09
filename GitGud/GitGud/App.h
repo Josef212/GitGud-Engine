@@ -13,6 +13,8 @@ struct Command;
 
 class HrdInfo;
 class Console;
+class RandGen;
+class JsonFile;
 
 class Module;
 class M_Window;
@@ -49,12 +51,16 @@ public:
 
 	void AddCommand(Command* cmd);
 
+	const char* GetConfigSavePath()const;
+	void SetConfigSavePath(const char* path);
+	void ResetConfig();
+
 
 private:
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	void ReadConfig();
+	void ReadConfig(JsonFile* config);
 
 	void ReadArgs();
 
@@ -64,6 +70,7 @@ private:
 public:
 	HrdInfo* info = nullptr;
 	Console* console = nullptr;
+	RandGen* random = nullptr;
 
 	M_FileSystem* fs = nullptr;
 	M_Window* win = nullptr;

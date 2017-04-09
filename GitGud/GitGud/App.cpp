@@ -2,6 +2,9 @@
 
 #include "HrdInfo.h"
 #include "Console.h"
+#include "RandGen.h"
+
+#include "JsonFile.h"
 
 #include "Module.h"
 #include "M_FileSystem.h"
@@ -29,7 +32,7 @@ struct C_Quit : public Command
 }c_Quit;
 //-----------------------------------------------
 
-App::App(int argv, char** argc)
+App::App(int argv, char** argc) : currentConfigSaveFileDir("settings/config.json")
 {
 	_LOG("App: Creation  =======================");
 	this->argv = argv;
@@ -41,6 +44,8 @@ App::App(int argv, char** argc)
 
 	info = new HrdInfo();
 	console = new Console();
+	random = new RandGen();
+	//TODO: Let user pass an arg for the seed??
 
 	console->AddCommand(&c_Quit);
 
@@ -79,9 +84,15 @@ bool App::Init()
 	bool ret = true;
 	_LOG("App: Init  =======================");
 
+	char* buffer = nullptr;
+	fs->Load(currentConfigSaveFileDir.c_str(), &buffer);
+
+	JsonFile config(buffer);
+	ReadConfig(&config.GetSection("app"));
+
 	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 	{
-		ret = (*it)->Init();
+		ret = (*it)->Init(&config.GetSection((*it)->name.c_str()));
 	}
 
 	_LOG("App: Start  =======================");
@@ -90,6 +101,8 @@ bool App::Init()
 		if((*it)->IsEnable())
 			ret = (*it)->Start();
 	}
+
+	RELEASE_ARRAY(buffer);
 
 	if (ret)
 		info->SetInfo();
@@ -238,6 +251,22 @@ void App::AddCommand(Command * cmd)
 		console->AddCommand(cmd);
 }
 
+const char * App::GetConfigSavePath() const
+{
+	return currentConfigSaveFileDir.c_str();
+}
+
+void App::SetConfigSavePath(const char * path)
+{
+	if (path)
+		currentConfigSaveFileDir = path;
+}
+
+void App::ResetConfig()
+{
+	currentConfigSaveFileDir = "settings/default_config.json";
+}
+
 void App::PrepareUpdate()
 {
 	dt = (float)msTimer.ReadSec();
@@ -278,8 +307,13 @@ void App::FinishUpdate()
 		editor->LogFPS((float)lastFps, (float)lastFrameMs);
 }
 
-void App::ReadConfig()
+void App::ReadConfig(JsonFile* config)
 {
+	if (!config)return;
+
+	SetMaxFPS(config->GetInt("fps_limit", 0));
+	SetTitle(config->GetString("app_title", "GitGud"));
+	SetOrganitzation(config->GetString("app_organitzation", "Josef21296"));
 }
 
 void App::ReadArgs()
@@ -292,10 +326,64 @@ void App::ReadArgs()
 
 bool App::SaveNow()
 {
-	return false;
+	bool ret = true;
+
+	JsonFile file;
+	JsonFile app = file.AddSection("app");
+	app.AddInt("fps_limit", GetMaxFPS());
+	app.AddString("app_title", title.c_str());
+	app.AddString("app_organitzation", organitzation.c_str());
+
+	for (auto mod : modules)
+	{
+		ret = mod->Save(&file.AddSection(mod->name.c_str()));
+	}
+	
+	char* buffer = nullptr;
+	uint size = file.WriteJson(&buffer);
+
+	if (size > 0 && buffer)
+	{
+		if (fs->Save(currentConfigSaveFileDir.c_str(), buffer, size) != size)
+		{
+			_LOG("APP_ERROR: Could not save config.");
+			ret = false;
+		}
+	}
+	else
+	{
+		ret = false;
+	}
+
+	RELEASE_ARRAY(buffer);
+
+	return ret;
 }
 
 bool App::LoadNow()
 {
-	return false;
+	bool ret = true;
+
+	char* buffer = nullptr;
+	uint size = fs->Load(currentConfigSaveFileDir.c_str(), &buffer);
+
+	if (size > 0 && buffer)
+	{
+		JsonFile file(buffer);
+		ReadConfig(&file.GetSection("app"));
+
+		for (auto mod : modules)
+		{
+			ret = mod->Load(&file.AddSection(mod->name.c_str()));
+		}
+	}
+
+	if (!ret)
+	{
+		_LOG("Could not load config from: [%s].", currentConfigSaveFileDir.c_str());
+	}
+
+	RELEASE_ARRAY(buffer);
+
+	return ret;
 }

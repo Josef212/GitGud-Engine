@@ -11,7 +11,7 @@ public:
 	M_Renderer(const char* name, bool startEnabled = true);
 	virtual ~M_Renderer();
 
-	bool Init()override;
+	bool Init(JsonFile* file)override;
 	bool Start()override;
 	UPDATE_RETURN PreUpdate(float dt)override;
 	UPDATE_RETURN PostUpdate(float dt)override;

@@ -4,6 +4,8 @@
 #include "Globals.h"
 #include <string>
 
+class JsonFile;
+
 class Module
 {
 public:
@@ -46,7 +48,7 @@ public:
 		}
 	}
 
-	virtual bool Init()
+	virtual bool Init(JsonFile* file)
 	{
 		return true;
 	}
@@ -76,12 +78,12 @@ public:
 		return true;
 	}
 
-	virtual bool Save()
+	virtual bool Save(JsonFile* file)
 	{
 		return true;
 	}
 
-	virtual bool Load()
+	virtual bool Load(JsonFile* file)
 	{
 		return true;
 	}
