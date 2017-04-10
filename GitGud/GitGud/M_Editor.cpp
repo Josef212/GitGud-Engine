@@ -8,6 +8,11 @@
 #include "EdWin.h"
 #include "EdConfig.h"
 #include "EdConsole.h"
+#include "EdHierarchy.h"
+#include "EdInspector.h"
+
+#include "GameObject.h"
+#include "M_GoManager.h"
 
 #include <SDL.h>
 #include "imgui-1.49\imgui.h"
@@ -20,12 +25,16 @@ M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnab
 
 	//Creating panels
 	//TODO: Start enabled according to engine start state
-	config = new EdConfig(true);
+	config = new EdConfig(false);
 	console = new EdConsole(true);
+	hierarchy = new EdHierarchy(true);
+	inspector = new EdInspector(true);
 
 
 	editorWins.push_back(config); 
 	editorWins.push_back(console);
+	editorWins.push_back(hierarchy);
+	editorWins.push_back(inspector);
 }
 
 
@@ -89,6 +98,17 @@ UPDATE_RETURN M_Editor::Update(float dt)
 			ImGui::MenuItem("SetStyle", nullptr, &styleEditor);
 
 
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("GameObject"))
+		{
+			if (ImGui::MenuItem("Create empty")) 
+			{
+				GameObject* selected = app->goManager->GetSelected();
+				app->goManager->CreateGameObject(selected); 
+			}
 
 			ImGui::EndMenu();
 		}

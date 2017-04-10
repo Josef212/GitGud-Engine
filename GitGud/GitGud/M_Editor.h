@@ -13,6 +13,8 @@ struct ImGuiStyle;
 
 class EdConfig;
 class EdConsole;
+class EdHierarchy;
+class EdInspector;
 
 class M_Editor : public Module
 {
@@ -53,6 +55,8 @@ private:
 
 	EdConfig* config = nullptr;
 	EdConsole* console = nullptr;
+	EdHierarchy* hierarchy = nullptr;
+	EdInspector* inspector = nullptr;
 
 };
 
