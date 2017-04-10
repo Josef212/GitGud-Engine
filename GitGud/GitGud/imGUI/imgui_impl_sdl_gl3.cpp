@@ -6,13 +6,13 @@
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 // https://github.com/ocornut/imgui
 
-#include "../../imgui.h"
+#include "imgui.h"
 #include "imgui_impl_sdl_gl3.h"
 
 // SDL,GL3W
 #include <SDL.h>
 #include <SDL_syswm.h>
-#include <GL/glew.h>
+#include <GL\glew.h>
 
 // Data
 static double       g_Time = 0.0f;
@@ -152,7 +152,6 @@ bool ImGui_ImplSdlGL3_ProcessEvent(SDL_Event* event)
         }
     case SDL_TEXTINPUT:
         {
-            ImGuiIO& io = ImGui::GetIO();
             io.AddInputCharactersUTF8(event->text.text);
             return true;
         }
@@ -186,6 +185,7 @@ void ImGui_ImplSdlGL3_CreateFontsTexture()
     glBindTexture(GL_TEXTURE_2D, g_FontTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
     // Store our identifier

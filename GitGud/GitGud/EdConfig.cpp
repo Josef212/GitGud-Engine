@@ -1,6 +1,6 @@
 #include "EdConfig.h"
 #include "Globals.h"
-#include "imgui-1.49/imgui.h"
+#include "imGui/imgui.h"
 
 #include "App.h"
 #include "HrdInfo.h"

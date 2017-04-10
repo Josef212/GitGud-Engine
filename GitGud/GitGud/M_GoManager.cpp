@@ -3,8 +3,13 @@
 #include "App.h"
 #include "RandGen.h"
 
+#include "GGOctree.h"
+
 #include "GameObject.h"
 #include "Component.h"
+#include "Transform.h"
+
+#define OCTREE_SIZE 100 / 2
 
 M_GoManager::M_GoManager(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
@@ -24,7 +29,10 @@ M_GoManager::~M_GoManager()
 bool M_GoManager::Init(JsonFile * conifg)
 {
 	_LOG("GoManager: Init.");
-	//TODO: Create tree
+	
+	octree = new GGOctree();
+	octree->Create(AABB::FromCenterAndSize(float3(0, 0, 0), float3(OCTREE_SIZE, OCTREE_SIZE, OCTREE_SIZE)));
+
 	return true;
 }
 
@@ -51,9 +59,12 @@ UPDATE_RETURN M_GoManager::PreUpdate(float dt)
 
 	if (root)
 	{
-		//TODO
-		//root->RecCalcTransform(root->GetTransform()->GetLocalTransform());
-		root->RecCalcBoxes();
+		if (anyGOTransHasChanged)
+		{
+			root->RecCalcTransform(root->transform->GetLocalTransform());
+			root->RecCalcBoxes();
+			anyGOTransHasChanged = false;
+		}
 
 		for (auto obj : root->childs)
 		{
@@ -81,6 +92,7 @@ UPDATE_RETURN M_GoManager::Update(float dt)
 bool M_GoManager::CleanUp()
 {
 	_LOG("GoManager: CleanUp.");
+	RELEASE(octree);
 	return true;
 }
 
@@ -119,12 +131,12 @@ GameObject * M_GoManager::CreateGameObject(GameObject * parent)
 
 void M_GoManager::InsertToTree(GameObject * object)
 {
-	//TODO
+	octree->Insert(object);
 }
 
 void M_GoManager::EraseFromTree(GameObject * object)
 {
-	//TODO
+	octree->Erase(object);
 }
 
 void M_GoManager::AddDynObject(GameObject * obj)

@@ -5,10 +5,12 @@
 #include "RandGen.h"
 #include "JsonFile.h"
 
+#include "Transform.h"
+
 GameObject::GameObject(GameObject * parent, UID uuid) : parent(parent), uuid(uuid)
 {
 	name.assign("GameObject");
-	//TODO: Create transform on creation
+	transform = (Transform*)CreateComponent(CMP_TRANSFORM);
 }
 
 GameObject::~GameObject()
@@ -41,6 +43,41 @@ GameObject * GameObject::CreateChild()
 
 	ret = new GameObject(this, app->random->GetRandInt());
 	childs.push_back(ret);
+
+	return ret;
+}
+
+Component * GameObject::CreateComponent(COMPONENT_TYPE type)
+{
+	Component* ret = nullptr;
+	//TODO: Send error message if already have unique components
+
+	switch (type)
+	{
+	case CMP_TRANSFORM:
+		if (!transform && !HasComponent(CMP_TRANSFORM))
+		{
+			transform = new Transform(this);
+			ret = transform;
+		}
+		break;
+	case CMP_MESH:
+		break;
+	case CMP_MATERIAL:
+		break;
+	case CMP_CAMERA:
+		break;
+	case CMP_LIGHT:
+		break;
+	default:
+		_LOG("Invalid component type!");
+		break;
+	}
+
+	if (ret)
+	{
+		components.push_back(ret);
+	}
 
 	return ret;
 }
@@ -193,17 +230,20 @@ void GameObject::Disable()
 
 void GameObject::PreUpdate()
 {
-	for (auto cmp : componentsToRemove)
+	if (!componentsToRemove.empty())
 	{
-		std::vector<Component*>::iterator it = std::find(components.begin(), components.end(), cmp);
-		if (it != components.end())
+		for (auto cmp : componentsToRemove)
 		{
-			components.erase(it);
-			cmp->OnFinish();
-			RELEASE(cmp);
+			std::vector<Component*>::iterator it = std::find(components.begin(), components.end(), cmp);
+			if (it != components.end())
+			{
+				components.erase(it);
+				cmp->OnFinish();
+				RELEASE(cmp);
+			}
 		}
+		componentsToRemove.clear();
 	}
-	componentsToRemove.clear();
 }
 
 void GameObject::Update(float dt)
@@ -310,8 +350,7 @@ void GameObject::OnGameObjectDestroyed()
 
 void GameObject::RecCalcTransform(const float4x4 & parentTrans, bool force)
 {
-	//TODO
-	/*if (transform && transform->localHasChanged || forced)
+	if (transform && (transform->localTransformHasChanged || force))
 	{
 		if (isStatic)
 			SetStatic(false);
@@ -336,13 +375,12 @@ void GameObject::RecCalcTransform(const float4x4 & parentTrans, bool force)
 		{
 			go->RecCalcTransform(transform->GetGlobalTransform(), force);
 		}
-	}*/
+	}
 }
 
 void GameObject::RecCalcBoxes()
 {
-	//TODO
-	/*if (wasDirty)
+	if (wasDirty)
 	{
 		RecalcBox();
 
@@ -358,7 +396,7 @@ void GameObject::RecCalcBoxes()
 	{
 		if (go && transform)
 			go->RecCalcBoxes();
-	}*/
+	}
 }
 
 void GameObject::RecalcBox()

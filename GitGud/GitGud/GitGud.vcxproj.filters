@@ -207,18 +207,6 @@
     <ClCompile Include="M_Editor.cpp">
       <Filter>Engine\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="imgui-1.49\imgui.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui-1.49\imgui_demo.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui-1.49\imgui_draw.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui-1.49\examples\sdl_opengl3_example\imgui_impl_sdl_gl3.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="EdConfig.cpp">
       <Filter>Engine\Editor\Panels</Filter>
     </ClCompile>
@@ -260,6 +248,24 @@
     </ClCompile>
     <ClCompile Include="EdInspector.cpp">
       <Filter>Engine\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Engine\GamObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui_demo.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui_draw.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui_impl_sdl_gl3.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imGUI\imgui_user2.cpp">
+      <Filter>3rdParty\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -491,27 +497,6 @@
     <ClInclude Include="EdWin.h">
       <Filter>Engine\Editor\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="imgui-1.49\imconfig.h">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.49\imgui.h">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.49\imgui_internal.h">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.49\stb_rect_pack.h">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.49\stb_textedit.h">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.49\stb_truetype.h">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.49\examples\sdl_opengl3_example\imgui_impl_sdl_gl3.h">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="EdConfig.h">
       <Filter>Engine\Editor\Panels</Filter>
     </ClInclude>
@@ -556,6 +541,36 @@
     </ClInclude>
     <ClInclude Include="EdInspector.h">
       <Filter>Engine\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Engine\GamObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imconfig.h">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imgui.h">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imgui_impl_sdl_gl3.h">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imgui_internal.h">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\imgui_user.h">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\stb_rect_pack.h">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\stb_textedit.h">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imGUI\stb_truetype.h">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GGOctree.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

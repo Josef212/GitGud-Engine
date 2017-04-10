@@ -7,6 +7,7 @@
 #include <map>
 #include <list>
 
+class GGOctree;
 class GameObject;
 class Component;
 
@@ -53,6 +54,7 @@ private:
 
 
 public:
+	bool anyGOTransHasChanged = true;
 
 private:
 	GameObject* root = nullptr;
@@ -60,6 +62,8 @@ private:
 
 	std::list<GameObject*> dynamicGameObjects;
 	std::vector<GameObject*> objectsToDelete;
+
+	GGOctree* octree = nullptr;
 
 };
 

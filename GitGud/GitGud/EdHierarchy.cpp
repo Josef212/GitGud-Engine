@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "M_GoManager.h"
 
-#include "imgui-1.49\imgui.h"
+#include "imGui/imgui.h"
 
 
 EdHierarchy::EdHierarchy(bool startEnabled) : EdWin(startEnabled)

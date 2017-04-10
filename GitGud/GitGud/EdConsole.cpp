@@ -5,7 +5,6 @@
 #include "Console.h"
 
 
-
 EdConsole::EdConsole(bool startEnabled) : EdWin(startEnabled)
 {
 }

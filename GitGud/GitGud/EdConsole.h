@@ -2,7 +2,7 @@
 #define __EDCONSOLE_H__
 
 #include "EdWin.h"
-#include "imgui-1.49\imgui.h"
+#include "imGui\imgui.h"
 
 class EdConsole : public EdWin
 {

@@ -110,6 +110,8 @@ public:
 
 	AABB enclosingBox;
 
+	Transform* transform = nullptr;
+
 private:
 	std::string name;
 	UID uuid = 0;
@@ -117,7 +119,6 @@ private:
 	bool selfActive = true;
 	bool isStatic = false;
 
-	Transform* transform = nullptr;
 
 	bool wasDirty = true;
 

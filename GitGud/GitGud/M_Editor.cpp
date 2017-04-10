@@ -15,8 +15,8 @@
 #include "M_GoManager.h"
 
 #include <SDL.h>
-#include "imgui-1.49\imgui.h"
-#include "imgui-1.49\examples\sdl_opengl3_example\imgui_impl_sdl_gl3.h"
+#include "imGui/imgui.h"
+#include "imGui\imgui_impl_sdl_gl3.h"
 
 
 M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnabled)
@@ -113,6 +113,14 @@ UPDATE_RETURN M_Editor::Update(float dt)
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Components"))
+		{
+			GameObject* selected = app->goManager->GetSelected();
+
+			if (ImGui::MenuItem("Transform")) if (selected) selected->CreateComponent(CMP_TRANSFORM);
+
+			ImGui::EndMenu();
+		}
 
 
 		if (ImGui::BeginMenu("Other"))
