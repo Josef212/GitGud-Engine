@@ -267,6 +267,12 @@
     <ClCompile Include="imGUI\imgui_user2.cpp">
       <Filter>3rdParty\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Engine\GamObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Containers&amp;Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -571,6 +577,12 @@
     </ClInclude>
     <ClInclude Include="GGOctree.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Engine\GamObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Containers&amp;Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
