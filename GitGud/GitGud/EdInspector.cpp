@@ -5,6 +5,7 @@
 #include "M_GoManager.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "Camera.h"
 
 EdInspector::EdInspector(bool startEnabled) : EdWin(startEnabled)
 {
@@ -59,6 +60,8 @@ void EdInspector::Draw()
 					case CMP_TRANSFORM:
 						DrawTrans(selected);
 						break;
+					case CMP_CAMERA:
+						DrawCamera(selected, (Camera*)cmp);
 					}
 				}
 			}
@@ -105,5 +108,54 @@ void EdInspector::DrawTrans(GameObject * selected)
 
 		ImGui::DragFloat3("Global pos", (float*)&trans->GetGlobalPosition());
 		
+	}
+}
+
+void EdInspector::DrawCamera(GameObject * selected, Camera * cam)
+{
+	if (cam)
+	{
+		if (ImGui::CollapsingHeader("Frustum camera"))
+		{
+			ImGui::ColorEdit4("Backgorund", (float*)&cam->backgorund, false);
+
+			float nearP = cam->GetNearPlaneDist();
+			float farP = cam->GetFarPlaneDist();
+
+			if (ImGui::DragFloat("Near plane:", &nearP)) cam->SetNearPlaneDist(nearP);
+			if (ImGui::DragFloat("Far plane:", &farP)) cam->SetFarPlaneDist(farP);
+
+
+			CAM_TYPE type = cam->GetType();
+
+			static int index = 0;
+			if (ImGui::Combo("Type", &index, "Perspective\0Orthographic"))
+			{
+				if (index == 0)
+				{
+					cam->SetType(CAM_PERSPECTIVE);
+				}
+				else if (index == 1)
+				{
+					cam->SetType(CAM_ORTHOGRAPHIC);
+				}
+			}
+
+			if (type == CAM_PERSPECTIVE)
+			{
+				float fov = cam->GetFOV();
+				if (ImGui::DragFloat("FOV", &fov)) cam->SetFOV(fov);
+			}
+			else
+			{
+				float size = cam->GetOthogonalSize();
+				if (ImGui::DragFloat("Size", &size)) cam->SetOrthoSize(size);
+			}
+
+			bool culling = cam->IsCulling();
+			if (ImGui::Checkbox("Culling", &culling)) cam->SetCulling(culling);
+
+			//TODO: Make active
+		}
 	}
 }

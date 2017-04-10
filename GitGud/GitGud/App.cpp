@@ -12,6 +12,7 @@
 #include "M_Input.h"
 #include "M_Editor.h"
 #include "M_GoManager.h"
+#include "M_Camera3D.h"
 
 
 
@@ -56,6 +57,7 @@ App::App(int argv, char** argc) : currentConfigSaveFileDir("settings/config.json
 	win = new M_Window("module_window");
 	input = new M_Input("module_input");
 	goManager = new M_GoManager("module_go_manager");
+	camera = new M_Camera3D("module_camera_editor");
 
 
 	renderer = new M_Renderer("module_renderer");
@@ -66,6 +68,7 @@ App::App(int argv, char** argc) : currentConfigSaveFileDir("settings/config.json
 	modules.push_back(win);
 	modules.push_back(input);
 	modules.push_back(goManager);
+	modules.push_back(camera);
 
 
 	modules.push_back(renderer);

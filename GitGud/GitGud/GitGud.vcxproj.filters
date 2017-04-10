@@ -273,6 +273,9 @@
     <ClCompile Include="Color.cpp">
       <Filter>Containers&amp;Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="M_Camera3D.cpp">
+      <Filter>Engine\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -583,6 +586,9 @@
     </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Containers&amp;Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="M_Camera3D.h">
+      <Filter>Engine\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,7 @@ public:
 
 private:
 	void DrawTrans(GameObject* selected);
+	void DrawCamera(GameObject* selected, Camera* cam);
 };
 
 #endif // !__EDINSPECTOR_H__

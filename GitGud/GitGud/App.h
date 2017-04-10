@@ -22,6 +22,7 @@ class M_Input;
 class M_FileSystem;
 class M_Editor;
 class M_GoManager;
+class M_Camera3D;
 class M_Renderer;
 
 class App
@@ -78,6 +79,7 @@ public:
 	M_Input* input = nullptr;
 	M_Editor* editor = nullptr;
 	M_GoManager* goManager = nullptr;
+	M_Camera3D* camera = nullptr;
 
 	M_Renderer* renderer = nullptr;
 

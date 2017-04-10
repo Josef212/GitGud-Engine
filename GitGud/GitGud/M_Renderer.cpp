@@ -3,6 +3,9 @@
 #include "App.h"
 #include "M_Window.h"
 #include "M_Editor.h"
+#include "M_Camera3D.h"
+
+#include "Camera.h"
 
 #include "OpenGL.h"
 
@@ -92,8 +95,19 @@ bool M_Renderer::Start()
 
 UPDATE_RETURN M_Renderer::PreUpdate(float dt)
 {
-	glClearColor(0.f, 0.f, 0.f, 1.f);
+	Camera* cam = app->camera->GetEditorCamera();
+	if (cam)
+	{
+		Color col = cam->GetBackground();
+		glClearColor(col.r, col.g, col.b, col.a);
+	}
+	else
+	{
+		glClearColor(0.f, 0.f, 0.f, 1.f);
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
 
 	return UPDT_CONTINUE;
 }

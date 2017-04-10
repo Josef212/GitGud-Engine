@@ -54,8 +54,11 @@ float Camera::GetFarPlaneDist() const
 
 void Camera::SetFarPlaneDist(float fD)
 {
-	frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), fD);
-	projectionMatChaged = true;
+	if (fD > frustum.NearPlaneDistance())
+	{
+		frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), fD);
+		projectionMatChaged = true;
+	}
 }
 
 float Camera::GetNearPlaneDist() const
@@ -65,8 +68,11 @@ float Camera::GetNearPlaneDist() const
 
 void Camera::SetNearPlaneDist(float nD)
 {
-	frustum.SetViewPlaneDistances(nD, frustum.FarPlaneDistance());
-	projectionMatChaged = true;
+	if (nD > 0.f && nD < frustum.FarPlaneDistance())
+	{
+		frustum.SetViewPlaneDistances(nD, frustum.FarPlaneDistance());
+		projectionMatChaged = true;
+	}
 }
 
 float Camera::GetAspectRatio() const
@@ -155,6 +161,7 @@ void Camera::SetType(CAM_TYPE type)
 
 void Camera::SwapType()
 {
+	//TODO: Ortho cam must be checked and prob fixed
 	if (camType == CAM_PERSPECTIVE)
 	{
 		camType = CAM_ORTHOGRAPHIC;
@@ -165,4 +172,28 @@ void Camera::SwapType()
 		camType = CAM_PERSPECTIVE;
 		frustum.SetPerspective(frustum.HorizontalFov(), frustum.VerticalFov());
 	}
+}
+
+void Camera::Look(const float3 spot, const float3 pos)
+{
+	frustum.SetPos(pos);
+	LookAt(spot);
+	projectionMatChaged = true;
+}
+
+void Camera::LookAt(const float3 spot)
+{
+	float3 dir = spot - frustum.Pos();
+	float3x3 mat = float3x3::LookAt(frustum.Front(), dir.Normalized(), frustum.Up(), float3::unitY);
+
+	frustum.SetFront(mat.MulDir(frustum.Front()).Normalized());
+	frustum.SetUp(mat.MulDir(frustum.Up()).Normalized());
+}
+
+void Camera::OnSaveCmp(JsonFile & sect) const
+{
+}
+
+void Camera::OnLoadCmp(JsonFile * sect)
+{
 }

@@ -54,6 +54,12 @@ public:
 	void SetType(CAM_TYPE type);
 	void SwapType();
 
+	void Look(const float3 spot, const float3 pos);
+	void LookAt(const float3 spot);
+
+	void OnSaveCmp(JsonFile& sect)const override;
+	void OnLoadCmp(JsonFile* sect)override;
+
 private:
 
 public:

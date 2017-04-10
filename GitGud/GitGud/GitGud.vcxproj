@@ -187,6 +187,7 @@
     <ClCompile Include="MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib\include\Time\Clock.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
+    <ClCompile Include="M_Camera3D.cpp" />
     <ClCompile Include="M_Editor.cpp" />
     <ClCompile Include="M_FileSystem.cpp" />
     <ClCompile Include="M_GoManager.cpp" />
@@ -291,6 +292,7 @@
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="mmgr\nommgr.h" />
     <ClInclude Include="Module.h" />
+    <ClInclude Include="M_Camera3D.h" />
     <ClInclude Include="M_Editor.h" />
     <ClInclude Include="M_FileSystem.h" />
     <ClInclude Include="M_GoManager.h" />

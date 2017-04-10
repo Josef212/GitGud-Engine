@@ -2,6 +2,8 @@
 #include "Globals.h"
 #include "imGui/imgui.h"
 
+#include "M_Camera3D.h"
+
 #include "App.h"
 #include "HrdInfo.h"
 #include "mmgr/mmgr.h"
@@ -10,6 +12,9 @@
 #include "M_Window.h"
 #include "M_Input.h"
 #include "M_FileSystem.h"
+
+
+#include "Camera.h"
 
 
 EdConfig::EdConfig(bool startEnabled) : EdWin(startEnabled)
@@ -190,6 +195,53 @@ void EdConfig::Draw()
 			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4(1, 0, 0, 1), "TODO: get GPU info");
+		}
+
+		if (ImGui::CollapsingHeader("Editor camera"))
+		{
+			Camera* cam = app->camera->GetEditorCamera();
+			if (cam)
+			{
+				Color col = cam->GetBackground();
+				if (ImGui::ColorEdit4("Backgorund", (float*)&col, false))
+					cam->SetBackground(col);
+
+				float nearP = cam->GetNearPlaneDist();
+				float farP = cam->GetFarPlaneDist();
+
+				if (ImGui::DragFloat("Near plane:", &nearP)) cam->SetNearPlaneDist(nearP);
+				if (ImGui::DragFloat("Far plane:", &farP)) cam->SetFarPlaneDist(farP);
+
+
+				CAM_TYPE type = cam->GetType();
+
+				static int index = 0;
+				if (ImGui::Combo("Type", &index, "Perspective\0Orthographic"))
+				{
+					if (index == 0)
+					{
+						cam->SetType(CAM_PERSPECTIVE);
+					}
+					else if (index == 1)
+					{
+						cam->SetType(CAM_ORTHOGRAPHIC);
+					}
+				}
+
+				if (type == CAM_PERSPECTIVE)
+				{
+					float fov = cam->GetFOV();
+					if (ImGui::DragFloat("FOV", &fov)) cam->SetFOV(fov);
+				}
+				else
+				{
+					float size = cam->GetOthogonalSize();
+					if (ImGui::DragFloat("Size", &size)) cam->SetOrthoSize(size);
+				}
+
+				bool culling = cam->IsCulling();
+				if (ImGui::Checkbox("Culling", &culling)) cam->SetCulling(culling);
+			}
 		}
 
 		ImGui::End();
