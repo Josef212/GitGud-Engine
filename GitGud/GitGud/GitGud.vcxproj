@@ -136,6 +136,8 @@
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="EdConfig.cpp" />
     <ClCompile Include="EdConsole.cpp" />
+    <ClCompile Include="EdHierarchy.cpp" />
+    <ClCompile Include="EdInspector.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="HrdInfo.cpp" />
@@ -200,6 +202,8 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="EdConfig.h" />
     <ClInclude Include="EdConsole.h" />
+    <ClInclude Include="EdHierarchy.h" />
+    <ClInclude Include="EdInspector.h" />
     <ClInclude Include="EdWin.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />

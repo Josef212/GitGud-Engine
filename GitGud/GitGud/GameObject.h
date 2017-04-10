@@ -38,6 +38,9 @@ public:
 	bool HasComponent(COMPONENT_TYPE type);
 	uint CountComponents(COMPONENT_TYPE type);
 
+	void RemoveChild(GameObject* obj);
+	void RemoveAllChilds();
+
 	//--------------------------
 
 	GameObject* GetParent()const;
@@ -55,7 +58,7 @@ public:
 	//--------------------------
 
 	bool IsStatic()const;
-	bool SetStatic(bool set);
+	void SetStatic(bool set);
 
 	//--------------------------
 
@@ -67,7 +70,7 @@ public:
 
 	//--------------------------
 
-	void PreUpdate(float dt);
+	void PreUpdate();
 	void Update(float dt);
 
 	//--------------------------
@@ -90,8 +93,6 @@ public:
 	void RecCalcBoxes();
 	void RecalcBox();
 
-	void RecRemoveFlagged();
-
 	//--------------------------
 
 	bool OnSaveGo(JsonFile& sect)const;
@@ -107,7 +108,7 @@ public:
 	std::vector<Component*> components;
 	std::vector<GameObject*> childs;
 
-	AABB encolsingBox;
+	AABB enclosingBox;
 
 private:
 	std::string name;

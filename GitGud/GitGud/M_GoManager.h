@@ -20,7 +20,6 @@ public:
 	bool Start()override;
 	UPDATE_RETURN PreUpdate(float dt)override;
 	UPDATE_RETURN Update(float dt)override;
-	UPDATE_RETURN PostUpdate(float dt)override;
 	bool CleanUp()override;
 
 	GameObject* GetRoot()const;
@@ -34,22 +33,24 @@ public:
 	void InsertToTree(GameObject* object);
 	void EraseFromTree(GameObject* object);
 	void AddDynObject(GameObject* obj);
-	void EraseDynObj(GameObject* ogj);
+	void EraseDynObj(GameObject* obj);
 
 	void RemoveGameObject(GameObject* obj);
+	void FastRemoveGameObject(GameObject* obj);
 
 private:
 	void OnPlay();
-	void DoOnPlay();
+	void DoOnPlay(GameObject* obj);
 	void OnStop();
-	void DoOnStop();
+	void DoOnStop(GameObject* obj);
 	void OnPause();
-	void DoOnPause();
+	void DoOnPause(GameObject* obj);
 	void OnUnPause();
-	void DoOnUnPause();
+	void DoOnUnPause(GameObject* obj);
 
-	void DoPreUpdate();
-	void DoUpdate(float dt);
+	void DoPreUpdate(GameObject* obj);
+	void DoUpdate(GameObject* obj, float dt);
+
 
 public:
 
@@ -57,7 +58,7 @@ private:
 	GameObject* root = nullptr;
 	GameObject* selected = nullptr;
 
-	std::vector<GameObject*> dynamicGameObjects;
+	std::list<GameObject*> dynamicGameObjects;
 	std::vector<GameObject*> objectsToDelete;
 
 };

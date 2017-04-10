@@ -5,9 +5,9 @@
 #include "RandGen.h"
 #include "JsonFile.h"
 
-GameObject::GameObject(GameObject * parent, UID uuid)
+GameObject::GameObject(GameObject * parent, UID uuid) : parent(parent), uuid(uuid)
 {
-	name.assign("GameObject_%d", uuid);
+	name.assign("GameObject");
 	//TODO: Create transform on creation
 }
 
@@ -40,6 +40,7 @@ GameObject * GameObject::CreateChild()
 	GameObject* ret = nullptr;
 
 	ret = new GameObject(this, app->random->GetRandInt());
+	childs.push_back(ret);
 
 	return ret;
 }
@@ -90,6 +91,25 @@ uint GameObject::CountComponents(COMPONENT_TYPE type)
 	return ret;
 }
 
+void GameObject::RemoveChild(GameObject * obj)
+{
+	if (obj)
+	{
+		std::vector<GameObject*>::iterator it = std::find(childs.begin(), childs.end(), obj);
+		if (it != childs.end())
+			childs.erase(it);
+	}
+}
+
+void GameObject::RemoveAllChilds()
+{
+	for (auto go : childs)
+	{
+		app->goManager->FastRemoveGameObject(go);
+	}
+	childs.clear();
+}
+
 GameObject * GameObject::GetParent() const
 {
 	return parent;
@@ -108,6 +128,29 @@ void GameObject::RemoveComponent(Component * cmp)
 bool GameObject::IsStatic() const
 {
 	return isStatic;
+}
+
+void GameObject::SetStatic(bool set)
+{
+	if (set != isStatic)
+	{
+		if (set)
+		{
+			app->goManager->EraseDynObj(this);
+			app->goManager->InsertToTree(this);
+		}
+		else
+		{
+			app->goManager->EraseFromTree(this);
+			app->goManager->AddDynObject(this);
+		}
+		isStatic = set;
+
+		for (auto go : childs)
+		{
+			go->SetStatic(set);
+		}
+	}
 }
 
 bool GameObject::IsActive() const
@@ -148,7 +191,7 @@ void GameObject::Disable()
 	}
 }
 
-void GameObject::PreUpdate(float dt)
+void GameObject::PreUpdate()
 {
 	for (auto cmp : componentsToRemove)
 	{
@@ -158,7 +201,6 @@ void GameObject::PreUpdate(float dt)
 			components.erase(it);
 			cmp->OnFinish();
 			RELEASE(cmp);
-			//TODO: Send event on game object destroyed
 		}
 	}
 	componentsToRemove.clear();
@@ -167,10 +209,12 @@ void GameObject::PreUpdate(float dt)
 void GameObject::Update(float dt)
 {
 	for (auto cmp : components)
-		cmp->OnPreUpdate(dt);
+		if(cmp->IsActive())
+			cmp->OnPreUpdate(dt);
 
 	for (auto cmp : components)
-		cmp->OnUpdate(dt);
+		if (cmp->IsActive())
+			cmp->OnUpdate(dt);
 }
 
 void GameObject::OnStart()
@@ -183,6 +227,15 @@ void GameObject::OnStart()
 
 void GameObject::OnFinish()
 {
+	if (isStatic)
+	{
+		app->goManager->EraseFromTree(this);
+	}
+	else
+	{
+		app->goManager->EraseDynObj(this);
+	}
+
 	for (auto cmp : components)
 	{
 		cmp->OnFinish();
@@ -195,6 +248,11 @@ void GameObject::OnEnable()
 	{
 		cmp->OnEnable();
 	}
+
+	for (auto go : childs)
+	{
+		go->Enable();
+	}
 }
 
 void GameObject::OnDisable()
@@ -202,6 +260,11 @@ void GameObject::OnDisable()
 	for (auto cmp : components)
 	{
 		cmp->OnDisable();
+	}
+
+	for (auto go : childs)
+	{
+		go->Disable();
 	}
 }
 
@@ -242,6 +305,70 @@ void GameObject::OnGameObjectDestroyed()
 	for (auto cmp : components)
 	{
 		cmp->OnGameObjectDestroyed();
+	}
+}
+
+void GameObject::RecCalcTransform(const float4x4 & parentTrans, bool force)
+{
+	//TODO
+	/*if (transform && transform->localHasChanged || forced)
+	{
+		if (isStatic)
+			SetStatic(false);
+
+		force = true;
+		wasDirty = true;
+		transform->UpdateTransform(parentTrans);
+
+		for (auto cmp : components)
+		{
+			cmp->OnTransformUpdate(transform);
+		}
+	}
+	else
+	{
+		wasDirty = false;
+	}
+
+	for (auto go : childs)
+	{
+		if (go && transform)
+		{
+			go->RecCalcTransform(transform->GetGlobalTransform(), force);
+		}
+	}*/
+}
+
+void GameObject::RecCalcBoxes()
+{
+	//TODO
+	/*if (wasDirty)
+	{
+		RecalcBox();
+
+		OBB o = enclosingBox;
+		if (o.IsFinite() && transform)
+		{
+			o.Transform(transform->GetGlobalTransform());
+			enclosingBox.SetFrom(o);
+		}
+	}
+
+	for (auto go : childs)
+	{
+		if (go && transform)
+			go->RecCalcBoxes();
+	}*/
+}
+
+void GameObject::RecalcBox()
+{
+	enclosingBox.SetNegativeInfinity();
+
+	for (auto cmp : components)
+	{
+		if (cmp->IsActive())
+			cmp->GetBox(enclosingBox);
 	}
 }
 
