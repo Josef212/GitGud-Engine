@@ -202,6 +202,16 @@ void EdConfig::Draw()
 			Camera* cam = app->camera->GetEditorCamera();
 			if (cam)
 			{
+				float3 pos = cam->frustum.Pos();
+				float3 front = cam->frustum.Front();
+				float3 up = cam->frustum.Up();
+
+				ImGui::DragFloat3("Pos", (float*)&pos);
+				ImGui::DragFloat3("Front", (float*)&front);
+				ImGui::DragFloat3("Up", (float*)&up);
+
+				ImGui::Separator();
+
 				Color col = cam->GetBackground();
 				if (ImGui::ColorEdit4("Backgorund", (float*)&col, false))
 					cam->SetBackground(col);

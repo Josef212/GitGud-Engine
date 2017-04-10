@@ -90,6 +90,9 @@ bool M_Renderer::Init(JsonFile* file)
 bool M_Renderer::Start()
 {
 	_LOG("Renderer: Start.");
+
+	TMPInit();
+
 	return true;
 }
 
@@ -107,7 +110,7 @@ UPDATE_RETURN M_Renderer::PreUpdate(float dt)
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	//glLoadIdentity();
 
 	return UPDT_CONTINUE;
 }
@@ -117,7 +120,7 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 	UPDATE_RETURN ret = UPDT_CONTINUE;
 
 
-
+	TMPDRAW();
 
 
 	//TODO: Editor state
@@ -155,4 +158,153 @@ void M_Renderer::SetVSync(bool set)
 void M_Renderer::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+void M_Renderer::TMPInit()
+{
+	float vertices[] = {
+		-0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f, 
+		0.5f,  0.5f, -0.5f, 
+		0.5f,  0.5f, -0.5f, 
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+
+		-0.5f, -0.5f,  0.5f,
+		0.5f, -0.5f,  0.5f, 
+		0.5f,  0.5f,  0.5f, 
+		0.5f,  0.5f,  0.5f, 
+		-0.5f,  0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+
+		0.5f,  0.5f,  0.5f, 
+		0.5f,  0.5f, -0.5f, 
+		0.5f, -0.5f, -0.5f, 
+		0.5f, -0.5f, -0.5f, 
+		0.5f, -0.5f,  0.5f, 
+		0.5f,  0.5f,  0.5f, 
+
+		-0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f, 
+		0.5f, -0.5f,  0.5f, 
+		0.5f, -0.5f,  0.5f, 
+		-0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f, -0.5f,
+
+		-0.5f,  0.5f, -0.5f,
+		0.5f,  0.5f, -0.5f, 
+		0.5f,  0.5f,  0.5f, 
+		0.5f,  0.5f,  0.5f, 
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+	};
+
+	glGenVertexArrays(1, &containrtVAO);
+	glGenBuffers(1, &VBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindVertexArray(containrtVAO);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(0);
+
+	std::string vertexCode = std::string(
+		"#version 330 core\n"
+		"layout(location = 0) in vec3 position;\n"
+		"uniform mat4 model;\n"
+		"uniform mat4 view;\n"
+		"uniform mat4 projection;\n"
+		"void main()\n"
+		"{\n"
+		"	gl_Position = projection * view * model * vec4(position, 1.0);\n"
+		"}\n"
+	);
+
+	std::string fragCode = std::string(
+		"#version 330 core\n"
+		"out vec4 color;\n"
+		"void main()\n"
+		"{\n"
+		"	color = vec4(1.0, 0.0, 0.0, 1.0);\n"
+		"}\n"
+	);
+
+	const char* str = vertexCode.c_str();
+	uint vertexShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &str, nullptr);
+	glCompileShader(vertexShader);
+
+	GLint success;
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (success == 0)
+	{
+		GLchar infoLog[512];
+		glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
+		_LOG("Vertex shader compilation error: %s.", infoLog);
+	}
+
+	str = fragCode.c_str();
+	uint fragShader;
+	fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragShader, 1, &str, nullptr);
+	glCompileShader(fragShader);
+
+	glGetShaderiv(fragShader, GL_COMPILE_STATUS, &success);
+	if (success == 0)
+	{
+		GLchar infoLog[512];
+		glGetShaderInfoLog(fragShader, 512, nullptr, infoLog);
+		_LOG("Fragment shader compilation error: %s.", infoLog);
+	}
+
+	shader = glCreateProgram();
+	glAttachShader(shader, vertexShader);
+	glAttachShader(shader, fragShader);
+	glLinkProgram(shader);
+
+	glGetProgramiv(shader, GL_LINK_STATUS, &success);
+	if (success == 0)
+	{
+		GLchar infoLog[512];
+		glGetProgramInfoLog(shader, 512, nullptr, infoLog);
+		_LOG("Shader link error: %s.", infoLog);
+	}
+
+	glDetachShader(shader, vertexShader);
+	glDetachShader(shader, fragShader);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragShader);
+}
+
+void M_Renderer::TMPDRAW()
+{
+	glBindVertexArray(containrtVAO);
+	glUseProgram(shader);
+
+	int viewLoc = glGetUniformLocation(shader, "view");
+	int modelLoc = glGetUniformLocation(shader, "model");
+	int projLoc = glGetUniformLocation(shader, "projection");
+
+	Camera* cam = app->camera->GetEditorCamera();
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, cam->GetGLViewMatrix());
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, cam->GetGLProjectionMatrix());
+	float4x4 model = float4x4::identity;
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.Transposed().ptr());
+
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+	glUseProgram(0);
+	glBindVertexArray(0);
 }

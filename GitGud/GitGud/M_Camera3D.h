@@ -22,7 +22,15 @@ public:
 	GameObject* GetEditorCamObj()const;
 	Camera* GetEditorCamera()const;
 
+	void Look(const float3& position, const float3& reference, bool rotateAroundReference = false);
+	void LookAt(const float3& spot);
+	void LookAt(float dx, float dy);
+
 private:
+	void Move(float dt);
+	void Rotate(float dt);
+	void Orbit(float dx, float dt);
+	void Zoom(float dt);
 
 public:
 	float movSpeed = 10.f;
