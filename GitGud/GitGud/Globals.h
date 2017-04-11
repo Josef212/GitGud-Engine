@@ -58,4 +58,43 @@ enum UPDATE_RETURN
 #define WIN_HEIGHT 720
 #define WIN_SCALE 1
 
+//PATHS ========================
+
+#define MESH_SAVE_PATH "Data/Library/Meshes/"
+#define TEXTURE_SAVE_PATH "Data/Library/Textures/"
+#define MATERIAL_SAVE_PATH "Data/Library/Materials/"
+#define SHADER_SAVE_PATH "Data/Library/Shaders/"
+
+#define SCENE_SAVE_PATH "Data/Scenes/"
+#define PREFABS_SAVE_PATH "Data/Prefabs/"
+
+#define CONFIG_PATH "Data/Configuration/"
+#define RESOURCES_PATH "Data/Resources/"
+
+#define ASSETS_SCENE_PATH "Data/Assets/Models/"
+#define ASSETS_TEXTURES_PATH "Data/Assets/Textures/"
+
+#define MESH_EXTENSION ".ggmesh"
+#define TEXTURE_EXTENSION ".ggtex"
+#define MATERIAL_EXTENSION ".ggmat"
+
+// URLS ========================
+
+#define URL_GITHUB "https://github.com/Josef212"
+#define URL_REPO "https://github.com/Josef212/GitGud-Engine"
+#define URL_RELEASES "https://github.com/Josef212/GitGud-Engine/releases"
+#define URL_ISSUES "https://github.com/Josef212/GitGud-Engine/issues"
+#define URL_PAGE ""
+
+#define URL_SDL2 "https://www.libsdl.org/download-2.0.php"
+#define URL_OPENGL "https://www.opengl.org/"
+#define URL_ASSIMP "http://www.assimp.org/"
+#define URL_DEVIL "http://openil.sourceforge.net/"
+#define URL_IMGUI "https://github.com/ocornut/imgui"
+#define URL_PHYSFS "https://icculus.org/physfs/"
+#define URL_GLEW "http://glew.sourceforge.net/"
+#define URL_PARSON "https://github.com/kgabis/parson"
+
+
+
 #endif // !__GLOBALS_H__

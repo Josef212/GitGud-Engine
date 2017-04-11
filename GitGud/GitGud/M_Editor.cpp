@@ -55,7 +55,7 @@ bool M_Editor::Init(JsonFile* file)
 
 	ImGui_ImplSdlGL3_Init(app->win->GetWindow());
 
-	SetStyle("settings/style.json");
+	SetStyle((CONFIG_PATH + std::string("style.json")).c_str());
 
 	return true;
 }
@@ -127,6 +127,30 @@ UPDATE_RETURN M_Editor::Update(float dt)
 		if (ImGui::BeginMenu("Other"))
 		{
 			ImGui::MenuItem("ImGui demo", nullptr, &showImGuiDemo);
+			if (ImGui::BeginMenu("3rd party"))
+			{
+				if (ImGui::MenuItem("SDL2")) app->Browse(URL_SDL2);
+				if (ImGui::MenuItem("OpenGL")) app->Browse(URL_OPENGL);
+				if (ImGui::MenuItem("Assimp")) app->Browse(URL_ASSIMP);
+				if (ImGui::MenuItem("Devil")) app->Browse(URL_DEVIL);
+				if (ImGui::MenuItem("ImGui")) app->Browse(URL_IMGUI);
+				if (ImGui::MenuItem("PhysFs")) app->Browse(URL_PHYSFS);
+				if (ImGui::MenuItem("Glew")) app->Browse(URL_GLEW);
+				if (ImGui::MenuItem("Parson")) app->Browse(URL_PARSON);
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("About me"))
+			{
+				if (ImGui::MenuItem("Repository")) app->Browse(URL_REPO);
+				if (ImGui::MenuItem("Github")) app->Browse(URL_GITHUB);
+				if (ImGui::MenuItem("Issues")) app->Browse(URL_ISSUES);
+				if (ImGui::MenuItem("Releases")) app->Browse(URL_RELEASES);
+				if (ImGui::MenuItem("Web")) ;
+
+				ImGui::EndMenu();
+			}
 
 			ImGui::EndMenu();
 		}
@@ -265,7 +289,7 @@ void M_Editor::SaveStyle(ImGuiStyle * style)
 
 	if (buffer && size > 0)
 	{
-		std::string savePath("settings/style.json");
+		std::string savePath(CONFIG_PATH + std::string("style.json"));
 		if (app->fs->Save(savePath.c_str(), buffer, size) != size)
 		{
 			_LOG("EDITOR_ERROR: Could not save style file in [%s].", savePath.c_str());
@@ -344,7 +368,7 @@ void M_Editor::SetStyleEditorWin()
 
 		if (ImGui::Button("Save style")) SaveStyle(&style);
 		ImGui::SameLine();
-		if (ImGui::Button("Set default imgui style")) SetStyle("settings/default_imgui_style.json");
+		if (ImGui::Button("Set default imgui style")) SetStyle((CONFIG_PATH + std::string("default_imgui_style.json")).c_str());
 
 		ImGui::End();
 	}

@@ -16,6 +16,7 @@ M_FileSystem::M_FileSystem(const char* name, bool startEnabled) : Module(name, s
 	SDL_free(basePath);
 
 	AddPath(".");
+	AddPath("Data/");
 }
 
 M_FileSystem::~M_FileSystem()
