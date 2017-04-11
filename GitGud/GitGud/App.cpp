@@ -11,6 +11,7 @@
 #include "M_Window.h"
 #include "M_Input.h"
 #include "M_Editor.h"
+#include "M_ResourceManager.h"
 #include "M_GoManager.h"
 #include "M_Camera3D.h"
 
@@ -34,7 +35,7 @@ struct C_Quit : public Command
 }c_Quit;
 //-----------------------------------------------
 
-App::App(int argv, char** argc) : currentConfigSaveFileDir("settings/config.json")
+App::App(int argv, char** argc) : currentConfigSaveFileDir(CONFIG_PATH + (std::string("config.json")))
 {
 	_LOG("App: Creation  =======================");
 	this->argv = argv;
@@ -56,6 +57,7 @@ App::App(int argv, char** argc) : currentConfigSaveFileDir("settings/config.json
 	fs = new M_FileSystem("module_file_system");
 	win = new M_Window("module_window");
 	input = new M_Input("module_input");
+	resources = new M_ResourceManager("module_resource_manager");
 	goManager = new M_GoManager("module_go_manager");
 	camera = new M_Camera3D("module_camera_editor");
 
@@ -67,6 +69,7 @@ App::App(int argv, char** argc) : currentConfigSaveFileDir("settings/config.json
 	modules.push_back(fs);
 	modules.push_back(win);
 	modules.push_back(input);
+	modules.push_back(resources);
 	modules.push_back(goManager);
 	modules.push_back(camera);
 
@@ -270,7 +273,7 @@ void App::SetConfigSavePath(const char * path)
 
 void App::ResetConfig()
 {
-	currentConfigSaveFileDir = "settings/default_config.json";
+	currentConfigSaveFileDir = (CONFIG_PATH + std::string("default_config.json"));
 }
 
 void App::PrepareUpdate()

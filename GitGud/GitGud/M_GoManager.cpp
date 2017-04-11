@@ -103,8 +103,7 @@ GameObject * M_GoManager::GetRoot() const
 
 GameObject * M_GoManager::GetGOFromUid(UID uuid) const
 {
-	//TODO
-	return nullptr;
+	return GetGoFromUID(root, uuid);
 }
 
 GameObject * M_GoManager::GetSelected() const
@@ -279,4 +278,22 @@ void M_GoManager::DoUpdate(GameObject * obj, float dt)
 			DoUpdate(go, dt);
 		}
 	}
+}
+
+GameObject * M_GoManager::GetGoFromUID(GameObject * obj, UID uuid) const
+{
+	if(!obj || uuid == 0)
+		return nullptr;
+
+	if (obj->GetUuid() == uuid)
+		return obj;
+
+	GameObject* ret = nullptr;
+
+	for (std::vector<GameObject*>::iterator it = obj->childs.begin(); it != obj->childs.end() && ret == nullptr; ++it)
+	{
+		ret = GetGoFromUID((*it), uuid);
+	}
+
+	return ret;
 }

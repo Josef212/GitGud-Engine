@@ -67,6 +67,15 @@
     <Filter Include="Engine\GamObjects\Components">
       <UniqueIdentifier>{f41575a5-fcea-4581-9185-4cf3c9ffc300}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\ResourceManagement">
+      <UniqueIdentifier>{227c8778-8eee-4757-ae48-3dacafea47f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Resources">
+      <UniqueIdentifier>{8709ffb4-2c0d-4f3c-990f-1f6172d0b1c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Importers">
+      <UniqueIdentifier>{cfdec2df-6c11-4487-8ab0-b30a015a877f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -275,6 +284,39 @@
     </ClCompile>
     <ClCompile Include="M_Camera3D.cpp">
       <Filter>Engine\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="M_ResourceManager.cpp">
+      <Filter>Engine\ResourceManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMaterial.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMesh.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceScene.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceShader.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceTexture.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterMaterial.cpp">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterMesh.cpp">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterScene.cpp">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterShader.cpp">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterTexture.cpp">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -589,6 +631,45 @@
     </ClInclude>
     <ClInclude Include="M_Camera3D.h">
       <Filter>Engine\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="M_ResourceManager.h">
+      <Filter>Engine\ResourceManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer.h">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceTexture.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMaterial.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMesh.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceScene.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceShader.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterTexture.h">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterMaterial.h">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterMesh.h">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterScene.h">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterShader.h">
+      <Filter>Engine\ResourceManagement\Importers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

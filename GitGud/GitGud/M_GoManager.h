@@ -52,6 +52,8 @@ private:
 	void DoPreUpdate(GameObject* obj);
 	void DoUpdate(GameObject* obj, float dt);
 
+	GameObject* GetGoFromUID(GameObject* obj, UID uuid)const;
+
 
 public:
 	bool anyGOTransHasChanged = true;
