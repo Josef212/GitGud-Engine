@@ -11,11 +11,11 @@
 Camera::Camera(GameObject* object) : Component(object, CMP_CAMERA)
 {
 	frustum.SetPos(float3(0.f, 0.f, 0.f));
-	frustum.SetFront(float3(0.f, 0.f, -1.f));
+	frustum.SetFront(float3(0.f, 0.f, 1.f));
 	frustum.SetUp(float3(0.f, 1.f, 0.f));
 
 	frustum.SetViewPlaneDistances(1.f, 100.f);
-	frustum.SetVerticalFovAndAspectRatio(45.f, aspectRatio);
+	frustum.SetVerticalFovAndAspectRatio(45.f * DEGTORAD, aspectRatio);
 	camType = CAM_PERSPECTIVE;
 }
 
@@ -26,13 +26,16 @@ Camera::~Camera()
 
 float Camera::GetFOV() const
 {
-	return frustum.VerticalFov();
+	return frustum.VerticalFov() * RADTODEG;
 }
 
 void Camera::SetFOV(float vFov)
 {
-	frustum.SetVerticalFovAndAspectRatio(vFov, aspectRatio);
-	projectionMatChaged = true;
+	if (vFov > 0.5f)
+	{
+		frustum.SetVerticalFovAndAspectRatio(vFov * DEGTORAD, aspectRatio);
+		projectionMatChaged = true;
+	}
 }
 
 float Camera::GetOthogonalSize() const

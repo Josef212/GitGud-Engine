@@ -126,7 +126,7 @@ void M_Camera3D::Move(float dt)
 	if (!movement.Equals(float3::zero))
 	{
 		movement *= (speed * dt);
-		frust->Translate(movement);
+		frust->SetPos(frust->Pos() + movement);
 	}
 }
 

@@ -33,8 +33,8 @@ private:
 	void Zoom(float dt);
 
 public:
-	float movSpeed = 10.f;
-	float rotSpeed = 3.f;
+	float movSpeed = 5.f;
+	float rotSpeed = 2.f;
 	float zoomSpeed = 500.f;
 
 private:

@@ -241,7 +241,7 @@ void EdConfig::Draw()
 				if (type == CAM_PERSPECTIVE)
 				{
 					float fov = cam->GetFOV();
-					if (ImGui::DragFloat("FOV", &fov)) cam->SetFOV(fov);
+					if (ImGui::DragFloat("FOV", &fov, 0.5f, 10.0f)) cam->SetFOV(fov);
 				}
 				else
 				{
