@@ -16,7 +16,7 @@ M_FileSystem::M_FileSystem(const char* name, bool startEnabled) : Module(name, s
 	SDL_free(basePath);
 
 	AddPath(".");
-	AddPath("Data/");
+	AddPath("./Data/");
 }
 
 M_FileSystem::~M_FileSystem()
@@ -44,7 +44,6 @@ bool M_FileSystem::Init(JsonFile* file)
 
 		_LOG("Fs: Base path: %s\n", GetBaseDir());
 
-		AddPath("settings");
 	}
 
 	return ret;
