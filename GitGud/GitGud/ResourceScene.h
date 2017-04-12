@@ -9,6 +9,9 @@ class ResourceScene : public Resource
 public:
 	ResourceScene(UID uuid);
 	virtual ~ResourceScene();
+
+	bool LoadInMemory()override;
+	bool RemoveFromMemory()override;
 };
 
 #endif // !__RESOURCE_SCENE_H__

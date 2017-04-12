@@ -9,6 +9,9 @@ class ResourceMesh : public Resource
 public:
 	ResourceMesh(UID uuid);
 	virtual ~ResourceMesh();
+
+	bool LoadInMemory()override;
+	bool RemoveFromMemory()override;
 };
 
 #endif // !__RESOURCE_MESH_H__

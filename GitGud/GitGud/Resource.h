@@ -18,7 +18,7 @@ enum RESOURCE_TYPE
 class Resource
 {
 public:
-	Resource(UID uuid, RESOURCE_TYPE resType)
+	Resource(UID uuid, RESOURCE_TYPE resType) : uuid(uuid), type(resType)
 	{}
 
 	virtual ~Resource()
