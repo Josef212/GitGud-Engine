@@ -17,5 +17,9 @@
 
   "module_renderer": {
     "vsync": true
+  },
+
+  "module_resource_manager" : {
+    "resource_file" : "resources.json"
   }
 }
