@@ -4,8 +4,11 @@
 #include "M_Window.h"
 #include "M_Editor.h"
 #include "M_Camera3D.h"
+#include "M_ResourceManager.h"
 
 #include "Camera.h"
+
+#include "ResourceMesh.h"
 
 #include "OpenGL.h"
 
@@ -110,7 +113,6 @@ UPDATE_RETURN M_Renderer::PreUpdate(float dt)
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glLoadIdentity();
 
 	return UPDT_CONTINUE;
 }
@@ -222,21 +224,33 @@ void M_Renderer::TMPInit()
 	std::string vertexCode = std::string(
 		"#version 330 core\n"
 		"layout(location = 0) in vec3 position;\n"
+		"layout(location = 1) in vec3 normal;\n"
+		"layout(location = 2) in vec2 uv;\n"
+		"layout(location = 3) in vec3 color;\n"
 		"uniform mat4 model;\n"
 		"uniform mat4 view;\n"
 		"uniform mat4 projection;\n"
+		"out vec3 outNormal;\n"
+		"out vec2 outUv;\n"
+		"out vec3 outColor;\n"
 		"void main()\n"
 		"{\n"
 		"	gl_Position = projection * view * model * vec4(position, 1.0);\n"
+		"	outNormal = normal;\n"
+		"	outUv = uv;\n"
+		"	outColor = color;\n"
 		"}\n"
 	);
 
 	std::string fragCode = std::string(
 		"#version 330 core\n"
+		"in vec3 outNormal;\n"
+		"in vec2 outUv;\n"
+		"in vec3 outColor;\n"
 		"out vec4 color;\n"
 		"void main()\n"
 		"{\n"
-		"	color = vec4(1.0, 0.0, 0.0, 1.0);\n"
+		"	color = vec4(outColor, 1.0);\n"
 		"}\n"
 	);
 
@@ -290,7 +304,10 @@ void M_Renderer::TMPInit()
 
 void M_Renderer::TMPDRAW()
 {
-	glBindVertexArray(containrtVAO);
+	ResourceMesh* r = app->resources->cube;
+
+	glBindVertexArray(r->idContainer);
+	//glBindVertexArray(containrtVAO);
 	glUseProgram(shader);
 
 	int viewLoc = glGetUniformLocation(shader, "view");
@@ -303,8 +320,12 @@ void M_Renderer::TMPDRAW()
 	float4x4 model = float4x4::identity;
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.Transposed().ptr());
 
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	//glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r->idIndices);
+	glDrawElements(GL_TRIANGLES, r->numIndices, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
+

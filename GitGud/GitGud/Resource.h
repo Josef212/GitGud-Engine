@@ -76,6 +76,16 @@ public:
 		return ret;
 	}
 
+	void AddInstance()
+	{
+		++instancesLoaded;
+	}
+
+	void RemoveInstance()
+	{
+		--instancesLoaded;
+	}
+
 	virtual void Save(JsonFile& file)
 	{
 		file.AddInt("UID", uuid);

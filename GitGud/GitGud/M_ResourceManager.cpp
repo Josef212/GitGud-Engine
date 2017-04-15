@@ -275,4 +275,9 @@ void M_ResourceManager::LoadBasicResources()
 {
 	checkers = (ResourceTexture*)CreateResource(RES_TEXTURE, 1);
 	textureImporter->LoadChequers(checkers);
+	checkers->AddInstance();
+
+	cube = (ResourceMesh*)CreateResource(RES_MESH, 2);
+	meshImporter->LoadCube(cube);
+	cube->AddInstance();
 }
