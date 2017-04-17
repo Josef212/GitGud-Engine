@@ -19,6 +19,7 @@ public:
 
 private:
 	void DrawTrans(GameObject* selected);
+	void DrawMesh(GameObject* selected, Mesh* mesh);
 	void DrawCamera(GameObject* selected, Camera* cam);
 };
 

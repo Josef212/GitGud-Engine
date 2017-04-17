@@ -4,8 +4,13 @@
 #include "App.h"
 #include "M_GoManager.h"
 #include "GameObject.h"
+#include "Component.h"
+#include "ComponentResource.h"
 #include "Transform.h"
+#include "Mesh.h"
 #include "Camera.h"
+
+#include "ResourceMesh.h"
 
 EdInspector::EdInspector(bool startEnabled) : EdWin(startEnabled)
 {
@@ -60,8 +65,13 @@ void EdInspector::Draw()
 					case CMP_TRANSFORM:
 						DrawTrans(selected);
 						break;
+
+					case CMP_MESH:
+						DrawMesh(selected, (Mesh*)cmp);
+						break;
 					case CMP_CAMERA:
 						DrawCamera(selected, (Camera*)cmp);
+						break;
 					}
 				}
 			}
@@ -107,7 +117,60 @@ void EdInspector::DrawTrans(GameObject * selected)
 		ImGui::Separator();
 
 		ImGui::DragFloat3("Global pos", (float*)&trans->GetGlobalPosition());
+		ImGui::Separator();
+		ImGui::Text("Global transform");
+		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[0]);
+		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[1]);
+		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[2]);
+		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[3]);
 		
+	}
+}
+
+void EdInspector::DrawMesh(GameObject * selected, Mesh * mesh)
+{
+	if (mesh)
+	{
+		if (ImGui::CollapsingHeader("Mesh"))
+		{
+			bool meshActive = mesh->IsActive();
+			if (ImGui::Checkbox("Mesh active", &meshActive)) mesh->SetActive(meshActive);
+
+			if (ImGui::Button("Remove mesh"))selected->RemoveComponent(mesh);
+
+			ResourceMesh* r = (ResourceMesh*)mesh->GetResource();
+
+			ImGui::Text("Resource mesh ID: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d.", mesh->GetResourceUID());
+
+			if (r)
+			{
+				ImGui::Text("Original file: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), r->GetOriginalFile());
+
+				ImGui::Text("Exported file: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), r->GetExportedFile());
+
+				ImGui::Separator();
+
+				ImGui::Text("Num indices: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d", r->numIndices);
+
+				ImGui::Text("Num vertices: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d", r->numVertices);
+			}
+
+			ImGui::Checkbox("Wirframe", &mesh->renderWirefreame);
+			ImGui::SameLine();
+			ImGui::Checkbox("Normals", &mesh->renderNormals);
+
+			ImGui::ColorEdit4("Tint", &mesh->tint);
+		}
 	}
 }
 
@@ -117,6 +180,11 @@ void EdInspector::DrawCamera(GameObject * selected, Camera * cam)
 	{
 		if (ImGui::CollapsingHeader("Frustum camera"))
 		{
+			bool camActive = cam->IsActive();
+			if (ImGui::Checkbox("Camera active", &camActive)) cam->SetActive(camActive);
+
+			if (ImGui::Button("Remove camera"))selected->RemoveComponent(cam);
+
 			ImGui::ColorEdit4("Backgorund", (float*)&cam->backgorund, false);
 
 			float nearP = cam->GetNearPlaneDist();
