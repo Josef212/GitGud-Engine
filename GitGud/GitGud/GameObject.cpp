@@ -6,7 +6,9 @@
 #include "JsonFile.h"
 
 #include "Transform.h"
+#include "Mesh.h"
 #include "Camera.h"
+#include "Material.h"
 
 GameObject::GameObject(GameObject * parent, UID uuid) : parent(parent), uuid(uuid)
 {
@@ -63,8 +65,10 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE type)
 		}
 		break;
 	case CMP_MESH:
+		ret = new Mesh(this);
 		break;
 	case CMP_MATERIAL:
+		ret = new Material(this);
 		break;
 	case CMP_CAMERA:
 		ret = new Camera(this);
