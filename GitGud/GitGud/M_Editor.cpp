@@ -118,6 +118,7 @@ UPDATE_RETURN M_Editor::Update(float dt)
 			GameObject* selected = app->goManager->GetSelected();
 
 			if (ImGui::MenuItem("Transform")) if (selected) selected->CreateComponent(CMP_TRANSFORM);
+			if (ImGui::MenuItem("Mesh")) if (selected) selected->CreateComponent(CMP_MESH);
 			if (ImGui::MenuItem("Camera")) if (selected) selected->CreateComponent(CMP_CAMERA);
 
 			ImGui::EndMenu();
