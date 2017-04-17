@@ -58,6 +58,7 @@ bool M_ResourceManager::Start()
 {
 	_LOG("Resource manager: Start.");
 
+	ImportFile("Data/Assets/Models/MechaT.fbx");
 	LoadBasicResources();
 	LoadResources();
 
@@ -112,6 +113,8 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 	case RES_MATERIAL:
 		break;
 	case RES_SCENE:
+		//TODO: Paths
+		success = sceneImporter->Import(fileName, exported, ext.c_str(), resid);
 		break;
 	case RES_SHADER:
 		break;
@@ -134,6 +137,52 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 		_LOG("Could not import file [%s].", fileName);
 	}
 	
+	return ret;
+}
+
+UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE type, const char * sourceFile)
+{
+	UID ret = 0;
+
+	if (!buffer)
+		return ret;
+
+	bool succes = false;
+	std::string output;
+
+	switch (type)
+	{
+	case RES_MESH:
+		succes = meshImporter->ImportMesh((const aiMesh*)buffer, output, ret);
+		break;
+	case RES_TEXTURE:
+		
+		break;
+	case RES_MATERIAL:
+		succes = materialImporter->Import((const aiMaterial*)buffer, output, ret, sourceFile);
+		break;
+	case RES_SCENE:
+		break;
+	case RES_SHADER:
+		break;
+	}
+
+	if (succes && ret != 0)
+	{
+		Resource* res = CreateResource(type, ret);
+		if (sourceFile)
+		{
+			res->originalFile = sourceFile;
+			app->fs->NormalizePath(res->originalFile);
+		}
+		res->exportedFile = output;
+		_LOG("Imported a buffer succesfully [%s].", output.c_str());
+	}
+	else
+	{
+		_LOG("ERROR: Could not import the buffer.");
+	}
+
 	return ret;
 }
 
