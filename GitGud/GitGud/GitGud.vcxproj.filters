@@ -318,6 +318,12 @@
     <ClCompile Include="ImporterTexture.cpp">
       <Filter>Engine\ResourceManagement\Importers</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Engine\GamObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Engine\GamObjects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -670,6 +676,12 @@
     </ClInclude>
     <ClInclude Include="ImporterShader.h">
       <Filter>Engine\ResourceManagement\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Engine\GamObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Engine\GamObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

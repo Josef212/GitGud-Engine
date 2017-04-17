@@ -77,6 +77,8 @@ enum UPDATE_RETURN
 #define MESH_EXTENSION ".ggmesh"
 #define TEXTURE_EXTENSION ".ggtex"
 #define MATERIAL_EXTENSION ".ggmat"
+#define SCENE_EXTENSION ".ggscene"
+#define PREFAB_EXTENSION ".ggprefab"
 
 // URLS ========================
 

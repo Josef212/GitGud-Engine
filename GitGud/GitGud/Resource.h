@@ -110,6 +110,8 @@ public:
 	std::string originalFile = "";
 	std::string exportedFile = "";
 
+	std::string name;
+
 protected:
 	RESOURCE_TYPE type;
 	UID uuid;
