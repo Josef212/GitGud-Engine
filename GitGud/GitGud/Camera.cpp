@@ -7,6 +7,8 @@
 
 #include "M_Renderer.h"
 
+#include "JsonFile.h"
+
 
 Camera::Camera(GameObject* object) : Component(object, CMP_CAMERA)
 {
@@ -207,8 +209,40 @@ void Camera::LookAt(const float3 spot)
 
 void Camera::OnSaveCmp(JsonFile & sect) const
 {
+	sect.AddInt("type", (int)type);
+	sect.AddBool("active", selfActive);
+	sect.AddInt("go_uuid", object->GetUuid());
+
+	sect.AddFloat("near_plane", frustum.NearPlaneDistance());
+	sect.AddFloat("far_plane", frustum.FarPlaneDistance());
+	sect.AddFloat("fov", frustum.VerticalFov());
+	sect.AddFloat("ar", frustum.AspectRatio());
+	//TODO: Save ortho mode etc
+
+	sect.AddFloat3("pos", frustum.Pos());
+	sect.AddFloat3("fornt", frustum.Front());
+	sect.AddFloat3("up", frustum.Up());
+
+	//TODO: Save if active
 }
 
 void Camera::OnLoadCmp(JsonFile * sect)
 {
+	if (sect)
+	{
+		selfActive = sect->GetBool("active", true);
+
+		float3 p = sect->GetFloat3("pos", float3(0.f, 0.f, 0.f));
+		float3 f = sect->GetFloat3("front", float3(0.f, 0.f, 1.f));
+		float3 u = sect->GetFloat3("up", float3(0.f, 1.f, 0.f));
+
+		float n = sect->GetFloat("near_plane", 100.f);
+		float fa = sect->GetFloat("far_plane", 100.f);
+		float fov = sect->GetFloat("fov", 45.f);
+		float ar = sect->GetFloat("ar", 16.f / 9.f);
+
+		frustum.SetFrame(p, f, u);
+		frustum.SetViewPlaneDistances(n, fa);
+		frustum.SetVerticalFovAndAspectRatio(fov, ar);
+	}
 }
