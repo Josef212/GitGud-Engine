@@ -18,16 +18,11 @@
 ImporterMesh::ImporterMesh() : Importer()
 {
 	_LOG("Mesh importer: Created.");
-
-	struct aiLogStream stream;
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
-	aiAttachLogStream(&stream);
 }
 
 
 ImporterMesh::~ImporterMesh()
 {
-	aiDetachAllLogStreams();
 }
 
 bool ImporterMesh::ImportMesh(const aiMesh * mesh, std::string & output, UID & id)
@@ -181,15 +176,16 @@ void ImporterMesh::GenBuffers(const ResourceMesh * res)
 
 			glBindVertexArray(res->idContainer);
 
+			//Vertices
+			glBindBuffer(GL_ARRAY_BUFFER, res->idVertices);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * res->numVertices * 3, res->vertices, GL_STATIC_DRAW);
+
 			//Indices
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, res->idIndices);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * res->numIndices, res->indices, GL_STATIC_DRAW);
 
 			//Vertices
-			glBindBuffer(GL_ARRAY_BUFFER, res->idVertices);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * res->numVertices * 3, res->vertices, GL_STATIC_DRAW);
-
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (GLvoid*)0);
 			glEnableVertexAttribArray(0);
 
 
@@ -199,7 +195,7 @@ void ImporterMesh::GenBuffers(const ResourceMesh * res)
 				glBindBuffer(GL_ARRAY_BUFFER, res->idNormals);
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * res->numVertices * 3, res->normals, GL_STATIC_DRAW);
 
-				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(3 * sizeof(float)));
+				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (GLvoid*)(3 * sizeof(float)));
 				glEnableVertexAttribArray(1);
 			}
 
@@ -209,7 +205,7 @@ void ImporterMesh::GenBuffers(const ResourceMesh * res)
 				glBindBuffer(GL_ARRAY_BUFFER, res->idUvs);
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * res->numVertices * 2, res->uvs, GL_STATIC_DRAW);
 
-				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(6 * sizeof(float)));
+				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)(6 * sizeof(float)));
 				glEnableVertexAttribArray(2);
 			}
 
@@ -220,10 +216,12 @@ void ImporterMesh::GenBuffers(const ResourceMesh * res)
 				glBindBuffer(GL_ARRAY_BUFFER, res->idColors);
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * res->numVertices * 3, res->colors, GL_STATIC_DRAW);
 
-				glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(8 * sizeof(float)));
+				glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (GLvoid*)(8 * sizeof(float)));
 				glEnableVertexAttribArray(3);
 			}
 
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindVertexArray(0);
 
 		}
@@ -316,7 +314,9 @@ bool ImporterMesh::LoadCube(ResourceMesh * res)
 
 	uint indices[6 * 6] = {
 		//Bottom
-		3, 1, 0,	3, 2, 1,
+		3, 1, 0,	
+		3, 2, 1,
+
 		//Left
 		3 + 4 * 1, 1 + 4 * 1, 0 + 4 * 1,
 		3 + 4 * 1, 2 + 4 * 1, 1 + 4 * 1,
@@ -409,17 +409,17 @@ bool ImporterMesh::LoadCube(ResourceMesh * res)
 
 	float colors[12 * 6] = {
 		//Bottom
-		0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,
+		1.0f, 0.0f, 0.0f,		0.0f, 1.0f, 0.0f,		0.0f, 0.0f, 1.0f,		1.0f, 1.0f, 1.0f,
 		//Left
-		0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,
+		1.0f, 0.0f, 0.0f,		0.0f, 1.0f, 0.0f,		0.0f, 0.0f, 1.0f,		1.0f, 1.0f, 1.0f,
 		//Front
-		0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,
+		1.0f, 0.0f, 0.0f,		0.0f, 1.0f, 0.0f,		0.0f, 0.0f, 1.0f,		1.0f, 1.0f, 1.0f,
 		//Back
-		0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,
+		1.0f, 0.0f, 0.0f,		0.0f, 1.0f, 0.0f,		0.0f, 0.0f, 1.0f,		1.0f, 1.0f, 1.0f,
 		//Right
-		0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,
+		1.0f, 0.0f, 0.0f,		0.0f, 1.0f, 0.0f,		0.0f, 0.0f, 1.0f,		1.0f, 1.0f, 1.0f,
 		//Top
-		0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f,	0.51f, 0.51f, 0.51f
+		1.0f, 0.0f, 0.0f,		0.0f, 1.0f, 0.0f,		0.0f, 0.0f, 1.0f,		1.0f, 1.0f, 1.0f
 	};
 
 	res->colors = new float[res->numVertices * 3];
