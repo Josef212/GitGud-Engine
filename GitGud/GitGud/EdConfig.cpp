@@ -251,6 +251,9 @@ void EdConfig::Draw()
 
 				bool culling = cam->IsCulling();
 				if (ImGui::Checkbox("Culling", &culling)) cam->SetCulling(culling);
+
+				ImGui::DragFloat("Move speed", &app->camera->movSpeed, 0.25f, 0.01f);
+				ImGui::DragFloat("Rot speed", &app->camera->rotSpeed, 0.25f, 0.01f);
 			}
 		}
 
