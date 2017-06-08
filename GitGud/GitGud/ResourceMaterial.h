@@ -44,31 +44,7 @@ enum RENDER_MODE
 
 struct MaterialProperty
 {
-	MaterialProperty()
-	{}
-	MaterialProperty(const char* propName, DATA_TYPE dType, void* data) : propertyName(propName), dataType(dType)
-	{
-		switch (dType)
-		{
-		case D_BOOL:
-			this->data.b = (bool)&data;
-			break;
-		case D_FLOAT:
-			this->data.f = (float)&data;
-			break;
-		case D_INT:
-			this->data.i = &data;
-			break;
-		case D_UINT:
-			this->data.ui = &data;
-			break;
-		case D_STRING:
-			this->data.str = data;
-			break;
-		}
-	}
-
-	union
+	union Data
 	{
 		bool b;
 		float f;
@@ -79,6 +55,7 @@ struct MaterialProperty
 
 	DATA_TYPE dataType;
 	std::string propertyName;
+
 };
 
 class ResourceMaterial : public Resource

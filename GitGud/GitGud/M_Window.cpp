@@ -32,7 +32,6 @@ bool M_Window::Init(JsonFile* file)
 	}
 	else
 	{
-		//TODO: Config
 		winScale = file->GetInt("screen_scale", 1);
 		width = file->GetInt("width", 1920);
 		height = file->GetInt("height", 1080);
@@ -44,7 +43,7 @@ bool M_Window::Init(JsonFile* file)
 
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED;
 
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3); //TODO: OpenGL version on config??
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
@@ -252,10 +251,8 @@ bool M_Window::SetBrightness(float bright)
 {
 	bool ret = true;
 
-	if (bright < 0.0f)
-		bright = 0.0f;
-	if (bright > 1.0f)
-		bright = 1.0f;
+	bright = CAP01(bright);
+
 	if (window)
 	{
 		if (SDL_SetWindowBrightness(window, bright) < 0)
