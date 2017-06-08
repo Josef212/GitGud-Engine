@@ -26,6 +26,8 @@ M_Camera3D::M_Camera3D(const char* name, bool startEnabled) : Module(name, start
 
 M_Camera3D::~M_Camera3D()
 {
+	RELEASE(editorCameraObj);
+
 	_LOG("EditrCamera3D: Destroying.");
 }
 

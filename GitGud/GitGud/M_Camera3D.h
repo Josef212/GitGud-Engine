@@ -29,7 +29,7 @@ public:
 private:
 	void Move(float dt);
 	void Rotate(float dt);
-	void Orbit(float dx, float dt);
+	void Orbit(float dx, float dy);
 	void Zoom(float dt);
 
 public:
