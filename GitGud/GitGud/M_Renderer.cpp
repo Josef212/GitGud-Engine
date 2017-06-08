@@ -97,7 +97,11 @@ bool M_Renderer::Start()
 {
 	_LOG("Renderer: Start.");
 
-	TMPInit();
+	//TMP
+	CreateShader();
+	LoadGeometry();
+
+	//-----------------
 
 	return true;
 }
@@ -124,9 +128,11 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 {
 	UPDATE_RETURN ret = UPDT_CONTINUE;
 
+	//TMP
+	Draw();
+	//------------
 
-	TMPDRAW();
-
+	//TODO: Debug draw
 
 	//TODO: Editor state
 	app->editor->DrawEditor();
@@ -165,95 +171,23 @@ void M_Renderer::OnResize(int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void M_Renderer::TMPInit()
+void M_Renderer::CreateShader()
 {
-	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f, 
-		0.5f,  0.5f, -0.5f, 
-		0.5f,  0.5f, -0.5f, 
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-
-		-0.5f, -0.5f,  0.5f,
-		0.5f, -0.5f,  0.5f, 
-		0.5f,  0.5f,  0.5f, 
-		0.5f,  0.5f,  0.5f, 
-		-0.5f,  0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
-
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-
-		0.5f,  0.5f,  0.5f, 
-		0.5f,  0.5f, -0.5f, 
-		0.5f, -0.5f, -0.5f, 
-		0.5f, -0.5f, -0.5f, 
-		0.5f, -0.5f,  0.5f, 
-		0.5f,  0.5f,  0.5f, 
-
-		-0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f, 
-		0.5f, -0.5f,  0.5f, 
-		0.5f, -0.5f,  0.5f, 
-		-0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f, -0.5f,
-
-		-0.5f,  0.5f, -0.5f,
-		0.5f,  0.5f, -0.5f, 
-		0.5f,  0.5f,  0.5f, 
-		0.5f,  0.5f,  0.5f, 
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
-	};
-
-	glGenVertexArrays(1, &containrtVAO);
-	glGenBuffers(1, &VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindVertexArray(containrtVAO);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindVertexArray(0);
-
 	std::string vertexCode = std::string(
 		"#version 330 core\n"
 		"layout(location = 0) in vec3 position;\n"
-		"layout(location = 1) in vec3 normal;\n"
-		"layout(location = 2) in vec2 uv;\n"
-		"layout(location = 3) in vec3 color;\n"
-		"uniform mat4 model;\n"
-		"uniform mat4 view;\n"
-		"uniform mat4 projection;\n"
-		"out vec3 outNormal;\n"
-		"out vec2 outUv;\n"
-		"out vec3 outColor;\n"
 		"void main()\n"
 		"{\n"
-		"	gl_Position = projection * view * model * vec4(position, 1.0);\n"
-		"	outNormal = normal;\n"
-		"	outUv = uv;\n"
-		"	outColor = color;\n"
+		"	gl_Position = vec4(position, 1.0);\n"
 		"}\n"
 	);
 
 	std::string fragCode = std::string(
 		"#version 330 core\n"
-		"in vec3 outNormal;\n"
-		"in vec2 outUv;\n"
-		"in vec3 outColor;\n"
-		"out vec4 color;\n"
+		"out vec4 FragColor;\n"
 		"void main()\n"
 		"{\n"
-		"	color = vec4(outColor, 1.0);\n"
+		"	FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
 		"}\n"
 	);
 
@@ -303,32 +237,86 @@ void M_Renderer::TMPInit()
 	glDetachShader(shader, fragShader);
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragShader);
-}
 
-void M_Renderer::TMPDRAW()
-{
-	ResourceMesh* r = app->resources->cube;
-
-	glBindVertexArray(r->idContainer);
-	//glBindVertexArray(containrtVAO);
-	glUseProgram(shader);
-
-	int viewLoc = glGetUniformLocation(shader, "view");
+	/*int viewLoc = glGetUniformLocation(shader, "view");
 	int modelLoc = glGetUniformLocation(shader, "model");
-	int projLoc = glGetUniformLocation(shader, "projection");
-
-	Camera* cam = app->camera->GetEditorCamera();
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, cam->GetGLViewMatrix());
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, cam->GetGLProjectionMatrix());
-	float4x4 model = float4x4::identity;
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.Transposed().ptr());
-
-	//glDrawArrays(GL_TRIANGLES, 0, 36);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r->idIndices);
-	glDrawElements(GL_TRIANGLES, r->numIndices, GL_UNSIGNED_INT, 0);
-
-	glUseProgram(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	int projLoc = glGetUniformLocation(shader, "projection");*/
 }
 
+void M_Renderer::LoadGeometry()
+{
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		0.0f,  0.5f, 0.0f
+	};
+
+	unsigned int indices[] = {  // note that we start from 0!
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	};
+
+	uint VBO = 0, EBO = 0;
+
+	//glUseProgram(shader);
+
+	glGenVertexArrays(1, &containerVAO);
+
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(containerVAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	//glUseProgram(0);
+}
+
+void M_Renderer::Draw()
+{
+	glUseProgram(shader);
+	glBindVertexArray(containerVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glUseProgram(0);
+}
+
+/*
+std::string vertexCode = std::string(
+"#version 330 core\n"
+"layout(location = 0) in vec3 position;\n"
+"layout(location = 1) in vec3 normal;\n"
+"layout(location = 2) in vec2 uv;\n"
+"layout(location = 3) in vec3 color;\n"
+"uniform mat4 model;\n"
+"uniform mat4 view;\n"
+"uniform mat4 projection;\n"
+"out vec3 outNormal;\n"
+"out vec2 outUv;\n"
+"out vec3 outColor;\n"
+"void main()\n"
+"{\n"
+"	gl_Position = projection * view * model * vec4(position, 1.0);\n"
+"	outNormal = normal;\n"
+"	outUv = uv;\n"
+"	outColor = color;\n"
+"}\n"
+);
+
+std::string fragCode = std::string(
+"#version 330 core\n"
+"in vec3 outNormal;\n"
+"in vec2 outUv;\n"
+"in vec3 outColor;\n"
+"out vec4 color;\n"
+"void main()\n"
+"{\n"
+"	color = vec4(outColor, 1.0);\n"
+"}\n"
+);
+
+*/

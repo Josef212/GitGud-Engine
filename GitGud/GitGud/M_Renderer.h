@@ -24,15 +24,19 @@ public:
 private:
 	void OnResize(int width, int height);
 
+
+	//****
 	//TMP
-	void TMPInit();
-
-	void TMPDRAW();
-
-	uint VBO, containrtVAO;
+	uint containerVAO = 0;
 	uint shader;
-	//---
+	int viewLoc, modelLoc, projLoc;
 
+	void CreateShader();
+	void LoadGeometry();
+
+	void Draw();
+
+	//-------------------
 
 public:
 	bool showGrid = true;
