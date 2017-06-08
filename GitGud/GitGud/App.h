@@ -26,6 +26,7 @@ class M_Camera3D;
 class M_ResourceManager;
 class M_Renderer;
 
+
 class App
 {
 public:
@@ -84,7 +85,7 @@ public:
 	M_Camera3D* camera = nullptr;
 
 	M_Renderer* renderer = nullptr;
-
+	
 
 	bool debugMode = false;
 	bool quit = false;

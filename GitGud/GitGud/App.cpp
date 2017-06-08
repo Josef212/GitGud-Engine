@@ -6,18 +6,7 @@
 
 #include "JsonFile.h"
 
-#include "Module.h"
-#include "M_FileSystem.h"
-#include "M_Window.h"
-#include "M_Input.h"
-#include "M_Editor.h"
-#include "M_ResourceManager.h"
-#include "M_GoManager.h"
-#include "M_Camera3D.h"
-
-
-
-#include "M_Renderer.h"
+#include "AllModules.h"
 
 #include <iostream>
 
@@ -35,6 +24,12 @@ struct C_Quit : public Command
 }c_Quit;
 //-----------------------------------------------
 
+/**
+*	- App constructor.
+*	- Read arguments.
+*	- Create info container, console and random generator.
+*	- Create all modules and add them to the vector.
+*/
 App::App(int argv, char** argc) : currentConfigSaveFileDir(CONFIG_PATH + (std::string("config.json")))
 {
 	_LOG("App: Creation  =======================");
@@ -62,6 +57,7 @@ App::App(int argv, char** argc) : currentConfigSaveFileDir(CONFIG_PATH + (std::s
 	camera = new M_Camera3D("module_camera_editor");
 
 
+
 	renderer = new M_Renderer("module_renderer");
 
 
@@ -77,7 +73,10 @@ App::App(int argv, char** argc) : currentConfigSaveFileDir(CONFIG_PATH + (std::s
 	modules.push_back(renderer);
 }
 
-
+/**
+*	- App destructor.
+*	- Release all the memory allocated in the class.
+*/
 App::~App()
 {
 	_LOG("App: Destruction  =======================");
@@ -86,8 +85,15 @@ App::~App()
 
 	RELEASE(info);
 	RELEASE(console);
+	RELEASE(random);
 }
 
+/**
+*	- App Init.
+*	- Read configuration.
+*	- Call all modules inits passing the configuration.
+*	- Call all modules starts.
+*/
 bool App::Init()
 {
 	bool ret = true;
@@ -119,6 +125,11 @@ bool App::Init()
 	return ret;
 }
 
+/**
+*	- App update.
+*	- Call modules preupdate, update and postupdate.
+*	- Check for exit.
+*/
 UPDATE_RETURN App::Update()
 {
 	UPDATE_RETURN ret = UPDT_CONTINUE;
@@ -161,6 +172,10 @@ UPDATE_RETURN App::Update()
 	return ret;
 }
 
+/**
+*	- App CleanUp.
+*	- Call all modules cleanup.
+*/
 bool App::CleanUp()
 {
 	bool ret = true;
@@ -174,6 +189,10 @@ bool App::CleanUp()
 	return ret;
 }
 
+/**
+*	- App DrawDebug.
+*	- Call all active modules drawdebug.
+*/
 void App::DrawDebug()
 {
 	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
@@ -183,16 +202,25 @@ void App::DrawDebug()
 	}
 }
 
+/**
+*	- GetTitle: Return the app title.
+*/
 const char * App::GetTitle() const
 {
 	return title.c_str();
 }
 
+/*
+*	- GetOrganitzation: Return app organitzation name.
+*/
 const char * App::GetOrganitzation() const
 {
 	return organitzation.c_str();
 }
 
+/**
+*	- SetTitle: Set the app title.
+*/
 void App::SetTitle(const char * str)
 {
 	if (str)
@@ -202,15 +230,21 @@ void App::SetTitle(const char * str)
 	}
 }
 
+/**
+*	- SetOrganitzation: Set app roganitzation.
+*/
 void App::SetOrganitzation(const char * str)
 {
 	if (str)
 	{
 		organitzation = str;
-		//TODO: Set title to window and file
+		//TODO: Set title to window and file system
 	}
 }
 
+/**
+*	- GetMaxFPS: Return app max fps.
+*/
 uint App::GetMaxFPS() const
 {
 	if (cappedMs > 0)
@@ -219,6 +253,9 @@ uint App::GetMaxFPS() const
 		return 0;
 }
 
+/**
+*	- SetMaxFPS: Set app max fps.
+*/
 void App::SetMaxFPS(uint _fps)
 {
 	if (_fps > 0)
@@ -227,17 +264,26 @@ void App::SetMaxFPS(uint _fps)
 		cappedMs = 0;
 }
 
+/**
+*	- Log: Log to editor. 
+*/
 void App::Log(const char * str)
 {
 	if (editor)
 		editor->Log(str);
 }
 
+/**
+*	- Browse: Open a link in the browser.
+*/
 void App::Browse(const char * url)
 {
 	ShellExecuteA(nullptr, "open", url, nullptr, nullptr, SW_SHOWNORMAL);
 }
 
+/**
+*	- Save: Prepare app to save and set the config save name.
+*/
 void App::Save(std::string saveFile)
 {
 	if (saveFile != currentConfigSaveFileDir)
@@ -246,6 +292,9 @@ void App::Save(std::string saveFile)
 	saveNextFrame = true;
 }
 
+/**
+*	- Load: Prepare app to load and set the config file name.
+*/
 void App::Load(std::string saveFile)
 {
 	if (saveFile != currentConfigSaveFileDir)
@@ -254,34 +303,54 @@ void App::Load(std::string saveFile)
 	loadNextFrame = true;
 }
 
+/**
+*	- AddCommand: Add a command to the console.
+*/
 void App::AddCommand(Command * cmd)
 {
 	if (console && cmd)
 		console->AddCommand(cmd);
 }
 
+/**
+*	- GetConfigSavePath: Return the config file name path.
+*/
 const char * App::GetConfigSavePath() const
 {
 	return currentConfigSaveFileDir.c_str();
 }
 
+/**
+*	- SetConfigSavePath: Set the config file name path.
+*/
 void App::SetConfigSavePath(const char * path)
 {
 	if (path)
 		currentConfigSaveFileDir = path;
 }
 
+/**
+*	- ResetConfig: Load the default config.
+*/
 void App::ResetConfig()
 {
 	currentConfigSaveFileDir = (CONFIG_PATH + std::string("default_config.json"));
 }
 
+/**
+*	- PrepareUpdate: Calculate dt.
+*/
 void App::PrepareUpdate()
 {
 	dt = (float)msTimer.ReadSec();
 	msTimer.Start();
 }
 
+/**
+*	- FinishUpdate: Calc fps and other metrics.
+*	- Delay if necessary.
+*	- Do Save or Load if marked to.
+*/
 void App::FinishUpdate()
 {
 	if (saveNextFrame)
@@ -316,6 +385,9 @@ void App::FinishUpdate()
 		editor->LogFPS((float)lastFps, (float)lastFrameMs);
 }
 
+/**
+*	- ReadConfig: Read the app config.
+*/
 void App::ReadConfig(JsonFile* config)
 {
 	if (!config)return;
@@ -325,6 +397,9 @@ void App::ReadConfig(JsonFile* config)
 	SetOrganitzation(config->GetString("app_organitzation", "Josef21296"));
 }
 
+/**
+*	- ReadArgs: Read args and set parameters.
+*/
 void App::ReadArgs()
 {
 	for (uint i = 0; i < argv; ++i)
@@ -333,6 +408,9 @@ void App::ReadArgs()
 	}
 }
 
+/**
+*	- SaveNow: Do save.
+*/
 bool App::SaveNow()
 {
 	bool ret = true;
@@ -369,6 +447,9 @@ bool App::SaveNow()
 	return ret;
 }
 
+/**
+*	- LoadNow: Do load.
+*/
 bool App::LoadNow()
 {
 	bool ret = true;
