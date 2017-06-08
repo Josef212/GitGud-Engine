@@ -324,6 +324,12 @@
     <ClCompile Include="Material.cpp">
       <Filter>Engine\GamObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="EdMaterialCreator.cpp">
+      <Filter>Engine\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="EdResources.cpp">
+      <Filter>Engine\Editor\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -682,6 +688,12 @@
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Engine\GamObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EdMaterialCreator.h">
+      <Filter>Engine\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="EdResources.h">
+      <Filter>Engine\Editor\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

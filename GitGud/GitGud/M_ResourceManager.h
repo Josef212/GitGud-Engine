@@ -45,6 +45,8 @@ public:
 
 	UID GetNewUID()const;
 
+	void GetResourcesOfType(std::vector<Resource*>& res, RESOURCE_TYPE type)const;
+
 private:
 	void LoadResources();
 	void SaveResources();

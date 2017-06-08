@@ -10,6 +10,8 @@
 #include "EdConsole.h"
 #include "EdHierarchy.h"
 #include "EdInspector.h"
+#include "EdResources.h"
+#include "EdMaterialCreator.h"
 
 #include "GameObject.h"
 #include "M_GoManager.h"
@@ -29,12 +31,16 @@ M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnab
 	console = new EdConsole(true);
 	hierarchy = new EdHierarchy(true);
 	inspector = new EdInspector(true);
+	resources = new EdResources(true);
+	materialCreator = new EdMaterialCreator(false);
 
 
 	editorWins.push_back(config); 
 	editorWins.push_back(console);
 	editorWins.push_back(hierarchy);
 	editorWins.push_back(inspector);
+	editorWins.push_back(resources);
+	editorWins.push_back(materialCreator);
 }
 
 
@@ -121,6 +127,12 @@ UPDATE_RETURN M_Editor::Update(float dt)
 			if (ImGui::MenuItem("Mesh")) if (selected) selected->CreateComponent(CMP_MESH);
 			if (ImGui::MenuItem("Camera")) if (selected) selected->CreateComponent(CMP_CAMERA);
 
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Resources"))
+		{
+			if (ImGui::MenuItem("Create material...")) if (materialCreator)materialCreator->Enable();
 			ImGui::EndMenu();
 		}
 

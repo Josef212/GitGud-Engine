@@ -48,7 +48,14 @@ enum UPDATE_RETURN
 	UPDT_ERROR
 };
 
-
+enum DATA_TYPE
+{
+	D_BOOL,
+	D_FLOAT,
+	D_INT,
+	D_UINT,
+	D_STRING
+};
 
 //Configuration =============
 #define APP_TITLE "GitGud"

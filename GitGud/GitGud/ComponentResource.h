@@ -21,7 +21,7 @@ protected:
 	void OnLoadRes(JsonFile* file);
 
 protected:
-	Resource* resource = nullptr;
+	UID resource = 0;
 };
 
 #endif // !__COMPONENT_RESOURCE_H__

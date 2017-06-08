@@ -1,7 +1,6 @@
 #ifndef __MATERIAL_H__
 #define __MATERIAL_H__
 
-
 #include "Component.h"
 #include "ComponentResource.h"
 

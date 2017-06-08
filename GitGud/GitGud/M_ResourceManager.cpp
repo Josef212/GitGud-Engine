@@ -58,7 +58,7 @@ bool M_ResourceManager::Start()
 {
 	_LOG("Resource manager: Start.");
 
-	ImportFile("Data/Assets/Models/MechaT.fbx");
+	//ImportFile("Data/Assets/Models/MechaT.fbx");
 	LoadBasicResources();
 	LoadResources();
 
@@ -264,6 +264,15 @@ RESOURCE_TYPE M_ResourceManager::GetTypeFromExtension(const char * ext) const
 UID M_ResourceManager::GetNewUID() const
 {
 	return app->random->GetRandInt();
+}
+
+void M_ResourceManager::GetResourcesOfType(std::vector<Resource*>& res, RESOURCE_TYPE type) const
+{
+	for (auto it : resources)
+	{
+		if (it.second->GetType() == type)
+			res.push_back(it.second);
+	}
 }
 
 void M_ResourceManager::LoadResources()

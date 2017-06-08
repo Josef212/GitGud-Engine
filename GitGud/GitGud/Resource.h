@@ -84,6 +84,8 @@ public:
 	void RemoveInstance()
 	{
 		--instancesLoaded;
+		if (instancesLoaded <= 0)
+			RemoveFromMemory();
 	}
 
 	virtual void Save(JsonFile& file)
@@ -110,7 +112,7 @@ public:
 	std::string originalFile = "";
 	std::string exportedFile = "";
 
-	std::string name;
+	std::string name = "resource";
 
 protected:
 	RESOURCE_TYPE type;

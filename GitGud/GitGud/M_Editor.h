@@ -15,6 +15,8 @@ class EdConfig;
 class EdConsole;
 class EdHierarchy;
 class EdInspector;
+class EdMaterialCreator;
+class EdResources;
 
 class M_Editor : public Module
 {
@@ -57,6 +59,8 @@ private:
 	EdConsole* console = nullptr;
 	EdHierarchy* hierarchy = nullptr;
 	EdInspector* inspector = nullptr;
+	EdResources* resources = nullptr;
+	EdMaterialCreator* materialCreator = nullptr;
 
 };
 

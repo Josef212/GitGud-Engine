@@ -13,6 +13,7 @@ Material::Material(GameObject* object) : Component(object, CMP_MATERIAL)
 
 Material::~Material()
 {
+
 }
 
 bool Material::SetResource(UID resUID)
@@ -26,7 +27,7 @@ bool Material::SetResource(UID resUID)
 		{
 			if (res->LoadToMemory())
 			{
-				resource = res;
+				resource = resUID;
 				object->RecalcBox();
 				ret = true;
 			}

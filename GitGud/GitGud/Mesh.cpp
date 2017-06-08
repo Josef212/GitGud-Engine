@@ -75,7 +75,7 @@ bool Mesh::SetResource(UID resUID)
 		{
 			if (res->LoadToMemory())
 			{
-				resource = res;
+				resource = resUID;
 				object->RecalcBox();
 				ret = true;
 			}

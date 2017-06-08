@@ -31,6 +31,8 @@ bool ImporterMesh::ImportMesh(const aiMesh * mesh, std::string & output, UID & i
 
 	ResourceMesh m(0);
 
+	m.name = mesh->mName.C_Str();
+
 	m.numVertices = mesh->mNumVertices;
 	m.vertices = new float[m.numVertices * 3];
 	memcpy(m.vertices, mesh->mVertices, sizeof(float) * m.numVertices * 3);
@@ -230,6 +232,8 @@ void ImporterMesh::GenBuffers(const ResourceMesh * res)
 
 UID ImporterMesh::SaveResource(ResourceMesh * res, std::string& outputName)
 {
+	//TODO: Save name
+
 	uint ranges[5] = {
 		res->numIndices,
 		res->numVertices,
@@ -309,6 +313,7 @@ bool ImporterMesh::LoadCube(ResourceMesh * res)
 
 	res->originalFile = "*Cube*";
 	res->exportedFile = "*Cube*";
+	res->name = "Cube";
 
 	//-----------------------
 

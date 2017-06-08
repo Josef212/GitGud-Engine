@@ -13,9 +13,49 @@ public:
 	virtual void Draw()
 	{}
 
+	virtual void OnEnable()
+	{}
+
+	virtual void OnDisable()
+	{}
+
 	bool IsActive()const { return active; }
-	void SetActive(bool set) { active = set; }
-	void SwapActive() { active = !active; }
+
+	void SetActive(bool set)
+	{
+		if (set != active)
+		{
+			if (active)
+				Disable();
+			else
+				Enable();
+		}
+	}
+
+	void SwapActive() 
+	{
+		if (active)
+			Disable();
+		else
+			Enable();
+	}
+
+	void Enable() 
+	{
+		if (!active)
+		{
+			active = true;
+			OnEnable();
+		}
+	}
+	void Disable() 
+	{
+		if (active)
+		{
+			active = false;
+			OnDisable();
+		}
+	}
 
 public:
 	bool active = false;

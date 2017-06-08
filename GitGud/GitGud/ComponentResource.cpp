@@ -1,6 +1,8 @@
 #include "ComponentResource.h"
 #include "Resource.h"
 
+#include "App.h"
+#include "M_ResourceManager.h"
 
 ComponentResource::~ComponentResource()
 {
@@ -8,17 +10,17 @@ ComponentResource::~ComponentResource()
 
 const Resource * ComponentResource::GetResource() const
 {
-	return resource;
+	return app->resources->GetResourceFromUID(resource);
 }
 
 const UID ComponentResource::GetResourceUID() const
 {
-	return resource != nullptr ? resource->GetUID() : 0;
+	return resource;
 }
 
 void ComponentResource::OnSaveRes(JsonFile & file) const
 {
-	file.AddInt("resource_id", GetResourceUID());
+	file.AddInt("resource_id", resource);
 }
 
 void ComponentResource::OnLoadRes(JsonFile * file)
