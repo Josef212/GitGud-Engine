@@ -46,9 +46,11 @@ UPDATE_RETURN M_GoManager::PreUpdate(float dt)
 {
 	if (!objectsToDelete.empty())
 	{
-		selected = nullptr;
 		for (auto obj : objectsToDelete)
 		{
+			if (obj == selected)
+				selected = nullptr;
+
 			obj->OnFinish();
 			RELEASE(obj);
 			//TODO: Event on obj destroyed
