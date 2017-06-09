@@ -19,7 +19,7 @@ M_Camera3D::M_Camera3D(const char* name, bool startEnabled) : Module(name, start
 	{
 		editorCameraObj->SetName("Editor camera");
 		editorCamera = (Camera*)editorCameraObj->CreateComponent(CMP_CAMERA);
-		//editorCamera->Look(float3::zero, float3(0, 10, 10));
+		editorCamera->Look(float3::zero, float3(-5, 5, 7));
 	}
 }
 

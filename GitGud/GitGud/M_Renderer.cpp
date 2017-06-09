@@ -102,7 +102,6 @@ bool M_Renderer::Start()
 
 	//TMP
 	CreateShader();
-	LoadGeometry();
 
 	//-----------------
 
@@ -179,20 +178,28 @@ void M_Renderer::CreateShader()
 	std::string vertexCode = std::string(
 		"#version 330 core\n"
 		"layout(location = 0) in vec3 position;\n"
-		"layout(location = 1) in vec3 color;\n"
+		"layout(location = 1) in vec3 normal;\n"
+		"layout(location = 2) in vec2 uv;\n"
+		"layout(location = 3) in vec3 color;\n"
 		"uniform mat4 model;\n"
 		"uniform mat4 view;\n"
 		"uniform mat4 projection;\n"
+		"out vec3 outNormal;\n"
+		"out vec2 outUv; \n"
 		"out vec3 outColor;\n"
 		"void main()\n"
 		"{\n"
 		"	gl_Position = projection * view * model * vec4(position, 1.0);\n"
+		"	outNormal = normal;\n"
+		"	outUv = uv;\n"
 		"	outColor = color;\n"
 		"}\n"
 	);
 
 	std::string fragCode = std::string(
 		"#version 330 core\n"
+		"in vec3 outNormal;\n"
+		"in vec2 outUv; \n"
 		"in vec3 outColor;\n"
 		"out vec4 FragColor;\n"
 		"void main()\n"
@@ -253,142 +260,13 @@ void M_Renderer::CreateShader()
 	projLoc = glGetUniformLocation(shader, "projection");
 }
 
-void M_Renderer::LoadGeometry()
-{
-	float vertices[] = {
-		0.5f,  0.5f, 0.0f,  // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left
-	};
-
-	unsigned int indices[] = {  // note that we start from 0!
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
-	};
-
-	float colors[] = {
-		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f
-	};
-
-	float s = 0.5f;
-	float cubeVertices[] = {
-		//Front
-		-s, -s, s,
-		s, -s, s,
-		s, s, s,
-		-s, s, s,
-		//Right
-		s, s, s,
-		s, s, -s,
-		s, -s, -s,
-		s, -s, s,
-		//Back
-		-s, -s, -s,
-		s, -s, -s,
-		s, s, -s,
-		-s, s, -s,
-		//Left
-		-s, -s, -s,
-		-s, -s, s,
-		-s, s, s,
-		-s, s, -s,
-		//Top
-		s, s, s,
-		-s, s, s,
-		-s, s, -s,
-		s, s, -s,
-		//Bot
-		-s, -s, -s,
-		s, -s, -s,
-		s, -s, s,
-		-s, -s, s
-	};
-
-	float cubeColors[] = {
-		//Front		0
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		//Right		6
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		//Back		12
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		//Left		18
-		1.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-		//Top		24
-		0.0f, 1.0f, 1.0f,
-		0.0f, 1.0f, 1.0f,
-		0.0f, 1.0f, 1.0f,
-		0.0f, 1.0f, 1.0f,
-		//Bot		30
-		1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f	//36
-	};
-
-	uint cubeIndices[] = {
-		0,  1,  2,  0,  2,  3,   //front
-		4,  5,  6,  4,  6,  7,   //right
-		8,  9,  10, 8,  10, 11,  //back
-		12, 13, 14, 12, 14, 15,  //left
-		16, 17, 18, 16, 18, 19,  //upper
-		20, 21, 22, 20, 22, 23	 //bottom
-	};
-	numIndices = 36;
-
-	uint VBO = 0, EBO = 0, CBO;
-
-	//glUseProgram(shader);
-
-	glGenVertexArrays(1, &containerVAO);
-
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-	glGenBuffers(1, &CBO);
-
-	glBindVertexArray(containerVAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), cubeIndices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, CBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeColors), cubeColors, GL_STATIC_DRAW);
-	
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-	//glUseProgram(0);
-}
-
 void M_Renderer::Draw()
 {
 	Camera* cam = app->camera->GetEditorCamera();
-
+	ResourceMesh* r = app->resources->cube;
 	glUseProgram(shader);
-	glBindVertexArray(containerVAO);
+	
+	glBindVertexArray(r->idContainer);
 
 	float4x4 model = float4x4::identity;
 
@@ -396,43 +274,11 @@ void M_Renderer::Draw()
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, cam->GetGLViewMatrix());
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, cam->GetGLProjectionMatrix());
 
-	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r->idIndices);
+
+	glDrawElements(GL_TRIANGLES, r->numIndices, GL_UNSIGNED_INT, 0);
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
-
-/*
-std::string vertexCode = std::string(
-"#version 330 core\n"
-"layout(location = 0) in vec3 position;\n"
-"layout(location = 1) in vec3 normal;\n"
-"layout(location = 2) in vec2 uv;\n"
-"layout(location = 3) in vec3 color;\n"
-"uniform mat4 model;\n"
-"uniform mat4 view;\n"
-"uniform mat4 projection;\n"
-"out vec3 outNormal;\n"
-"out vec2 outUv;\n"
-"out vec3 outColor;\n"
-"void main()\n"
-"{\n"
-"	gl_Position = projection * view * model * vec4(position, 1.0);\n"
-"	outNormal = normal;\n"
-"	outUv = uv;\n"
-"	outColor = color;\n"
-"}\n"
-);
-
-std::string fragCode = std::string(
-"#version 330 core\n"
-"in vec3 outNormal;\n"
-"in vec2 outUv;\n"
-"in vec3 outColor;\n"
-"out vec4 color;\n"
-"void main()\n"
-"{\n"
-"	color = vec4(outColor, 1.0);\n"
-"}\n"
-);
-
-*/
