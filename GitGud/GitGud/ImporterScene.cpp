@@ -175,7 +175,7 @@ void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameOb
 		{
 			aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 			Material* cMat = (Material*)childGo->CreateComponent(CMP_MATERIAL);
-			cMat->SetResource(app->resources->ImportBuf(mat, 0, RES_MATERIAL, (basePath).c_str()));
+			//cMat->SetResource(app->resources->ImportBuf(mat, 0, RES_MATERIAL, (basePath).c_str()));
 		}
 
 		Mesh* cMesh = (Mesh*)childGo->CreateComponent(CMP_MESH);
