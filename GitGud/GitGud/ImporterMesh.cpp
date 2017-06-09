@@ -415,11 +415,217 @@ bool ImporterMesh::LoadCube(ResourceMesh * res)
 
 	//-----------------------
 
-	res->aabb = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5, 0.5));
+	res->aabb = AABB(float3(-s, -s, -s), float3(s, s, s));
 
 	//-----------------------
 
 	GenBuffers(res);
+
+	return true;
+}
+
+bool ImporterMesh::LoadQuad(ResourceMesh * res)
+{
+	if (!res) return false;
+
+	res->originalFile = "*Quad*";
+	res->exportedFile = "*Quad*";
+	res->name = "Quad";
+
+	//-----------------------
+
+	uint indices[6] = {
+		0,  1,  2,  0,  2,  3
+	};
+
+	res->numIndices = 6;
+	res->indices = new uint[res->numIndices];
+	memcpy(res->indices, indices, sizeof(uint) * res->numIndices);
+
+	//-----------------------
+	float s = 0.5f;
+
+	float vertices[4 * 3] = {
+		-s, -s, 0.0f,	s, -s, 0.0f,	s, s, 0.0f,		-s, s, 0.0f
+	};
+
+	res->numVertices = 4;
+	res->vertices = new float[res->numVertices * 3];
+	memcpy(res->vertices, vertices, sizeof(float) * res->numVertices * 3);
+
+	//-----------------------
+	float u = 1.0f;
+
+	float normals[4 * 3] = {
+		0.0f, 0.0f, u,		0.0f, 0.0f, u,		0.0f, 0.0f, u,		0.0f, 0.0f, u
+	};
+
+	res->normals = new float[res->numVertices * 3];
+	memcpy(res->normals, normals, sizeof(float) * res->numVertices * 3);
+
+	//-----------------------
+	float o = 0.0f;
+	float uvs[4 * 3] = {
+		o, o,		u, o,	u, u,	o, u
+	};
+
+	res->uvs = new float[res->numVertices * 2];
+	memcpy(res->uvs, uvs, sizeof(float) * res->numVertices * 2);
+
+	//-----------------------
+
+	float colors[4 * 3] = {
+		0.7f, 0.7f, 0.7f,	0.7f, 0.7f, 0.7f,	0.7f, 0.7f, 0.7f,	0.7f, 0.7f, 0.7f
+	};
+
+	res->colors = new float[res->numVertices * 3];
+	memcpy(res->colors, colors, sizeof(float) * res->numVertices * 3);
+
+	//-----------------------
+
+	res->aabb = AABB(float3(-s, -s, -s), float3(s, s, s));
+
+	//-----------------------
+
+	GenBuffers(res);
+
+	return true;
+}
+
+bool ImporterMesh::LoadPlane(ResourceMesh * res) //TODO: Fix
+{
+	if (!res) return false;
+
+	res->originalFile = "*Plane*";
+	res->exportedFile = "*Plane*";
+	res->name = "Plane";
+
+	//-----------------------
+
+	float length = 1.0f;
+	float width = 1.0f;
+	int resX = 2;
+	int resZ = 2;
+
+	res->numVertices = resX * resZ;
+	res->vertices = new float[res->numVertices * 3];
+
+	for (int z = 0; z < resZ; ++z)
+	{
+		float zPos = ((float)z / (resZ - 1) - 0.5f) * length;
+		for (int x = 0; x < resX; ++x)
+		{
+			float xPos = ((float)x / (resX - 1) - 0.5f)*width;
+			res->vertices[x + z + resX] = xPos;
+			res->vertices[x + z + resX + 1] = 0.0f;
+			res->vertices[x + z + resX + 2] = zPos;
+		}
+	}
+
+	//-----------------------
+
+	res->normals = new float[res->numVertices * 3];
+
+	for (int i = 0; i < res->numVertices * 3; i += 3)
+	{
+		res->normals[i + 0] = 0.0f;
+		res->normals[i + 1] = 1.0f;
+		res->normals[i + 2] = 0.0f;
+	}
+
+	//-----------------------
+
+	res->uvs = new float[res->numVertices * 2];
+
+	for (int v = 0; v < resZ; ++v)
+	{
+		for (int u = 0; u < resX; ++u)
+		{
+			res->uvs[u + v * resX] = (float)u / (resX - 1);
+			res->uvs[u + v * resX + 1] = (float)v / (resZ - 1);
+		}
+	}
+
+	//-----------------------
+
+	int nbFaces = (resX - 1) * (resZ - 1);
+	res->numIndices = nbFaces * 6;
+	res->indices = new uint[res->numIndices];
+
+	int t = 0;
+	for (int face = 0; face < nbFaces; ++face)
+	{
+		int i = face % (resX - 1) + (face / (resZ - 1) * resX);
+
+		res->indices[t++] = i + resX;
+		res->indices[t++] = i + 1;
+		res->indices[t++] = i;
+
+		res->indices[t++] = i + resX;
+		res->indices[t++] = i + resX + 1;
+		res->indices[t++] = i + 1;
+	}
+
+	//-----------------------
+
+	res->colors = new float[res->numVertices * 3];
+
+	for (int i = 0; i < res->numVertices * 3; ++i)
+	{
+		res->colors[i] = 0.7f;
+	}
+
+	//-----------------------
+
+	//TODO: Calc AABB
+
+	//-----------------------
+
+	GenBuffers(res);
+
+	return true;
+}
+
+bool ImporterMesh::LoadCone(ResourceMesh * res)
+{
+	if (!res) return false;
+
+	res->originalFile = "*Cone*";
+	res->exportedFile = "*Cone*";
+	res->name = "Cone";
+
+	return true;
+}
+
+bool ImporterMesh::LoadCylinder(ResourceMesh * res)
+{
+	if (!res) return false;
+
+	res->originalFile = "*Cylinder*";
+	res->exportedFile = "*Cylinder*";
+	res->name = "Cylinder";
+
+	return true;
+}
+
+bool ImporterMesh::LoadTorus(ResourceMesh * res)
+{
+	if (!res) return false;
+
+	res->originalFile = "*Torus*";
+	res->exportedFile = "*Torus*";
+	res->name = "Torus";
+
+	return true;
+}
+
+bool ImporterMesh::LoadSphere(ResourceMesh * res)
+{
+	if (!res) return false;
+
+	res->originalFile = "*Sphere*";
+	res->exportedFile = "*Sphere*";
+	res->name = "Sphere";
 
 	return true;
 }

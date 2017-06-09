@@ -62,6 +62,8 @@ public:
 	//---------
 
 	ResourceMesh* cube = nullptr;
+	ResourceMesh* quad = nullptr;
+	ResourceMesh* plane = nullptr;
 	ResourceMesh* sphere = nullptr;
 	ResourceMesh* cone = nullptr;
 

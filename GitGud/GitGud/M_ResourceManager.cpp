@@ -338,4 +338,18 @@ void M_ResourceManager::LoadBasicResources()
 	cube = (ResourceMesh*)CreateResource(RES_MESH, 2);
 	meshImporter->LoadCube(cube);
 	cube->AddInstance();
+
+	quad = (ResourceMesh*)CreateResource(RES_MESH, 3);
+	meshImporter->LoadQuad(quad);
+	quad->AddInstance();
+
+	plane = (ResourceMesh*)CreateResource(RES_MESH, 4);
+	meshImporter->LoadPlane(plane);
+	plane->AddInstance();
+
+	sphere = (ResourceMesh*)CreateResource(RES_MESH, 5);
+	meshImporter->LoadSphere(sphere);
+	sphere->AddInstance();
+
+
 }

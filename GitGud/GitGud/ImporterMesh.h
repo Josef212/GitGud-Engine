@@ -24,6 +24,12 @@ public:
 
 
 	bool LoadCube(ResourceMesh* res);
+	bool LoadQuad(ResourceMesh* res);
+	bool LoadPlane(ResourceMesh* res);
+	bool LoadCone(ResourceMesh* res);
+	bool LoadCylinder(ResourceMesh* res);
+	bool LoadTorus(ResourceMesh* res);
+	bool LoadSphere(ResourceMesh* res);
 };
 
 #endif // !__IMPORTER_MESH_H__
