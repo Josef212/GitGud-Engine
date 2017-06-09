@@ -78,7 +78,7 @@
       <SDLCheck>false</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\Documents\GitHub\GitGud-Engine\GitGud\GitGud\Assimp\include;Glew-2.0.0\include;SDL-2.0.5\include;Devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Assimp\include;Glew-2.0.0\include;SDL-2.0.5\include;Devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -205,6 +205,7 @@
     <ClCompile Include="M_ResourceManager.cpp" />
     <ClCompile Include="M_Window.cpp" />
     <ClCompile Include="parson-master\parson.c" />
+    <ClCompile Include="Path.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="RandGen.cpp" />
     <ClCompile Include="ResourceMaterial.cpp" />
@@ -328,6 +329,7 @@
     <ClInclude Include="M_Window.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="parson-master\parson.h" />
+    <ClInclude Include="Path.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="RandGen.h" />
     <ClInclude Include="Resource.h" />

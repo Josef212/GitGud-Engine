@@ -330,6 +330,9 @@
     <ClCompile Include="EdResources.cpp">
       <Filter>Engine\Editor\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="Path.cpp">
+      <Filter>Containers&amp;Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -696,6 +699,9 @@
       <Filter>Engine\Editor\Panels</Filter>
     </ClInclude>
     <ClInclude Include="AllModules.h">
+      <Filter>Containers&amp;Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Path.h">
       <Filter>Containers&amp;Helpers</Filter>
     </ClInclude>
   </ItemGroup>
