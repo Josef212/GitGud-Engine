@@ -18,8 +18,8 @@ Mesh::~Mesh()
 
 void Mesh::GetBox(AABB & box) const
 {
-	ResourceMesh* r = (ResourceMesh*)resource;
-	if (r)
+	ResourceMesh* r = (ResourceMesh*)app->resources->GetResourceFromUID(resource);
+	if (r && r->vertices)
 		box.Enclose(r->aabb);
 }
 
