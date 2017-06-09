@@ -30,6 +30,7 @@ private:
 	uint containerVAO = 0;
 	uint shader;
 	int viewLoc, modelLoc, projLoc;
+	int numIndices = 0;
 
 	void CreateShader();
 	void LoadGeometry();
