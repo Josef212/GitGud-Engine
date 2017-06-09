@@ -20,7 +20,6 @@ ImporterMesh::ImporterMesh() : Importer()
 	_LOG("Mesh importer: Created.");
 }
 
-
 ImporterMesh::~ImporterMesh()
 {
 }
@@ -31,7 +30,7 @@ bool ImporterMesh::ImportMesh(const aiMesh * mesh, std::string & output, UID & i
 
 	ResourceMesh m(0);
 
-	m.name = mesh->mName.C_Str();
+	m.name = (mesh->mName.length > 0) ? mesh->mName.C_Str() : "unamed_mesh";
 
 	m.numVertices = mesh->mNumVertices;
 	m.vertices = new float[m.numVertices * 3];
@@ -154,7 +153,7 @@ bool ImporterMesh::LoadResource(Resource * resource)
 
 		ret = true;
 
-		//TODO: Gen gl buffers
+		GenBuffers(res);
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -239,7 +238,7 @@ UID ImporterMesh::SaveResource(ResourceMesh * res, std::string& outputName)
 		res->numVertices,
 		(res->normals) ? res->numVertices : 0,
 		(res->colors) ? res->numVertices : 0,
-		(res->uvs) ? res->numVertices : 0,
+		(res->uvs) ? res->numVertices : 0
 	};
 
 	uint size = sizeof(ranges) + sizeof(uint) * res->numIndices + sizeof(float) * res->numVertices * 3;
@@ -306,6 +305,8 @@ UID ImporterMesh::SaveResource(ResourceMesh * res, std::string& outputName)
 
 	return ret;
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 bool ImporterMesh::LoadCube(ResourceMesh * res)
 {
