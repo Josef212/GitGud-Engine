@@ -54,6 +54,11 @@ public:
 		return exportedFile.c_str();
 	}
 
+	const char* GetResourceName()const
+	{
+		return name.c_str();
+	}
+
 	bool LoadToMemory()
 	{
 		if (instancesLoaded > 0)
@@ -94,14 +99,15 @@ public:
 		file.AddInt("type", (int)type);
 		file.AddString("original_file", originalFile.c_str());
 		file.AddString("exported_file", exportedFile.c_str());
+		file.AddString("resource_name", name.c_str());
 	}
 
 	virtual void Load(JsonFile& file)
 	{
 		uuid = file.GetInt("UID", 0);
-		type = (RESOURCE_TYPE)file.GetInt("type", 0);
 		originalFile = file.GetString("original_file", "???");
 		exportedFile = file.GetString("exported_file", "???");
+		name = file.GetString("resource_name", "unamed");
 	}
 
 protected:
