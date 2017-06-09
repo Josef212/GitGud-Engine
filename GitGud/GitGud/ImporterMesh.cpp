@@ -197,7 +197,7 @@ void ImporterMesh::GenBuffers(const ResourceMesh * res)
 				glBindBuffer(GL_ARRAY_BUFFER, res->idNormals);
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * res->numVertices * 3, res->normals, GL_STATIC_DRAW);
 
-				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (GLvoid*)(3 * sizeof(float)));
+				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (GLvoid*)0);
 				glEnableVertexAttribArray(1);
 			}
 
@@ -207,7 +207,7 @@ void ImporterMesh::GenBuffers(const ResourceMesh * res)
 				glBindBuffer(GL_ARRAY_BUFFER, res->idUvs);
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * res->numVertices * 2, res->uvs, GL_STATIC_DRAW);
 
-				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)(6 * sizeof(float)));
+				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
 				glEnableVertexAttribArray(2);
 			}
 
@@ -218,7 +218,7 @@ void ImporterMesh::GenBuffers(const ResourceMesh * res)
 				glBindBuffer(GL_ARRAY_BUFFER, res->idColors);
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * res->numVertices * 3, res->colors, GL_STATIC_DRAW);
 
-				glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (GLvoid*)(8 * sizeof(float)));
+				glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (GLvoid*)0);
 				glEnableVertexAttribArray(3);
 			}
 
