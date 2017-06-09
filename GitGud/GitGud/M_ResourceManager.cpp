@@ -4,6 +4,8 @@
 #include "RandGen.h"
 #include "M_FileSystem.h"
 
+#include "Path.h"
+
 #include "Resource.h"
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
@@ -128,6 +130,7 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 		app->fs->NormalizePath(exported);
 		app->fs->SplitPath(exported.c_str(), nullptr, &exp);
 		r->exportedFile = exp;
+		r->name = file;
 		ret = r->GetUID();
 
 		_LOG("Imported file [%s] to [%s].", r->GetOriginalFile(), r->GetExportedFile());

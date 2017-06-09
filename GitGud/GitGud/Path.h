@@ -15,6 +15,7 @@ public:
 
 	const char* GetFileName()const { return fileName.c_str(); }
 	const char* GetExtension()const { return extension.c_str(); }
+	const char* GetFile()const { return file.c_str(); }
 	const char* GetPathToFile()const { return folders.c_str(); }
 	const char* GetFullPath()const { return fullPath.c_str(); }
 

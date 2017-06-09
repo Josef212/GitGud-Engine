@@ -38,7 +38,7 @@ void Path::SplitPath()
 	{
 		folders = fullPath.substr(0, lastSeparator + 1);
 		file = fullPath.substr(lastSeparator + 1);
-		fileName = fullPath.substr(lastSeparator + 1, dot);
+		fileName = fullPath.substr(lastSeparator + 1, fullPath.size() - dot + 2);
 	}
 	else
 	{
@@ -65,8 +65,8 @@ void Path::Normalize()
 	{
 		if (*it == '\\')
 			*it = '/';
-		else
-			*it = tolower(*it);
+		//else
+		//	*it = tolower(*it);
 	}
 }
 

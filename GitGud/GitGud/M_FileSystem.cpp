@@ -2,6 +2,8 @@
 
 #include "App.h"
 
+#include "Path.h"
+
 #include "PhysFS\include\physfs.h"
 #include <SDL.h>
 
