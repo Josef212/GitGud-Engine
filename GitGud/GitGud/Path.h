@@ -28,13 +28,22 @@ public:
 	void SetFolders(const char* _folders);
 	void SetFullPath(const char* _fullPath);
 
+	void Set(const char* folders, const char* fileName, const char* extension);
+
 	void Normalize();
 	void InsertFolderAfter(const char* folder, const char* after);
 	int CountFolders();
 
+	bool Empty()const;
+	bool EmptyFile()const;
+	bool EmptyFolder()const;
+
+	bool IsFileLocatedInFolder(std::string folder);
+
 private:
 	void SplitPath();
 	void MountPath();
+	void SetFileNameFromFile();
 	
 public:
 

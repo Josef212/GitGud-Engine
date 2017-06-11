@@ -58,6 +58,13 @@ void Path::MountPath()
 	Normalize();
 }
 
+void Path::SetFileNameFromFile()
+{
+	int lastSeparator = fullPath.find_last_of("\\/");
+	int dot = fullPath.find_last_of(".");
+	fileName = fullPath.substr(lastSeparator + 1, fullPath.size() - dot + 2);
+}
+
 int Path::GetFolders(std::vector<std::string>& _folders)
 {
 	for (int i = 0, start = 0; i < folders.size(); ++i)
@@ -124,10 +131,19 @@ void Path::SetFullPath(const char * _fullPath)
 	SplitPath();
 }
 
+void Path::Set(const char * folders, const char * fileName, const char * extension)
+{
+	this->folders = folders;
+	this->fileName = fileName;
+	this->extension = extension;
+	file = fileName + string(".") + extension;
+	MountPath();
+}
+
 void Path::InsertFolderAfter(const char * folder, const char * after)
 {
-	int insertPos = folders.find_last_of(after) - strlen(after) + 2;
-	if (insertPos < folders.size())
+	int insertPos = folders.find(after) + strlen(after);
+	if (insertPos <= folders.size())
 	{
 		folders.insert(insertPos, folder);
 		MountPath();
@@ -148,4 +164,35 @@ int Path::CountFolders()
 	}
 
 	return ret;
+}
+
+bool Path::Empty() const
+{
+	return fullPath.empty();
+}
+
+bool Path::EmptyFile() const
+{
+	return file.empty();
+}
+
+bool Path::EmptyFolder() const
+{
+	return folders.empty();
+}
+
+bool Path::IsFileLocatedInFolder(std::string folder)
+{
+	if (folders.size() >= folder.size())
+	{
+		int i = 0;
+		for (string::iterator it = folder.begin(); it != folder.end() && i < folders.size(); ++it)
+		{
+			if (*it != folders[i])
+				return false;
+			++i;
+		}
+	}
+
+	return true;
 }
