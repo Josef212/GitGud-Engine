@@ -37,32 +37,29 @@ ImporterScene::~ImporterScene()
 	aiDetachAllLogStreams();
 }
 
-bool ImporterScene::Import(const char * originalFile, std::string & exportedFile, const char * originalFileExt, UID & resUID)
+bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 {
 	bool ret = false;
 
-	if (!originalFile || !originalFileExt)
+	if (originalFile.Empty())
 		return ret;
-	//TODO: Paths??
+
 	char* buffer = nullptr;
-	uint size = app->fs->Load(originalFile, &buffer);
+	uint size = app->fs->Load(originalFile.GetFullPath(), &buffer);
 
 	if (size > 0 && buffer)
 	{
-		const aiScene* scene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, originalFileExt);
+		const aiScene* scene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, originalFile.GetExtension());
 		RELEASE_ARRAY(buffer);
 
 		if (scene && scene->HasMeshes())
 		{
-			std::string path, file;
-			app->fs->SplitPath(originalFile, &path, &file);
-
 			meshesImported.clear();
 
 			GameObject* go = app->goManager->CreateGameObject();
-			go->SetName(file.c_str());
+			go->SetName(originalFile.GetFileName());
 
-			RecImport(scene, scene->mRootNode, go, path, file);
+			RecImport(scene, scene->mRootNode, go, originalFile);
 
 			//TODO: bones
 
@@ -79,13 +76,12 @@ bool ImporterScene::Import(const char * originalFile, std::string & exportedFile
 			}
 
 			resUID = app->resources->GetNewUID();
-
-			exportedFile = (std::to_string(resUID) + PREFAB_EXTENSION);
+			exportedFile.Set(PREFABS_SAVE_PATH, std::to_string(resUID).c_str(), PREFAB_EXTENSION);
 
 			char* buff = nullptr;
 			uint s = save.WriteJson(&buff, false); //TODO: Fast
 
-			if (app->fs->Save((PREFABS_SAVE_PATH + exportedFile).c_str(), buff, s) == s)
+			if (app->fs->Save(exportedFile.GetFullPath(), buff, s) == s)
 				ret = true;
 
 			RELEASE_ARRAY(buff);
@@ -100,7 +96,7 @@ bool ImporterScene::Import(const char * originalFile, std::string & exportedFile
 	return ret;
 }
 
-void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameObject * parent, const std::string & basePath, const std::string & file)
+void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameObject * parent, Path& file)
 {
 	static std::string name;
 	name = (node->mName.length > 0) ? node->mName.C_Str() : "unnamed";
@@ -175,16 +171,16 @@ void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameOb
 		{
 			aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 			Material* cMat = (Material*)childGo->CreateComponent(CMP_MATERIAL);
-			//cMat->SetResource(app->resources->ImportBuf(mat, 0, RES_MATERIAL, (basePath).c_str()));
+			//cMat->SetResource(app->resources->ImportBuf(mat, 0, RES_MATERIAL, &file));
 		}
 
 		Mesh* cMesh = (Mesh*)childGo->CreateComponent(CMP_MESH);
-		cMesh->SetResource(app->resources->ImportBuf(mesh, 0, RES_MESH, (basePath + file).c_str()));
+		cMesh->SetResource(app->resources->ImportBuf(mesh, 0, RES_MESH, &file));
 		//TODO: Resource instances??
 	}
 
 	for (uint i = 0; i < node->mNumChildren; ++i)
-		RecImport(scene, node->mChildren[i], go, basePath, file);
+		RecImport(scene, node->mChildren[i], go, file);
 	
 
 }

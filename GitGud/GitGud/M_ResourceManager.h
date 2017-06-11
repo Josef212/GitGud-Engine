@@ -34,7 +34,7 @@ public:
 	bool CleanUp()override;
 
 	UID ImportFile(const char* fileName, bool checkFirst = false);
-	UID ImportBuf(const void* buffer, uint size, RESOURCE_TYPE type, const char* sourceFile = nullptr);
+	UID ImportBuf(const void* buffer, uint size, RESOURCE_TYPE type, Path* sourceFile = nullptr);
 
 	Resource* GetResourceFromUID(UID uuid);
 	Resource* CreateResource(RESOURCE_TYPE type, UID forceUID = 0);

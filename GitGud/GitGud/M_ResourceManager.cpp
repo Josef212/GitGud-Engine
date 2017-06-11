@@ -81,28 +81,42 @@ bool M_ResourceManager::CleanUp()
 	return true;
 }
 
+/**
+*	- ImportFile: Import any file that has to be imported into the engine.
+*		If the file is not located insife Assets it will DUPLICATE the file into assets root folder,
+*		if the file is already in Assets, no matter if is in a directory, will import it.
+*
+*	- const char* fileNam: Path of the file to import with its relative path to it.
+*	- bool checkFirst: Flag to search for already imported files. False by default.
+*
+*	- Return UID: The id resulting resource, 0 if any error.
+*
+*/
 UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 {
 	UID ret = 0;
 
-	//TODO: Must do something to check if file is out assets folder and react to that
+	Path source(fileName);
 
-	std::string original(fileName);
-	std::string path, file, ext;
-	app->fs->NormalizePath(original);
-	app->fs->SplitPath(original.c_str(), &path, &file, &ext);
+	//TODO: Check first or duplicate first?? Must change resource paths saved
+	
+	if (!source.IsFileLocatedInFolder(ASSETS_PATH))
+	{
+		source.SetFolders(ASSETS_PATH);
+		app->fs->DuplicateFile(fileName, source.GetFullPath());
+	}
 
 	if (checkFirst)
 	{
-		Resource* tmp = FindResourceFromOriginalFileName(file.c_str());
+		Resource* tmp = FindResourceFromOriginalFileName(source.GetFullPath());
 		if (tmp)
 			return tmp->GetUID();
 	}
 
-	RESOURCE_TYPE type = GetTypeFromExtension(ext.c_str());
+	RESOURCE_TYPE type = GetTypeFromExtension(source.GetExtension());
 
 	bool success = false;
-	std::string exported;
+	Path exportedPath;
 	UID resid = 0;
 
 	switch (type)
@@ -116,7 +130,7 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 		break;
 	case RES_SCENE:
 		//TODO: Paths
-		success = sceneImporter->Import(fileName, exported, ext.c_str(), resid);
+		success = sceneImporter->Import(source, exportedPath, resid);
 		break;
 	case RES_SHADER:
 		break;
@@ -125,12 +139,9 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 	if (success)
 	{
 		Resource* r = CreateResource(type, resid);
-		r->originalFile = file;
-		std::string exp;
-		app->fs->NormalizePath(exported);
-		app->fs->SplitPath(exported.c_str(), nullptr, &exp);
-		r->exportedFile = exp;
-		r->name = file;
+		r->originalFile = source.GetFullPath(); //TODO: Change
+		r->exportedFile = exportedPath.GetFullPath();
+		r->name = source.GetFileName();
 		ret = r->GetUID();
 
 		_LOG("Imported file [%s] to [%s].", r->GetOriginalFile(), r->GetExportedFile());
@@ -143,7 +154,7 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 	return ret;
 }
 
-UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE type, const char * sourceFile)
+UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE type, Path* sourceFile)
 {
 	UID ret = 0;
 
@@ -162,7 +173,7 @@ UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE t
 		
 		break;
 	case RES_MATERIAL:
-		succes = materialImporter->Import((const aiMaterial*)buffer, output, ret, sourceFile);
+		succes = materialImporter->Import((const aiMaterial*)buffer, output, ret, nullptr);
 		break;
 	case RES_SCENE:
 		break;
@@ -175,7 +186,7 @@ UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE t
 		Resource* res = CreateResource(type, ret);
 		if (sourceFile)
 		{
-			res->originalFile = sourceFile;
+			res->originalFile = (sourceFile) ? sourceFile->GetFullPath() : "unknown";
 			app->fs->NormalizePath(res->originalFile);
 		}
 		res->exportedFile = output;

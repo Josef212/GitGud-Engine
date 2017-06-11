@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include "Path.h"
 
 #define _LOG(format, ...) _log(__FILE__, __LINE__, format, __VA_ARGS__);
 
@@ -67,6 +68,9 @@ enum DATA_TYPE
 
 //PATHS ========================
 
+#define ASSETS_PATH "Data/Assets/"
+#define LIBRARY_PATH "Data/Library/"
+
 #define MESH_SAVE_PATH "Data/Library/Meshes/"
 #define TEXTURE_SAVE_PATH "Data/Library/Textures/"
 #define MATERIAL_SAVE_PATH "Data/Library/Materials/"
@@ -81,11 +85,11 @@ enum DATA_TYPE
 #define ASSETS_SCENE_PATH "Data/Assets/Models/"
 #define ASSETS_TEXTURES_PATH "Data/Assets/Textures/"
 
-#define MESH_EXTENSION ".ggmesh"
-#define TEXTURE_EXTENSION ".ggtex"
-#define MATERIAL_EXTENSION ".ggmat"
-#define SCENE_EXTENSION ".ggscene"
-#define PREFAB_EXTENSION ".ggprefab"
+#define MESH_EXTENSION "ggmesh"
+#define TEXTURE_EXTENSION "ggtex"
+#define MATERIAL_EXTENSION "ggmat"
+#define SCENE_EXTENSION "ggscene"
+#define PREFAB_EXTENSION "ggprefab"
 
 // URLS ========================
 
