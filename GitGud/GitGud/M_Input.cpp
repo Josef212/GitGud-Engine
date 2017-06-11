@@ -3,6 +3,7 @@
 #include "App.h"
 #include "M_Window.h"
 #include "M_Editor.h"
+#include "M_ResourceManager.h"
 
 #include <SDL.h>
 
@@ -125,6 +126,17 @@ UPDATE_RETURN M_Input::PreUpdate(float dt)
 			}
 		}
 		break;
+
+		case SDL_DROPFILE:
+		{
+			char* dropped_file = e.drop.file;
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "File dropped on window: ", 
+				dropped_file, app->win->GetWindow());
+			//app->resources->ImportFile(dropped_file);	//TODO: Should do this by events
+			SDL_free(dropped_file);
+		}
+		break;
+
 		}
 
 	}

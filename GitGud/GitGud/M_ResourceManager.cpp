@@ -129,7 +129,6 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 	case RES_MATERIAL:
 		break;
 	case RES_SCENE:
-		//TODO: Paths
 		success = sceneImporter->Import(source, exportedPath, resid);
 		break;
 	case RES_SHADER:
@@ -259,18 +258,22 @@ RESOURCE_TYPE M_ResourceManager::GetTypeFromExtension(const char * ext) const
 		ret = RES_TEXTURE;
 	else if (strcmp(ext, "tga") == 0)
 		ret = RES_TEXTURE;
-	else if (strcmp(ext, "ggtex") == 0)
-		ret = RES_TEXTURE;
 	else if (strcmp(ext, "fbx") == 0)
 		ret = RES_SCENE;
 	else if (strcmp(ext, "obj") == 0)
 		ret = RES_SCENE;
-	else if (strcmp(ext, "ggmesh") == 0)
+	else if (strcmp(ext, TEXTURE_EXTENSION) == 0)
+		ret = RES_TEXTURE;
+	else if (strcmp(ext, MESH_EXTENSION) == 0)
 		ret = RES_MESH;
-	else if (strcmp(ext, "ggmat") == 0)
+	else if (strcmp(ext, MATERIAL_EXTENSION) == 0)
 		ret = RES_MATERIAL;
+	else if (strcmp(ext, SCENE_EXTENSION) == 0)
+		ret = RES_SCENE;
+	else if (strcmp(ext, PREFAB_EXTENSION) == 0)
+		ret = RES_SCENE;
 
-	//TODO
+	//TODO: Add more extensions
 
 	return ret;
 }
