@@ -17,9 +17,8 @@ Path::Path(const char * folders, const char * file) : folders(folders), file(fil
 	SplitPath();
 }
 
-Path::Path(Path & copy)
+Path::Path(Path & copy) : fullPath(copy.fullPath)
 {
-	fullPath = copy.fullPath;
 	SplitPath();
 }
 
@@ -59,9 +58,31 @@ void Path::MountPath()
 	Normalize();
 }
 
+int Path::GetFolders(std::vector<std::string>& _folders)
+{
+	for (int i = 0, start = 0; i < folders.size(); ++i)
+	{
+		if (folders[i] == '/')
+		{
+			_folders.push_back(folders.substr(start, i - start + 1));
+			start = i + 1;
+		}
+	}
+
+	return _folders.size();
+}
+
 void Path::Normalize()
 {
 	for (string::iterator it = fullPath.begin(); it != fullPath.end(); ++it)
+	{
+		if (*it == '\\')
+			*it = '/';
+		//else
+		//	*it = tolower(*it);
+	}
+
+	for (string::iterator it = folders.begin(); it != folders.end(); ++it)
 	{
 		if (*it == '\\')
 			*it = '/';
@@ -101,4 +122,30 @@ void Path::SetFullPath(const char * _fullPath)
 {
 	fullPath = _fullPath;
 	SplitPath();
+}
+
+void Path::InsertFolderAfter(const char * folder, const char * after)
+{
+	int insertPos = folders.find_last_of(after) - strlen(after) + 2;
+	if (insertPos < folders.size())
+	{
+		folders.insert(insertPos, folder);
+		MountPath();
+	}
+}
+
+int Path::CountFolders()
+{
+	int ret = 0;
+
+	for (int i = 0, start = 0; i < folders.size(); ++i)
+	{
+		if (folders[i] == '/')
+		{
+			++ret;
+			start = i + 1;
+		}
+	}
+
+	return ret;
 }

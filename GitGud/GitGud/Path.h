@@ -2,6 +2,7 @@
 #define __PATH_H__
 
 #include <string>
+#include <vector>
 
 class Path
 {
@@ -18,19 +19,24 @@ public:
 	const char* GetFile()const { return file.c_str(); }
 	const char* GetPathToFile()const { return folders.c_str(); }
 	const char* GetFullPath()const { return fullPath.c_str(); }
-
-private:
-	void SplitPath();
-	void MountPath();
 	
-public:
-	void Normalize();
+	int GetFolders(std::vector<std::string>& _folders);
 
 	void SetFileName(const char* _fileName);
 	void SetFile(const char* _file);
 	void SetExtension(const char* ext);
 	void SetFolders(const char* _folders);
 	void SetFullPath(const char* _fullPath);
+
+	void Normalize();
+	void InsertFolderAfter(const char* folder, const char* after);
+	int CountFolders();
+
+private:
+	void SplitPath();
+	void MountPath();
+	
+public:
 
 private:
 	std::string file;
