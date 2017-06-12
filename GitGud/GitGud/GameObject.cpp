@@ -158,6 +158,31 @@ GameObject * GameObject::GetParent() const
 	return parent;
 }
 
+void GameObject::SetNewParent(GameObject * parent, bool force)
+{
+	if (parent == this->parent) return;
+
+	if (parent)
+	{
+		auto it = std::find(this->parent->childs.begin(), this->parent->childs.end(), this);
+		if (it != this->parent->childs.end())
+			this->parent->childs.erase(it);
+	}
+
+	this->parent = parent;
+
+	if (parent)
+		parent->childs.push_back(this);
+
+	wasDirty = true;
+
+	if (force && transform && parent && parent->transform)
+	{
+		float4x4 tmp = transform->GetGlobalTransform();
+		transform->SetLocalTransform(tmp * parent->transform->GetLocalTransform().Inverted());
+	}
+}
+
 void GameObject::Destroy()
 {
 	app->goManager->RemoveGameObject(this);
@@ -416,12 +441,85 @@ void GameObject::RecalcBox()
 	}
 }
 
-bool GameObject::OnSaveGo(JsonFile & sect) const
+bool GameObject::OnSaveGo(JsonFile & sect, std::map<uint, uint>* duplicate) const
 {
-	return false;
+	bool ret = true;
+
+	JsonFile file;
+
+	UID idToSave = uuid;
+	UID parentID = parent ? parent->GetUuid() : 0;
+
+	if (duplicate)
+	{
+		if (duplicate->find(idToSave) != duplicate->end())
+		{
+			idToSave = app->random->GetRandInt();
+			(*duplicate)[uuid] = idToSave;
+
+			auto it = duplicate->find(parentID);
+			if (it != duplicate->end())
+				parentID = it->second;
+		}
+	}
+
+	file.AddInt("UID", idToSave);
+	file.AddInt("parent_id", parentID);
+
+	file.AddString("name", name.c_str());
+
+	file.AddArray("components");
+
+	for (auto it : components)
+	{
+		if (it)
+		{
+			JsonFile cmp;
+			cmp.AddInt("cmp_type", (int)it->GetType());
+			cmp.AddBool("active", it->IsActive());
+			cmp.AddBool("go_id", it->GetGameObject()->GetUuid());
+
+			it->OnSaveCmp(cmp);
+			file.AddArrayEntry(cmp);
+		}
+	}
+
+	sect.AddArrayEntry(file);
+
+	for (auto it : childs)
+		if (it)
+			it->OnSaveGo(sect, duplicate);
+
+	return ret;
 }
 
-bool GameObject::OnLoadGo(JsonFile * sect)
+bool GameObject::OnLoadGo(JsonFile * sect, std::map<GameObject*, uint>& relations)
 {
-	return false;
+	bool ret = true;
+
+	uuid = sect->GetInt("UID", 0);
+	UID dad = sect->GetInt("parent_id", 0);
+	relations[this] = dad;
+
+	name = sect->GetString("name", "unnamed");
+
+	int cmpCount = sect->GetArraySize("components");
+	for (uint i = 0; i < cmpCount; ++i)
+	{
+		JsonFile cmp(sect->GetArray("components", i));
+		COMPONENT_TYPE type = (COMPONENT_TYPE)cmp.GetInt("cmp_type", 0);
+		if (type != CMP_UNKNOWN)
+		{
+			if (type == CMP_TRANSFORM)
+				transform->OnLoadCmp(&cmp);
+			else
+				CreateComponent(type)->OnLoadCmp(&cmp);
+		}
+		else
+		{
+			_LOG("Unknown component type for game object [%s].", name.c_str());
+		}
+	}
+
+	return ret;
 }

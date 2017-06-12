@@ -76,17 +76,17 @@ enum DATA_TYPE
 #define MATERIAL_SAVE_PATH "Data/Library/Materials/"
 #define SHADER_SAVE_PATH "Data/Library/Shaders/"
 
-#define SCENE_SAVE_PATH "Data/Scenes/"
+#define SCENE_SAVE_PATH "Data/Assets/Scenes/"
 #define PREFABS_SAVE_PATH "Data/Prefabs/"	//TODO: Prefabs should be inside assets root dir and let user place them whereber u want
 
 #define CONFIG_PATH "Data/Configuration/"
 #define RESOURCES_PATH "Data/Resources/"
 
 #define MESH_EXTENSION "ggmesh"
-#define TEXTURE_EXTENSION "dds"
+#define TEXTURE_EXTENSION "dds"//"ggtex"
 #define MATERIAL_EXTENSION "ggmat"
 #define SCENE_EXTENSION "ggscene"
-#define PREFAB_EXTENSION "ggprefab"
+#define PREFAB_EXTENSION "json"//"ggprefab"
 
 // URLS ========================
 

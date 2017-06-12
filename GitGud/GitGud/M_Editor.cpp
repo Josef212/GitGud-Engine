@@ -91,6 +91,8 @@ UPDATE_RETURN M_Editor::Update(float dt)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			if (ImGui::MenuItem("Save scene")) app->goManager->SaveScene(); //TMP
+			if (ImGui::MenuItem("Load scene")) app->goManager->LoadScene();
 			if (ImGui::MenuItem("Quit")) app->quit = true;
 			ImGui::EndMenu();
 		}

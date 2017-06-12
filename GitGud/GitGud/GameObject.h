@@ -6,6 +6,7 @@
 #include "Math.h"
 
 #include <vector>
+#include <map>
 #include <string>
 
 class Transform;
@@ -95,8 +96,8 @@ public:
 
 	//--------------------------
 
-	bool OnSaveGo(JsonFile& sect)const;
-	bool OnLoadGo(JsonFile* sect);
+	bool OnSaveGo(JsonFile& sect, std::map<uint, uint>* duplicate = nullptr)const;
+	bool OnLoadGo(JsonFile* sect, std::map<GameObject*, uint>& relations);
 
 	//--------------------------
 

@@ -2,6 +2,9 @@
 
 #include "App.h"
 #include "RandGen.h"
+#include "JsonFile.h"
+
+#include "M_FileSystem.h"
 
 #include "GGOctree.h"
 
@@ -66,6 +69,18 @@ UPDATE_RETURN M_GoManager::PreUpdate(float dt)
 			root->RecCalcTransform(root->transform->GetLocalTransform());
 			root->RecCalcBoxes();
 			anyGOTransHasChanged = false;
+		}
+
+		if (mustSave)
+		{
+			SaveSceneNow();
+			mustSave = false;
+		}
+
+		if (mustLoad)
+		{
+			LoadSceneNow();
+			mustLoad = false;
 		}
 
 		for (auto obj : root->childs)
@@ -172,6 +187,16 @@ void M_GoManager::FastRemoveGameObject(GameObject * obj)
 	}
 }
 
+void M_GoManager::SaveScene()
+{
+	mustSave = true;
+}
+
+void M_GoManager::LoadScene()
+{
+	mustLoad = true;
+}
+
 void M_GoManager::OnPlay()
 {
 	for (auto obj : root->childs)
@@ -226,12 +251,12 @@ void M_GoManager::DoOnPause(GameObject * obj)
 {
 	if (obj && obj->IsActive())
 	{
-		obj->OnPause();
+	obj->OnPause();
 
-		for (auto go : obj->childs)
-		{
-			DoOnPause(go);
-		}
+	for (auto go : obj->childs)
+	{
+		DoOnPause(go);
+	}
 	}
 }
 
@@ -284,7 +309,7 @@ void M_GoManager::DoUpdate(GameObject * obj, float dt)
 
 GameObject * M_GoManager::GetGoFromUID(GameObject * obj, UID uuid) const
 {
-	if(!obj || uuid == 0)
+	if (!obj || uuid == 0)
 		return nullptr;
 
 	if (obj->GetUuid() == uuid)
@@ -298,4 +323,96 @@ GameObject * M_GoManager::GetGoFromUID(GameObject * obj, UID uuid) const
 	}
 
 	return ret;
+}
+
+void M_GoManager::SaveSceneNow()
+{
+	bool ret = false;
+
+	//TODO: Resource scene organitzation!!
+
+	JsonFile scene;
+	scene.AddArray("game_objects");
+
+	for (auto it : root->childs)
+	{
+		if (it)
+			ret = it->OnSaveGo(scene);
+	}
+
+	if (ret)
+	{
+		char* buffer = nullptr;
+		uint size = scene.WriteJson(&buffer, false); // TODO: fast
+		if (buffer && size > 0)
+		{
+			std::string path(SCENE_SAVE_PATH);
+			path.append("test_scene.json");
+
+			if (app->fs->Save(path.c_str(), buffer, size) != size)
+			{
+				_LOG("ERROR while saving scene.");
+			}
+			else
+			{
+				ret = true;
+				_LOG("Just saved scene into [%s].", path.c_str());
+			}
+		}
+
+		RELEASE_ARRAY(buffer);
+	}
+
+}
+
+void M_GoManager::LoadSceneNow()
+{
+	bool ret = false;
+
+	//TODO: Resource scene organitzation!!
+
+	std::string path(SCENE_SAVE_PATH);
+	path.append("test_scene.json");
+
+	char* buffer = nullptr;
+	uint size = app->fs->Load(path.c_str(), &buffer);
+
+	if (buffer && size > 0)
+	{
+		JsonFile scene(buffer);
+
+		int goCount = scene.GetArraySize("game_objects");
+		std::map<GameObject*, uint> relations;
+		for (int i = 0; i < goCount; ++i)
+		{
+			GameObject* go = CreateGameObject();
+			go->OnLoadGo(&scene.GetArray("game_objects", i), relations);
+		}
+
+		for (auto it : relations)
+		{
+			UID parentID = it.second;
+			GameObject* go = it.first;
+
+			if (parentID == 0)
+			{
+				go->SetNewParent(root);
+			}
+			else
+			{
+				GameObject* dad = GetGOFromUid(parentID);
+				if (dad) go->SetNewParent(dad);
+			}
+		}
+
+		root->RecCalcTransform(root->transform->GetLocalTransform(), true);
+		root->RecalcBox();
+
+		for (auto it : relations)
+			if (it.first) it.first->OnStart();
+	}
+
+	RELEASE_ARRAY(buffer);
+
+	_LOG("Scene loaded [%s].", path.c_str());
 }

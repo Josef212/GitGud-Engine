@@ -85,7 +85,7 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 				ret = true;
 
 			RELEASE_ARRAY(buff);
-			go->Destroy();
+			//go->Destroy();	//TODO
 		}
 	}
 	else

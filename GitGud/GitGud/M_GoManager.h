@@ -39,6 +39,9 @@ public:
 	void RemoveGameObject(GameObject* obj);
 	void FastRemoveGameObject(GameObject* obj);
 
+	void SaveScene();
+	void LoadScene(); //TODO: Must adapt this to use scene resource and a way to change scenes, etc.
+
 private:
 	void OnPlay();
 	void DoOnPlay(GameObject* obj);
@@ -54,11 +57,16 @@ private:
 
 	GameObject* GetGoFromUID(GameObject* obj, UID uuid)const;
 
+	void SaveSceneNow();
+	void LoadSceneNow();
+
 
 public:
 	bool anyGOTransHasChanged = true;
 
 private:
+	bool mustSave = false, mustLoad = false;
+
 	GameObject* root = nullptr;
 	GameObject* selected = nullptr;
 
@@ -67,6 +75,8 @@ private:
 
 	GGOctree* octree = nullptr;
 
+
+	//TODO: Adapt current scene to use a scene resource
 };
 
 #endif // !__M_GOMANAGER_H__

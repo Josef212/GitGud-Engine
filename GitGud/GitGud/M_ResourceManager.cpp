@@ -60,11 +60,9 @@ bool M_ResourceManager::Start()
 {
 	_LOG("Resource manager: Start.");
 
-	//ImportFile("Data/Assets/Models/MechaT.fbx");
+	//ImportFile("Data/Assets/MechaT/MechaT.fbx");
 	LoadBasicResources();
 	LoadResources();
-
-	ImportFile("Data/Assets/MechaT/Diffuse_Mech.png");
 
 	return true;
 }
