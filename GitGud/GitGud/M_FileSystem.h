@@ -26,6 +26,9 @@ public:
 
 	const char* GetBaseDir()const;
 
+	void DisplaySearchPaths()const;
+	int GetSearchPaths(std::vector<std::string>& paths);
+
 	uint Load(const char* file, char** buffer)const;
 	SDL_RWops* Load(const char* file)const;
 

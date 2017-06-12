@@ -15,10 +15,11 @@ M_FileSystem::M_FileSystem(const char* name, bool startEnabled) : Module(name, s
 	char* basePath = SDL_GetBasePath();
 	//TODO: Path according to DEBUG / RELEASE???
 	PHYSFS_init(basePath);
-	SDL_free(basePath);
 
 	AddPath(".");
-	AddPath("./Data/");
+	AddPath("Data");
+
+	SDL_free(basePath);
 }
 
 M_FileSystem::~M_FileSystem()
@@ -47,6 +48,10 @@ bool M_FileSystem::Init(JsonFile* file)
 		_LOG("Fs: Base path: %s\n", GetBaseDir());
 
 	}
+
+	DisplaySearchPaths();
+
+	SDL_free(writePath);
 
 	return ret;
 }
@@ -97,6 +102,20 @@ bool M_FileSystem::IsDirectory(const char * path) const
 const char * M_FileSystem::GetBaseDir() const
 {
 	return PHYSFS_getBaseDir();
+}
+
+void M_FileSystem::DisplaySearchPaths() const
+{
+	for (char** i = PHYSFS_getSearchPath(); *i != NULL; ++i)
+		_LOG("[%s] is in search path.", *i);
+}
+
+int M_FileSystem::GetSearchPaths(std::vector<std::string>& paths)
+{
+	for (char** i = PHYSFS_getSearchPath(); *i != NULL; ++i)
+		paths.push_back(*i);
+
+	return paths.size();
 }
 
 uint M_FileSystem::Load(const char * file, char ** buffer) const

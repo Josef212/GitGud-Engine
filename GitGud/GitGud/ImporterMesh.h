@@ -15,12 +15,12 @@ public:
 	ImporterMesh();
 	virtual ~ImporterMesh();
 
-	bool ImportMesh(const aiMesh* mesh, std::string& output, UID& id);
+	bool ImportMesh(const aiMesh* mesh, Path& output, UID& id);
 
 	bool LoadResource(Resource* resource)override;
 	void GenBuffers(const ResourceMesh* res);
 
-	UID SaveResource(ResourceMesh* res, std::string& outputName);
+	UID SaveResource(ResourceMesh* res, Path& outputPath);
 
 
 	bool LoadCube(ResourceMesh* res);

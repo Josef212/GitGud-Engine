@@ -24,7 +24,7 @@ ImporterMesh::~ImporterMesh()
 {
 }
 
-bool ImporterMesh::ImportMesh(const aiMesh * mesh, std::string & output, UID & id)
+bool ImporterMesh::ImportMesh(const aiMesh * mesh, Path& output, UID & id)
 {
 	if (!mesh) return false;
 
@@ -229,9 +229,9 @@ void ImporterMesh::GenBuffers(const ResourceMesh * res)
 	}
 }
 
-UID ImporterMesh::SaveResource(ResourceMesh * res, std::string& outputName)
+UID ImporterMesh::SaveResource(ResourceMesh * res, Path& outputPath)
 {
-	//TODO: Save name
+	//TODO: Save name?? But name is already saved into the resources file..
 
 	uint ranges[5] = {
 		res->numIndices,
@@ -293,9 +293,9 @@ UID ImporterMesh::SaveResource(ResourceMesh * res, std::string& outputName)
 	memcpy(cursor, &res->aabb, bytes);
 
 	UID ret = app->resources->GetNewUID();
-	outputName.assign(std::to_string(ret) + MESH_EXTENSION);
+	outputPath.Set(MESH_SAVE_PATH, std::to_string(ret).c_str(), MESH_EXTENSION);
 
-	if (app->fs->Save((MESH_SAVE_PATH + outputName).c_str(), data, size) != size)
+	if (app->fs->Save(outputPath.GetFullPath(), data, size) != size)
 	{
 		_LOG("ERRRO: Saving mesh!!");
 		ret = 0;

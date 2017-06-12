@@ -161,7 +161,7 @@ UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE t
 		return ret;
 
 	bool succes = false;
-	std::string output;
+	Path output;
 
 	switch (type)
 	{
@@ -172,7 +172,7 @@ UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE t
 		
 		break;
 	case RES_MATERIAL:
-		succes = materialImporter->Import((const aiMaterial*)buffer, output, ret, nullptr);
+		//succes = materialImporter->Import((const aiMaterial*)buffer, output, ret, nullptr);
 		break;
 	case RES_SCENE:
 		break;
@@ -183,13 +183,9 @@ UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE t
 	if (succes && ret != 0)
 	{
 		Resource* res = CreateResource(type, ret);
-		if (sourceFile)
-		{
-			res->originalFile = (sourceFile) ? sourceFile->GetFullPath() : "unknown";
-			app->fs->NormalizePath(res->originalFile);
-		}
-		res->exportedFile = output;
-		_LOG("Imported a buffer succesfully [%s].", output.c_str());
+		res->originalFile = (sourceFile) ? sourceFile->GetFullPath() : "unknown";
+		res->exportedFile = output.GetFullPath();
+		_LOG("Imported a buffer succesfully [%s].", output.GetFullPath());
 	}
 	else
 	{
