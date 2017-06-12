@@ -121,10 +121,9 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 
 	switch (type)
 	{
-	case RES_MESH:
 		//TODO
-		break;
 	case RES_TEXTURE:
+		success = textureImporter->Import(source, exportedPath, resid);
 		break;
 	case RES_MATERIAL:
 		break;
@@ -169,10 +168,10 @@ UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE t
 		succes = meshImporter->ImportMesh((const aiMesh*)buffer, output, ret);
 		break;
 	case RES_TEXTURE:
-		
+		succes = textureImporter->ImportBuff(buffer, size, output, ret);
 		break;
 	case RES_MATERIAL:
-		//succes = materialImporter->Import((const aiMaterial*)buffer, output, ret, nullptr);
+		succes = materialImporter->Import((const aiMaterial*)buffer, output, ret, sourceFile);
 		break;
 	case RES_SCENE:
 		break;
@@ -185,6 +184,7 @@ UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE t
 		Resource* res = CreateResource(type, ret);
 		res->originalFile = (sourceFile) ? sourceFile->GetFullPath() : "unknown";
 		res->exportedFile = output.GetFullPath();
+		res->name = sourceFile ? sourceFile->GetFileName() : "unamed";
 		_LOG("Imported a buffer succesfully [%s].", output.GetFullPath());
 	}
 	else

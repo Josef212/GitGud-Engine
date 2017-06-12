@@ -18,25 +18,26 @@ ImporterMaterial::~ImporterMaterial()
 {
 }
 
-bool ImporterMaterial::Import(const aiMaterial * material, std::string & exported, UID & resUID, const char* basePath)
+bool ImporterMaterial::Import(const aiMaterial * material, Path& exported, UID & resUID, Path* sourcePath)
 {
 	bool ret = false;
 
-	if (!material)return ret;
+	if (!material) return ret;
 
 	ResourceMaterial r(0);
 
 	//Name
 	aiString name;
 	material->Get(AI_MATKEY_NAME, name);
-	r.name = name.C_Str();
+	r.name = (name.length > 0) ? name.C_Str() : "unamed_material";
 	_LOG("Material name: %s.", name.C_Str());
 
-	//Ambient
+	//Ambient color
 	aiColor4D ambientColor;
 	material->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor);
 	r.ambientColor.Set(ambientColor.r, ambientColor.g, ambientColor.b, ambientColor.a);
 
+	//Ambient texture
 	if (material->GetTextureCount(aiTextureType_AMBIENT) > 0)
 	{
 		aiString str;
@@ -45,11 +46,12 @@ bool ImporterMaterial::Import(const aiMaterial * material, std::string & exporte
 		_LOG("Ambient tex: %s.", str.C_Str());
 	}
 
-	//Diffuse
+	//Diffuse color
 	aiColor4D diffuseColor;
 	material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
 	r.diffuseColor.Set(diffuseColor.r, diffuseColor.g, diffuseColor.b, diffuseColor.a);
 
+	//Diffuse texture
 	if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 	{
 		aiString str;
@@ -58,11 +60,12 @@ bool ImporterMaterial::Import(const aiMaterial * material, std::string & exporte
 		_LOG("Diffuse tex: %s.", str.C_Str());
 	}
 
-	//Specular
+	//Specular color
 	aiColor4D specularColor;
 	material->Get(AI_MATKEY_COLOR_SPECULAR, specularColor);
 	r.specularColor.Set(specularColor.r, specularColor.g, specularColor.b, specularColor.a);
 
+	//Specular texture
 	if (material->GetTextureCount(aiTextureType_SPECULAR) > 0)
 	{
 		aiString str;
@@ -89,11 +92,12 @@ bool ImporterMaterial::Import(const aiMaterial * material, std::string & exporte
 		_LOG("Height tex: %s.", str.C_Str());
 	}
 
-	//Emission
+	//Emission color
 	aiColor4D emissionColor;
 	material->Get(AI_MATKEY_COLOR_EMISSIVE, emissionColor);
 	r.emissionColor.Set(emissionColor.r, emissionColor.g, emissionColor.b, emissionColor.a);
 
+	//Emission texture
 	if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0)
 	{
 		aiString str;

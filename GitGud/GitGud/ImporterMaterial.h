@@ -13,7 +13,7 @@ public:
 	ImporterMaterial();
 	virtual ~ImporterMaterial();
 
-	bool Import(const aiMaterial* material, std::string& exported, UID& resUID, const char* basePath);
+	bool Import(const aiMaterial* material, Path& exported, UID& resUID, Path* sourcePath);
 
 	bool LoadResource(Resource* resource)override;
 };
