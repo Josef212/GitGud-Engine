@@ -1,6 +1,8 @@
 #include "ResourceScene.h"
 
-
+#include "App.h"
+#include "M_ResourceManager.h"
+#include "ImporterScene.h"
 
 ResourceScene::ResourceScene(UID uuid) : Resource(uuid, RES_SCENE)
 {
@@ -13,7 +15,7 @@ ResourceScene::~ResourceScene()
 
 bool ResourceScene::LoadInMemory()
 {
-	return false;
+	return app->resources->sceneImporter->LoadResource(this);
 }
 
 bool ResourceScene::RemoveFromMemory()

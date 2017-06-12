@@ -86,11 +86,11 @@ void EdResources::MeshResource(std::vector<Resource*> meshes)
 
 						ImGui::Text("Original file: ");
 						ImGui::SameLine();
-						ImGui::TextColored(ImVec4(1, 1, 0, 1), mesh->originalFile.c_str());
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), mesh->originalFile.GetFile());
 
 						ImGui::Text("Exported file: ");
 						ImGui::SameLine();
-						ImGui::TextColored(ImVec4(1, 1, 0, 1), mesh->exportedFile.c_str());
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), mesh->exportedFile.GetFile());
 
 						ImGui::Text("Instances in memory: ");
 						ImGui::SameLine();
@@ -192,11 +192,11 @@ void EdResources::MaterialResource(std::vector<Resource*> materials)
 
 						ImGui::Text("Original file: ");
 						ImGui::SameLine();
-						ImGui::TextColored(ImVec4(1, 1, 0, 1), material->originalFile.c_str());
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), material->originalFile.GetFile());
 
 						ImGui::Text("Exported file: ");
 						ImGui::SameLine();
-						ImGui::TextColored(ImVec4(1, 1, 0, 1), material->exportedFile.c_str());
+						ImGui::TextColored(ImVec4(1, 1, 0, 1), material->exportedFile.GetFile());
 
 						ImGui::Text("Instances in memory: ");
 						ImGui::SameLine();

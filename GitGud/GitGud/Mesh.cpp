@@ -40,8 +40,6 @@ void Mesh::OnSaveCmp(JsonFile & sect) const
 		sect.AddBool("have_res", false);
 	}
 
-	//TODO: Tint
-
 	sect.AddBool("wireframe", renderWirefreame);
 	sect.AddBool("normals", renderNormals);
 }
@@ -54,8 +52,6 @@ void Mesh::OnLoadCmp(JsonFile * sect)
 
 		if (sect->GetBool("have_res", false))
 			ComponentResource::OnLoadRes(sect);
-
-		//TODO: Tint
 
 		renderWirefreame = sect->GetBool("wireframe", false);
 		renderNormals = sect->GetBool("normals", false);

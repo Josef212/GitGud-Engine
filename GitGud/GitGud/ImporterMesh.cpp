@@ -84,7 +84,7 @@ bool ImporterMesh::ImportMesh(const aiMesh * mesh, Path& output, UID & id)
 
 bool ImporterMesh::LoadResource(Resource * resource)
 {
-	if(!resource || resource->GetType() != RES_MESH || resource->exportedFile.empty())
+	if(!resource || resource->GetType() != RES_MESH || resource->exportedFile.Empty())
 		return false;
 
 	bool ret = false;
@@ -92,7 +92,7 @@ bool ImporterMesh::LoadResource(Resource * resource)
 	ResourceMesh* res = (ResourceMesh*)resource;
 
 	char* buffer = nullptr;
-	uint size = app->fs->Load((MESH_SAVE_PATH + res->exportedFile).c_str(), &buffer);
+	uint size = app->fs->Load(res->GetExportedFileFullPath(), &buffer);
 
 	if (buffer && size > 0)
 	{

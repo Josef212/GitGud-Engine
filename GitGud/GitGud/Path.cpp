@@ -33,11 +33,16 @@ void Path::SplitPath()
 	int lastSeparator = fullPath.find_last_of("\\/");
 	int dot = fullPath.find_last_of(".");
 
+	if (dot < fullPath.length())
+		extension = fullPath.substr(dot + 1);
+	else
+		extension.clear();
+
 	if (lastSeparator < fullPath.length())
 	{
 		folders = fullPath.substr(0, lastSeparator + 1);
 		file = fullPath.substr(lastSeparator + 1);
-		fileName = fullPath.substr(lastSeparator + 1, fullPath.size() - dot + 2);
+		fileName = fullPath.substr(lastSeparator + 1, file.size() - extension.size() - 1);
 	}
 	else
 	{
@@ -46,10 +51,6 @@ void Path::SplitPath()
 		fileName.clear();
 	}
 
-	if (dot < fullPath.length())
-		extension = fullPath.substr(dot + 1);
-	else
-		extension.clear();
 }
 
 void Path::MountPath()

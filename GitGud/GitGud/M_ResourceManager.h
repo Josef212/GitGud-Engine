@@ -39,7 +39,7 @@ public:
 	Resource* GetResourceFromUID(UID uuid);
 	Resource* CreateResource(RESOURCE_TYPE type, UID forceUID = 0);
 
-	Resource* FindResourceFromOriginalFileName(const char* name);
+	Resource* FindResourceFromOriginalFullPath(const char* fullpath);
 
 	RESOURCE_TYPE GetTypeFromExtension(const char* ext)const;
 

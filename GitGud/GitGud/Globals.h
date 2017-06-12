@@ -83,7 +83,7 @@ enum DATA_TYPE
 #define RESOURCES_PATH "Data/Resources/"
 
 #define MESH_EXTENSION "ggmesh"
-#define TEXTURE_EXTENSION "ggtex"
+#define TEXTURE_EXTENSION "dds"
 #define MATERIAL_EXTENSION "ggmat"
 #define SCENE_EXTENSION "ggscene"
 #define PREFAB_EXTENSION "ggprefab"

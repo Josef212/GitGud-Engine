@@ -64,6 +64,8 @@ bool M_ResourceManager::Start()
 	LoadBasicResources();
 	LoadResources();
 
+	ImportFile("Data/Assets/MechaT/Diffuse_Mech.png");
+
 	return true;
 }
 
@@ -108,7 +110,7 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 
 	if (checkFirst)
 	{
-		Resource* tmp = FindResourceFromOriginalFileName(source.GetFullPath());
+		Resource* tmp = FindResourceFromOriginalFullPath(source.GetFullPath());
 		if (tmp)
 			return tmp->GetUID();
 	}
@@ -137,8 +139,8 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 	if (success)
 	{
 		Resource* r = CreateResource(type, resid);
-		r->originalFile = source.GetFullPath(); //TODO: Change
-		r->exportedFile = exportedPath.GetFullPath();
+		r->originalFile.SetFullPath(source.GetFullPath());
+		r->exportedFile.SetFullPath(exportedPath.GetFullPath());
 		r->name = source.GetFileName();
 		ret = r->GetUID();
 
@@ -182,8 +184,8 @@ UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE t
 	if (succes && ret != 0)
 	{
 		Resource* res = CreateResource(type, ret);
-		res->originalFile = (sourceFile) ? sourceFile->GetFullPath() : "unknown";
-		res->exportedFile = output.GetFullPath();
+		res->originalFile.SetFullPath((sourceFile) ? sourceFile->GetFullPath() : "unknown");
+		res->exportedFile.SetFullPath(output.GetFullPath());
 		res->name = sourceFile ? sourceFile->GetFileName() : "unamed";
 		_LOG("Imported a buffer succesfully [%s].", output.GetFullPath());
 	}
@@ -233,11 +235,12 @@ Resource * M_ResourceManager::CreateResource(RESOURCE_TYPE type, UID forceUID)
 	return ret;
 }
 
-Resource * M_ResourceManager::FindResourceFromOriginalFileName(const char * name)
+//Compare with resources fullpath.
+Resource * M_ResourceManager::FindResourceFromOriginalFullPath(const char * fullpath)
 {
 	for (auto it : resources)
 	{
-		if (it.second->originalFile == name)
+		if (it.second->originalFile.GetFullPath() == fullpath)
 			return it.second;
 	}
 

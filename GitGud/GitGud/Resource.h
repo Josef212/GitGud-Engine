@@ -46,12 +46,22 @@ public:
 
 	const char* GetOriginalFile()const
 	{
-		return originalFile.c_str();
+		return originalFile.GetFile();
+	}
+
+	const char* GetOriginalFileFullPath()const
+	{
+		return originalFile.GetFullPath();
 	}
 
 	const char* GetExportedFile()const
 	{
-		return exportedFile.c_str();
+		return exportedFile.GetFile();
+	}
+
+	const char* GetExportedFileFullPath()const
+	{
+		return exportedFile.GetFullPath();
 	}
 
 	const char* GetResourceName()const
@@ -97,16 +107,16 @@ public:
 	{
 		file.AddInt("UID", uuid);
 		file.AddInt("type", (int)type);
-		file.AddString("original_file", originalFile.c_str());
-		file.AddString("exported_file", exportedFile.c_str());
+		file.AddString("original_file", originalFile.GetFullPath());
+		file.AddString("exported_file", exportedFile.GetFullPath());
 		file.AddString("resource_name", name.c_str());
 	}
 
 	virtual void Load(JsonFile& file)
 	{
 		uuid = file.GetInt("UID", 0);
-		originalFile = file.GetString("original_file", "???");
-		exportedFile = file.GetString("exported_file", "???");
+		originalFile.SetFullPath(file.GetString("original_file", "???"));
+		exportedFile.SetFullPath(file.GetString("exported_file", "???"));
 		name = file.GetString("resource_name", "unamed");
 	}
 
@@ -115,8 +125,8 @@ protected:
 	virtual bool RemoveFromMemory() = 0;
 
 public:
-	std::string originalFile = "";
-	std::string exportedFile = "";
+	Path originalFile;
+	Path exportedFile;
 
 	std::string name = "resource";
 
