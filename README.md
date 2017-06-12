@@ -3,7 +3,7 @@
 <p>GitGud is an OpenGL engine done for educational purposes as a continuation of <a href="https://github.com/Josef212/JayEngine">JayEngine</a> done for the game engine assignement.</p>
 <p>The engine is still in a really early state but will be working on my free time.</p>
 
-<h3>v0.1</h3>
+<h3>v0.1.5</h3>
 <p>First engine version, basic structure is created to build the engine on it.</p>
 <p>Current features:</p>
 <ul>
