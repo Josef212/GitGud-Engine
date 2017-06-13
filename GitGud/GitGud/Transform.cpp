@@ -21,6 +21,7 @@ Transform::~Transform()
 void Transform::OnEnable()
 {
 	localTransformHasChanged = true;
+	app->goManager->anyGOTransHasChanged = true;
 }
 
 float3 Transform::GetLocalPosition() const
@@ -100,7 +101,7 @@ void Transform::SetLocalTransform(const float4x4 & transform)
 
 const float * Transform::GetGlobalTransformGL() const
 {
-	return globalTransform.Transposed().ptr();
+	return globalTransform.ptr();
 }
 
 void Transform::UpdateTransform(const float4x4 & parentMat)

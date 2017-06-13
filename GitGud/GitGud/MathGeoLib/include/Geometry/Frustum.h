@@ -613,6 +613,7 @@ public:
 	bool Intersects(const Ray &ray) const;
 	bool Intersects(const Line &line) const;
 	bool Intersects(const LineSegment &lineSegment) const;
+	bool CustomIntersects(const AABB& aabb)const;
 	bool Intersects(const AABB &aabb) const;
 	bool Intersects(const OBB &obb) const;
 	bool Intersects(const Plane &plane) const;

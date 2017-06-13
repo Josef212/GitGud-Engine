@@ -362,13 +362,13 @@ bool ImporterMesh::LoadCube(ResourceMesh * res)
 		//Right
 		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,
 		//Back
-		0.0f, 0.0f, -u,		0.0f, 0.0f, -u,		0.0f, 0.0f, -u,		0.0f, 0.0f, -u,
+		0.0f, 0.0f, u,		0.0f, 0.0f, u,		0.0f, 0.0f, u,		0.0f, 0.0f, u,
 		//Left
-		-u, 0.0f, 0.0f,		-u, 0.0f, 0.0f,		-u, 0.0f, 0.0f,		-u, 0.0f, 0.0f,
+		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,
 		//Top
 		0.0f, u, 0.0f,		0.0f, u, 0.0f,		0.0f, u, 0.0f,		0.0f, u, 0.0f,
 		//Bot
-		0.0f, -u, 0.0f,		0.0f, -u, 0.0f,		0.0f, -u, 0.0f,		0.0f, -u, 0.0f
+		0.0f, u, 0.0f,		0.0f, u, 0.0f,		0.0f, u, 0.0f,		0.0f, u, 0.0f
 	};
 
 	res->normals = new float[res->numVertices * 3];

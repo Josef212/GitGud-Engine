@@ -10,6 +10,7 @@
 class GGOctree;
 class GameObject;
 class Component;
+class Camera;
 
 class M_GoManager : public Module
 {
@@ -38,6 +39,9 @@ public:
 
 	void RemoveGameObject(GameObject* obj);
 	void FastRemoveGameObject(GameObject* obj);
+
+	void GetToDrawStaticObjects(std::vector<GameObject*>& objects, Camera* cam);
+	std::list<GameObject*>* GetDynamicObjects();
 
 	void SaveScene();
 	void LoadScene(); //TODO: Must adapt this to use scene resource and a way to change scenes, etc.

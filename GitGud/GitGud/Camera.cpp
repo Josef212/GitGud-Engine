@@ -22,8 +22,8 @@ Camera::Camera(GameObject* object) : Component(object, CMP_CAMERA)
 	else
 	{
 		frustum.SetPos(float3(0.f, 0.f, 0.f));
-		frustum.SetFront(float3(0.f, 0.f, -1.f));
-		frustum.SetUp(float3(0.f, 1.f, 0.f));
+		frustum.SetFront(float3::unitZ);
+		frustum.SetUp(float3::unitY);
 	}
 
 	frustum.SetViewPlaneDistances(1.f, 100.f);

@@ -1052,6 +1052,29 @@ bool Frustum::Intersects(const LineSegment &lineSegment) const
 	return GJKIntersect(*this, lineSegment);
 }
 
+bool Frustum::CustomIntersects(const AABB & aabb) const
+{
+	float3 corners[8];
+	aabb.GetCornerPoints(corners);
+
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		int outPoints = 8;
+		for (unsigned int j = 0; j < 8; ++j)
+		{
+			if (GetPlane(i).normal.Dot(corners[j]) - GetPlane(i).d >= 0.f)
+			{
+				--outPoints;
+			}
+
+			if (outPoints <= 0)
+				return false;
+		}
+	}
+
+	return true;
+}
+
 bool Frustum::Intersects(const AABB &aabb) const
 {
 	return GJKIntersect(*this, aabb);

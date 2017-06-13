@@ -5,7 +5,11 @@
 #include "M_Editor.h"
 #include "M_Camera3D.h"
 #include "M_ResourceManager.h"
+#include "M_GoManager.h"
 
+#include "GameObject.h"
+#include "Transform.h"
+#include "Mesh.h"
 #include "Camera.h"
 
 #include "ResourceMesh.h"
@@ -110,7 +114,7 @@ bool M_Renderer::Start()
 
 UPDATE_RETURN M_Renderer::PreUpdate(float dt)
 {
-	Camera* cam = app->camera->GetEditorCamera();
+	Camera* cam = currentCamera ? currentCamera : app->camera->GetEditorCamera();
 	if (cam)
 	{
 		Color col = cam->GetBackground();
@@ -130,8 +134,38 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 {
 	UPDATE_RETURN ret = UPDT_CONTINUE;
 
+	Camera* cam = currentCamera ? currentCamera : app->camera->GetEditorCamera(); //TODO: AppState, editor/game?
+
+	std::vector<GameObject*> objects;
+	app->goManager->GetToDrawStaticObjects(objects, cam);
+	std::list<GameObject*>* dyn = app->goManager->GetDynamicObjects();
+
+	//Static objects
+	/*for (std::vector<GameObject*>::iterator it = objects.begin(); it != objects.end(); ++it)
+	{
+		if(*it)
+			DrawObject(*it, cam);
+	}
+
+	//Dynamic bjects
+	if (dyn)
+	{
+		for (std::list<GameObject*>::iterator it = dyn->begin(); it != dyn->end(); ++it)
+		{
+			if(*it && cam->frustum.Intersects((*it)->enclosingBox))
+				DrawObject(*it, cam);
+		}
+	}
+	*/
 	//TMP
-	Draw();
+	//Draw();
+	GameObject* r = app->goManager->GetRoot();
+	for (auto it : r->childs)
+	{
+		if (it && cam->frustum.Intersects(it->enclosingBox))
+			DrawObject(it, cam);
+		DrawChilds(it, cam);
+	}
 	//------------
 
 	//TODO: Debug draw
@@ -168,9 +202,47 @@ void M_Renderer::SetVSync(bool set)
 	}
 }
 
+Camera * M_Renderer::GetCurrentCamera() const
+{
+	return currentCamera;
+}
+
+void M_Renderer::SetCamera(Camera * cam)
+{
+	currentCamera = cam;
+}
+
 void M_Renderer::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+void M_Renderer::DrawObject(GameObject * object, Camera * cam)
+{
+	Mesh* meshCmp = (Mesh*)object->GetComponent(CMP_MESH);
+	if (meshCmp)
+	{
+		ResourceMesh* mesh = (ResourceMesh*)meshCmp->GetResource();
+		if (mesh)
+		{
+			glUseProgram(shader);
+
+			glBindVertexArray(mesh->idContainer);
+
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, object->transform->GetGlobalTransformGL());
+			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, cam->GetGLViewMatrix());
+			glUniformMatrix4fv(projLoc, 1, GL_FALSE, cam->GetGLProjectionMatrix());
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->idIndices);
+
+			glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, 0);
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
+
+			glUseProgram(0);
+		}
+	}
 }
 
 void M_Renderer::CreateShader()
@@ -204,7 +276,9 @@ void M_Renderer::CreateShader()
 		"out vec4 FragColor;\n"
 		"void main()\n"
 		"{\n"
-		"	FragColor = vec4(outColor, 1.0);\n"
+		"	//FragColor = vec4(outColor, 1.0);\n"
+		"	//FragColor = vec4(0.7, 0.7, 0.7, 1.0); \n"
+		"	FragColor = vec4(outNormal, 1.0); \n"
 		"}\n"
 	);
 
@@ -281,4 +355,14 @@ void M_Renderer::Draw()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
+}
+
+void M_Renderer::DrawChilds(GameObject * object, Camera* cam)
+{
+	for (auto it : object->childs)
+	{
+		if (it && cam->frustum.Intersects(it->enclosingBox))
+			DrawObject(it, cam);
+		DrawChilds(it, cam);
+	}
 }

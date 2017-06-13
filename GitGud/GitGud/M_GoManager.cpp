@@ -11,6 +11,8 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "Transform.h"
+#include "Camera.h"
+#include "Mesh.h"
 
 #define OCTREE_SIZE 100 / 2
 
@@ -42,6 +44,11 @@ bool M_GoManager::Init(JsonFile * conifg)
 bool M_GoManager::Start()
 {
 	_LOG("GoManager: Start.");
+
+	GameObject* go = CreateGameObject();
+	Mesh* m = (Mesh*)go->CreateComponent(CMP_MESH);
+	m->SetResource(2);
+
 	return true;
 }
 
@@ -185,6 +192,17 @@ void M_GoManager::FastRemoveGameObject(GameObject * obj)
 		obj->RemoveAllChilds();
 		objectsToDelete.push_back(obj);
 	}
+}
+
+void M_GoManager::GetToDrawStaticObjects(std::vector<GameObject*>& objects, Camera * cam)
+{
+	if(cam)
+		octree->CollectCandidates(objects, cam->frustum);
+}
+
+std::list<GameObject*>* M_GoManager::GetDynamicObjects()
+{
+	return &dynamicGameObjects;
 }
 
 void M_GoManager::SaveScene()

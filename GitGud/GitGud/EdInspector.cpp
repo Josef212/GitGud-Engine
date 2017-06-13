@@ -123,6 +123,11 @@ void EdInspector::DrawTrans(GameObject * selected)
 		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[1]);
 		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[2]);
 		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[3]);
+		ImGui::Text("Local transform");
+		ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[0]);
+		ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[1]);
+		ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[2]);
+		ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[3]);
 		
 	}
 }

@@ -4,6 +4,8 @@
 #include "Module.h"
 #include <SDL.h>
 
+class GameObject;
+class Camera;
 
 class M_Renderer : public Module
 {
@@ -20,9 +22,14 @@ public:
 	bool GetVSync()const;
 	void SetVSync(bool set);
 
+	Camera* GetCurrentCamera()const;
+	void SetCamera(Camera* cam);
+
 
 private:
 	void OnResize(int width, int height);
+
+	void DrawObject(GameObject* object, Camera* cam);
 
 
 	//****
@@ -33,6 +40,7 @@ private:
 	void CreateShader();
 
 	void Draw();
+	void DrawChilds(GameObject* object, Camera* cam);
 
 	//-------------------
 
@@ -42,6 +50,8 @@ public:
 private:
 	SDL_GLContext context;
 	bool vsync;
+
+	Camera* currentCamera = nullptr; //TODO: Only one camera?? Viewport??
 };
 
 
