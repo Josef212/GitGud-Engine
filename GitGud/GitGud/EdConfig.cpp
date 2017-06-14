@@ -12,6 +12,9 @@
 #include "M_Window.h"
 #include "M_Input.h"
 #include "M_FileSystem.h"
+#include "M_GoManager.h"
+#include "GameObject.h"
+#include "Camera.h"
 
 
 #include "Camera.h"
@@ -254,6 +257,35 @@ void EdConfig::Draw()
 
 				ImGui::DragFloat("Move speed", &app->camera->movSpeed, 0.25f, 0.01f);
 				ImGui::DragFloat("Rot speed", &app->camera->rotSpeed, 0.25f, 0.01f);
+			}
+		}
+
+		if (ImGui::CollapsingHeader("Game Object Manager"))
+		{
+			if (ImGui::TreeNodeEx("Dynamic objects"))
+			{
+				std::list<GameObject*>* dyn = app->goManager->GetDynamicObjects();
+				for (auto it : *dyn)
+				{
+					if(ImGui::TreeNodeEx(it->GetName(), ImGuiTreeNodeFlags_Leaf))
+						ImGui::TreePop();
+				}
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNodeEx("Static objects"))
+			{
+				std::vector<GameObject*> stc;
+				app->goManager->GetToDrawStaticObjects(stc, app->camera->GetEditorCamera());
+
+				for (auto it : stc)
+				{
+					if (ImGui::TreeNodeEx(it->GetName(), ImGuiTreeNodeFlags_Leaf))
+						ImGui::TreePop();
+				}
+
+				ImGui::TreePop();
 			}
 		}
 

@@ -46,6 +46,7 @@ GameObject * GameObject::CreateChild()
 
 	ret = new GameObject(this, app->random->GetRandInt());
 	childs.push_back(ret);
+	app->goManager->AddDynObject(ret);
 
 	return ret;
 }

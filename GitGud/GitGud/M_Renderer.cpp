@@ -141,7 +141,7 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 	std::list<GameObject*>* dyn = app->goManager->GetDynamicObjects();
 
 	//Static objects
-	/*for (std::vector<GameObject*>::iterator it = objects.begin(); it != objects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = objects.begin(); it != objects.end(); ++it)
 	{
 		if(*it)
 			DrawObject(*it, cam);
@@ -156,16 +156,7 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 				DrawObject(*it, cam);
 		}
 	}
-	*/
-	//TMP
-	//Draw();
-	GameObject* r = app->goManager->GetRoot();
-	for (auto it : r->childs)
-	{
-		if (it && cam->frustum.Intersects(it->enclosingBox))
-			DrawObject(it, cam);
-		DrawChilds(it, cam);
-	}
+	
 	//------------
 
 	//TODO: Debug draw

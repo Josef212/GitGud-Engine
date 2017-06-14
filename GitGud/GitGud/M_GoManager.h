@@ -74,6 +74,7 @@ private:
 	GameObject* root = nullptr;
 	GameObject* selected = nullptr;
 
+	//TODO: Have a vector of all static objects in the camera. Update it only if camera has changed.
 	std::list<GameObject*> dynamicGameObjects;
 	std::vector<GameObject*> objectsToDelete;
 
