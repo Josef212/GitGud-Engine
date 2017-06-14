@@ -334,29 +334,6 @@ void M_Renderer::CreateShader()
 	projLoc = glGetUniformLocation(shader, "projection");
 }
 
-void M_Renderer::Draw()
-{
-	Camera* cam = app->camera->GetEditorCamera();
-	ResourceMesh* r = app->resources->cube;
-	glUseProgram(shader);
-	
-	glBindVertexArray(r->idContainer);
-
-	float4x4 model = float4x4::identity;
-
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.Transposed().ptr());
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, cam->GetGLViewMatrix());
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, cam->GetGLProjectionMatrix());
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r->idIndices);
-
-	glDrawElements(GL_TRIANGLES, r->numIndices, GL_UNSIGNED_INT, 0);
-	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-	glUseProgram(0);
-}
-
 void M_Renderer::DrawChilds(GameObject * object, Camera* cam)
 {
 	for (auto it : object->childs)

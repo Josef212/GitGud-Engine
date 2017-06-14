@@ -101,7 +101,7 @@ void Transform::SetLocalTransform(const float4x4 & transform)
 
 const float * Transform::GetGlobalTransformGL() const
 {
-	return globalTransform.ptr();
+	return globalTransform.Transposed().ptr();
 }
 
 void Transform::UpdateTransform(const float4x4 & parentMat)

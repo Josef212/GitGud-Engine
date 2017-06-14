@@ -39,7 +39,6 @@ private:
 
 	void CreateShader();
 
-	void Draw();
 	void DrawChilds(GameObject* object, Camera* cam);
 
 	//-------------------
