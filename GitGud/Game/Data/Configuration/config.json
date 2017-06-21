@@ -21,5 +21,8 @@
 
   "module_resource_manager" : {
     "resource_file" : "resources.json"
+  },
+  "module_go_manager": {
+  	"octree_size": 50
   }
 }

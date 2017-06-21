@@ -61,6 +61,7 @@ bool M_ResourceManager::Start()
 	_LOG("Resource manager: Start.");
 
 	//ImportFile("Data/Assets/MechaT/MechaT.fbx");
+	//ImportFile("Data/Assets/Brute.fbx");
 	LoadBasicResources();
 	LoadResources();
 

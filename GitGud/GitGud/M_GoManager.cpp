@@ -34,9 +34,11 @@ M_GoManager::~M_GoManager()
 bool M_GoManager::Init(JsonFile * conifg)
 {
 	_LOG("GoManager: Init.");
+
+	octreeSize = conifg->GetInt("octree_size", OCTREE_SIZE);
 	
 	octree = new GGOctree();
-	octree->Create(AABB::FromCenterAndSize(float3(0, 0, 0), float3(OCTREE_SIZE, OCTREE_SIZE, OCTREE_SIZE)));
+	octree->Create(AABB::FromCenterAndSize(float3(0, 0, 0), float3(octreeSize, octreeSize, octreeSize)));
 
 	return true;
 }

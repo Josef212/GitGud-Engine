@@ -124,7 +124,9 @@ void Console::CListCmd::Function(std::vector<std::string>& args)
 				_LOG("Description: %s.", c->commandDescription.c_str());
 			}
 		}
+		_LOG("-------------");
 	}
+	_LOG("==================================");
 }
 
 void Console::CHelp::Function(std::vector<std::string>& args)

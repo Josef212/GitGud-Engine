@@ -173,8 +173,6 @@ void EdInspector::DrawMesh(GameObject * selected, Mesh * mesh)
 			ImGui::Checkbox("Wirframe", &mesh->renderWirefreame);
 			ImGui::SameLine();
 			ImGui::Checkbox("Normals", &mesh->renderNormals);
-
-			ImGui::ColorEdit4("Tint", &mesh->tint);
 		}
 	}
 }

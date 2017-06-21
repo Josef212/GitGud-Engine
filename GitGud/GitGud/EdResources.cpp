@@ -48,6 +48,30 @@ void EdResources::Draw()
 			MaterialResource(resources);
 		}
 
+		if (ImGui::CollapsingHeader("Textures"))
+		{
+			resources.clear();
+			app->resources->GetResourcesOfType(resources, RES_TEXTURE);
+
+			TextureResource(resources);
+		}
+
+		if (ImGui::CollapsingHeader("Scenes"))
+		{
+			resources.clear();
+			app->resources->GetResourcesOfType(resources, RES_SCENE);
+
+			SceneResource(resources);
+		}
+
+		if (ImGui::CollapsingHeader("Shader"))
+		{
+			resources.clear();
+			app->resources->GetResourcesOfType(resources, RES_SHADER);
+
+			ShaderResource(resources);
+		}
+
 
 		ImGui::End();
 	}
@@ -186,7 +210,7 @@ void EdResources::MaterialResource(std::vector<Resource*> materials)
 				{
 					ImGui::PushStyleVar(ImGuiStyleVar_ChildWindowRounding, 5.0f);
 
-					ImGui::BeginChild("meshes", ImVec2(infoW, infoH));
+					ImGui::BeginChild("materials", ImVec2(infoW, infoH));
 					{
 						//---- Should be generic??
 
@@ -236,5 +260,13 @@ void EdResources::MaterialResource(std::vector<Resource*> materials)
 }
 
 void EdResources::TextureResource(std::vector<Resource*> textures)
+{
+}
+
+void EdResources::SceneResource(std::vector<Resource*> textures)
+{
+}
+
+void EdResources::ShaderResource(std::vector<Resource*> textures)
 {
 }

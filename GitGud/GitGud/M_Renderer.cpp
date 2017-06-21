@@ -143,7 +143,7 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 	//Static objects
 	for (std::vector<GameObject*>::iterator it = objects.begin(); it != objects.end(); ++it)
 	{
-		if(*it)
+		if(*it && (*it)->IsActive())
 			DrawObject(*it, cam);
 	}
 
@@ -152,8 +152,9 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 	{
 		for (std::list<GameObject*>::iterator it = dyn->begin(); it != dyn->end(); ++it)
 		{
-			if(*it && cam->frustum.Intersects((*it)->enclosingBox))
-				DrawObject(*it, cam);
+			if(*it && (*it)->IsActive())
+				if((*it)->enclosingBox.IsFinite() && cam->frustum.Intersects((*it)->enclosingBox))
+					DrawObject(*it, cam);
 		}
 	}
 	

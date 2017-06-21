@@ -69,6 +69,8 @@ public:
 	bool anyGOTransHasChanged = true;
 
 private:
+	float octreeSize = 0.0f;
+
 	bool mustSave = false, mustLoad = false;
 
 	GameObject* root = nullptr;
