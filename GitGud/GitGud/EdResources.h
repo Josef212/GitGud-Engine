@@ -22,8 +22,8 @@ private:
 	void MeshResource(std::vector<Resource*> meshes);
 	void MaterialResource(std::vector<Resource*> materials);
 	void TextureResource(std::vector<Resource*> textures);
-	void SceneResource(std::vector<Resource*> textures);
-	void ShaderResource(std::vector<Resource*> textures);
+	void SceneResource(std::vector<Resource*> scenes);
+	void ShaderResource(std::vector<Resource*> shaders);
 
 	int infoW = 300;
 	int infoH = 150; //TODO: Should calc this with the window size??

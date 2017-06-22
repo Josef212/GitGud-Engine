@@ -333,6 +333,9 @@
     <ClCompile Include="Path.cpp">
       <Filter>Containers&amp;Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="EdShaderEditor.cpp">
+      <Filter>Engine\Editor\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -703,6 +706,9 @@
     </ClInclude>
     <ClInclude Include="Path.h">
       <Filter>Containers&amp;Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="EdShaderEditor.h">
+      <Filter>Engine\Editor\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -116,8 +116,9 @@ bool ImporterTexture::LoadChequers(ResourceTexture * res)
 {
 	if (!res)return false;
 
-	res->originalFile = "*checkers*";
-	res->exportedFile = "*checkers*";
+	res->originalFile.SetFileName("*checkers*");
+	res->exportedFile.SetFileName("*checkers*");
+	res->name = "Checkers";
 
 	GLubyte checkImage[CHECKERS_WIDHT][CHECKERS_HEIGHT][4];
 	for (int i = 0; i < CHECKERS_HEIGHT; ++i)

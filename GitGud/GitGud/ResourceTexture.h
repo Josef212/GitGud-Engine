@@ -54,6 +54,9 @@ public:
 	bool LoadInMemory()override;
 	bool RemoveFromMemory()override;
 
+	const char* GetTextureTypeStr()const;
+	const char* GetTextureFormatStr()const;
+
 public:
 	uint width = 0;
 	uint height = 0;
@@ -65,6 +68,7 @@ public:
 	uint texID = 0;
 
 	FORMAT format = UNKNOWN;
+	TEXTURE_TYPE textureType = TEX_NONE;
 };
 
 #endif // !__RESOURCE_TEXTURE_H__

@@ -17,6 +17,7 @@ class EdHierarchy;
 class EdInspector;
 class EdMaterialCreator;
 class EdResources;
+class EdShaderEditor;
 
 class M_Editor : public Module
 {
@@ -45,6 +46,15 @@ private:
 	void SaveStyle(ImGuiStyle* style);
 	void SetStyleEditorWin();
 
+public:
+	EdConfig* config = nullptr;
+	EdConsole* console = nullptr;
+	EdHierarchy* hierarchy = nullptr;
+	EdInspector* inspector = nullptr;
+	EdResources* resources = nullptr;
+	EdMaterialCreator* materialCreator = nullptr;
+	EdShaderEditor* shaderEditor = nullptr;
+
 private:
 	std::list<EdWin*> editorWins;
 
@@ -53,15 +63,7 @@ private:
 
 	bool showImGuiDemo = false;
 	bool styleEditor = false;
-
-
-	EdConfig* config = nullptr;
-	EdConsole* console = nullptr;
-	EdHierarchy* hierarchy = nullptr;
-	EdInspector* inspector = nullptr;
-	EdResources* resources = nullptr;
-	EdMaterialCreator* materialCreator = nullptr;
-
+	
 };
 
 #endif //!__M_EDITOR_H__

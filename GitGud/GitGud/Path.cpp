@@ -102,6 +102,7 @@ void Path::Normalize()
 void Path::SetFileName(const char * _fileName)
 {
 	fileName = _fileName;
+	file = fileName + extension;
 	MountPath();
 }
 

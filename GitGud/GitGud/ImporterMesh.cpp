@@ -312,8 +312,8 @@ bool ImporterMesh::LoadCube(ResourceMesh * res)
 {
 	if (!res)return false;
 
-	res->originalFile = "*Cube*";
-	res->exportedFile = "*Cube*";
+	res->originalFile.SetFileName("*Cube*");
+	res->exportedFile.SetFileName("*Cube*");
 	res->name = "Cube";
 
 	//-----------------------
@@ -429,8 +429,8 @@ bool ImporterMesh::LoadQuad(ResourceMesh * res)
 {
 	if (!res) return false;
 
-	res->originalFile = "*Quad*";
-	res->exportedFile = "*Quad*";
+	res->originalFile.SetFileName("*Quad*");
+	res->exportedFile.SetFileName("*Quad*");
 	res->name = "Quad";
 
 	//-----------------------
@@ -497,8 +497,8 @@ bool ImporterMesh::LoadPlane(ResourceMesh * res) //TODO: Fix
 {
 	if (!res) return false;
 
-	res->originalFile = "*Plane*";
-	res->exportedFile = "*Plane*";
+	res->originalFile.SetFileName("*Plane*");
+	res->exportedFile.SetFileName("*Plane*");
 	res->name = "Plane";
 
 	//-----------------------
@@ -591,8 +591,8 @@ bool ImporterMesh::LoadCone(ResourceMesh * res)
 {
 	if (!res) return false;
 
-	res->originalFile = "*Cone*";
-	res->exportedFile = "*Cone*";
+	res->originalFile.SetFileName("*Cone*");
+	res->exportedFile.SetFileName("*Cone*");
 	res->name = "Cone";
 
 	return true;
@@ -602,8 +602,8 @@ bool ImporterMesh::LoadCylinder(ResourceMesh * res)
 {
 	if (!res) return false;
 
-	res->originalFile = "*Cylinder*";
-	res->exportedFile = "*Cylinder*";
+	res->originalFile.SetFileName("*Cylinder*");
+	res->exportedFile.SetFileName("*Cylinder*");
 	res->name = "Cylinder";
 
 	return true;
@@ -613,8 +613,8 @@ bool ImporterMesh::LoadTorus(ResourceMesh * res)
 {
 	if (!res) return false;
 
-	res->originalFile = "*Torus*";
-	res->exportedFile = "*Torus*";
+	res->originalFile.SetFileName("*Torus*");
+	res->exportedFile.SetFileName("*Torus*");
 	res->name = "Torus";
 
 	return true;
@@ -624,8 +624,8 @@ bool ImporterMesh::LoadSphere(ResourceMesh * res)
 {
 	if (!res) return false;
 
-	res->originalFile = "*Sphere*";
-	res->exportedFile = "*Sphere*";
+	res->originalFile.SetFileName("*Sphere*");
+	res->exportedFile.SetFileName("*Sphere*");
 	res->name = "Sphere";
 
 	return true;

@@ -22,3 +22,20 @@ bool ResourceTexture::RemoveFromMemory()
 {
 	return false;
 }
+
+const char * ResourceTexture::GetTextureTypeStr()const
+{
+	static const char* types[] = { 
+		"none", "diffues", "specular", "ambient", "emissive", "height", "normal map", 
+		"shininess", "opacity", "displacement", "light map", "reflection" };
+
+	return types[type];
+}
+
+const char * ResourceTexture::GetTextureFormatStr() const
+{
+	static const char* formats[] = {
+		"color index", "rgb", "rgba", "bgr", "bgra", "luminance", "unknown" };
+
+	return formats[format];
+}

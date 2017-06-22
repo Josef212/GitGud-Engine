@@ -19,16 +19,6 @@ EdMaterialCreator::~EdMaterialCreator()
 {
 }
 
-void EdMaterialCreator::OnEnable()
-{
-	currentMaterial = (ResourceMaterial*)app->resources->CreateResource(RES_MATERIAL);
-}
-
-void EdMaterialCreator::OnDisable()
-{
-	if (currentMaterial) currentMaterial = nullptr;
-}
-
 void EdMaterialCreator::Draw()
 {
 	ImGui::Begin("Material creator", &active);

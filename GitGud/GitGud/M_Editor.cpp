@@ -12,6 +12,7 @@
 #include "EdInspector.h"
 #include "EdResources.h"
 #include "EdMaterialCreator.h"
+#include "EdShaderEditor.h"
 
 #include "GameObject.h"
 #include "M_GoManager.h"
@@ -33,6 +34,7 @@ M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnab
 	inspector = new EdInspector(true);
 	resources = new EdResources(true);
 	materialCreator = new EdMaterialCreator(false);
+	shaderEditor = new EdShaderEditor(false);
 
 
 	editorWins.push_back(config); 
@@ -41,6 +43,7 @@ M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnab
 	editorWins.push_back(inspector);
 	editorWins.push_back(resources);
 	editorWins.push_back(materialCreator);
+	editorWins.push_back(shaderEditor);
 }
 
 
@@ -99,13 +102,12 @@ UPDATE_RETURN M_Editor::Update(float dt)
 
 		if (ImGui::BeginMenu("View"))
 		{
-			if (ImGui::MenuItem("Configuration"))if (config)config->SwapActive();
-			if (ImGui::MenuItem("Console"))if (console)console->SwapActive();
-			if (ImGui::MenuItem("Hierarchy"));
-			if (ImGui::MenuItem("Inspector"));
+			ImGui::MenuItem("Configuration", nullptr, &config->active);
+			ImGui::MenuItem("Console", nullptr, &console->active);
+			ImGui::MenuItem("Hierarchy", nullptr, &hierarchy->active);
+			ImGui::MenuItem("Inspector", nullptr, &inspector->active);
+			ImGui::MenuItem("Resource", nullptr, &resources->active);
 			ImGui::MenuItem("SetStyle", nullptr, &styleEditor);
-
-
 
 			ImGui::EndMenu();
 		}
@@ -134,7 +136,8 @@ UPDATE_RETURN M_Editor::Update(float dt)
 
 		if (ImGui::BeginMenu("Resources"))
 		{
-			if (ImGui::MenuItem("Create material...")) if (materialCreator)materialCreator->Enable();
+			ImGui::MenuItem("Create material...", nullptr, &materialCreator->active);
+			ImGui::MenuItem("Shader editor", nullptr, &shaderEditor->active);
 			ImGui::EndMenu();
 		}
 

@@ -14,9 +14,6 @@ public:
 	EdMaterialCreator(bool startEnabled = false);
 	virtual ~EdMaterialCreator();
 
-	void OnEnable()override;
-	void OnDisable()override;
-
 	void Draw()override;
 
 public:

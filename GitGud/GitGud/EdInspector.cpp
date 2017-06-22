@@ -27,7 +27,7 @@ void EdInspector::Draw()
 	int h = ImGui::GetIO().DisplaySize.y;
 
 	ImGui::SetNextWindowPos(ImVec2(w * 0.8, 20));
-	ImGui::SetNextWindowSize(ImVec2(w*0.2, (h -20)*0.8 - 55));
+	ImGui::SetNextWindowSize(ImVec2(w*0.2, (h -20)*0.8 - 5));
 
 	GameObject* selected = app->goManager->GetSelected();
 
