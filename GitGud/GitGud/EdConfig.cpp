@@ -177,19 +177,21 @@ void EdConfig::Draw()
 
 		if (ImGui::CollapsingHeader("Information"))
 		{
+			const Hrd* hrd = app->info->GetInfo();
+
 			ImGui::Text("SDL Version: ");
 			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d.%d.%d", app->info->GetInfo()->sdlVersion.major, app->info->GetInfo()->sdlVersion.minor, app->info->GetInfo()->sdlVersion.patch);
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d.%d.%d", hrd->sdlVersion.major, hrd->sdlVersion.minor, hrd->sdlVersion.patch);
 			
 			ImGui::Separator();
 
 			ImGui::Text("CPUs: ");
 			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%dCores (Cache: %dKb)", app->info->GetInfo()->cpuCores, app->info->GetInfo()->cpuCacheSize);
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%dCores (Cache: %dKb)", hrd->cpuCores, hrd->cpuCacheSize);
 
 			ImGui::Text("System RAM: ");
 			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%dGb", app->info->GetInfo()->ram);
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%dGb", hrd->ram);
 
 			ImGui::Text("Caps: ");
 			ImGui::SameLine();
@@ -197,7 +199,36 @@ void EdConfig::Draw()
 
 			ImGui::Separator();
 
-			ImGui::TextColored(ImVec4(1, 0, 0, 1), "TODO: get GPU info");
+			ImGui::Text("System RAM: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%dGb", hrd->ram);
+
+			ImGui::Separator();
+
+			ImGui::Text("GPU: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "Vendor: %u. Device: %u.", hrd->gpuVendor, hrd->gpuDevice);
+
+			ImGui::Text("Brand: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), hrd->gpuBrand);
+
+			ImGui::Text("VRAM budget: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.1f Mb.", hrd->vRamMbBudget);
+
+			ImGui::Text("VRAM usage: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.1f Mb.", hrd->vRamMbUsage);
+
+			ImGui::Text("VRAM available: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.1f Mb.", hrd->vRamMbAvailable);
+
+			ImGui::Text("VRAM reserved: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.1f Mb.", hrd->vRamMbReserved);
+
 		}
 
 		if (ImGui::CollapsingHeader("Editor camera"))

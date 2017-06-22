@@ -1,5 +1,5 @@
 #include "HrdInfo.h"
-
+#include "gpudetect/DeviceId.h"
 
 
 HrdInfo::HrdInfo()
@@ -29,6 +29,23 @@ void HrdInfo::SetInfo()
 	info.has3DNow = SDL_Has3DNow();
 	SDL_GetVersion(&info.sdlVersion);
 	info.sdlRevision = SDL_GetRevision();
+
+	//GPU
+	uint vendor, deviceId;
+	std::wstring brand;
+	unsigned __int64 videoMemBudget, videoMemUsage, videoMemAvailable, videoMemReserved;
+
+	if (getGraphicsDeviceInfo(&vendor, &deviceId, &brand, &videoMemBudget, &videoMemUsage, &videoMemAvailable, &videoMemReserved))
+	{
+		info.gpuVendor = vendor;
+		info.gpuDevice = deviceId;
+		sprintf_s(info.gpuBrand, 250, "%S", brand.c_str());
+		info.vRamMbBudget = float(videoMemBudget) / 1073741824.0f;
+		info.vRamMbUsage = float(videoMemUsage) / (1024.f * 1024.f);
+		info.vRamMbAvailable = float(videoMemAvailable) / (1024.f * 1024.f * 1024.f);
+		info.vRamMbReserved = float(videoMemReserved) / (1024.f * 1024.f * 1024.f);
+	}
+
 	SetCaps();
 }
 
@@ -61,31 +78,46 @@ void HrdInfo::LogHrdInfo()
 		_LOG("Has3DNow");
 }
 
+const Hrd * HrdInfo::GetInfo()
+{
+	unsigned __int64 videoMemBudget, videoMemUsage, videoMemAvailable, videoMemReserved;
+
+	if (getGraphicsDeviceInfo(nullptr, nullptr, nullptr, &videoMemBudget, &videoMemUsage, &videoMemAvailable, &videoMemReserved))
+	{
+		info.vRamMbBudget = float(videoMemBudget) / (1024.f * 1024.f);
+		info.vRamMbUsage = float(videoMemUsage) / (1024.f * 1024.f);
+		info.vRamMbAvailable = float(videoMemAvailable) / (1024.f * 1024.f);
+		info.vRamMbReserved = float(videoMemReserved) / (1024.f * 1024.f);
+	}
+
+	return &info;
+}
+
 void HrdInfo::SetCaps()
 {
 	if (info.hasAVX)
-		str.append("AVX ");
+		strCaps.append("AVX ");
 	if (info.hasAltiVec)
-		str.append("AltiVec ");
+		strCaps.append("AltiVec ");
 	if (info.hasMMX)
-		str.append("MMX ");
+		strCaps.append("MMX ");
 	if (info.hasRDTSC)
-		str.append("RDTSC ");
+		strCaps.append("RDTSC ");
 	if (info.hasSSE)
-		str.append("SSE ");
+		strCaps.append("SSE ");
 	if (info.hasSSE2)
-		str.append("SSE2 ");
+		strCaps.append("SSE2 ");
 	if (info.hasSSE3)
-		str.append("SSE3 ");
+		strCaps.append("SSE3 ");
 	if (info.hasSSE41)
-		str.append("SSE41 ");
+		strCaps.append("SSE41 ");
 	if (info.hasSSE42)
-		str.append("SSE42 ");
+		strCaps.append("SSE42 ");
 	if (info.has3DNow)
-		str.append("3DNow");
+		strCaps.append("3DNow");
 }
 
 const char* HrdInfo::GetCaps()
 {
-	return str.c_str();
+	return strCaps.c_str();
 }
