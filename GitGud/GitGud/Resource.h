@@ -103,24 +103,28 @@ public:
 			RemoveFromMemory();
 	}
 
-	virtual void Save(JsonFile& file)
+	void Save(JsonFile& file)
 	{
 		file.AddInt("UID", uuid);
 		file.AddInt("type", (int)type);
 		file.AddString("original_file", originalFile.GetFullPath());
 		file.AddString("exported_file", exportedFile.GetFullPath());
 		file.AddString("resource_name", name.c_str());
+		OnSave(file);
 	}
 
-	virtual void Load(JsonFile& file)
+	void Load(JsonFile& file)
 	{
 		uuid = file.GetInt("UID", 0);
 		originalFile.SetFullPath(file.GetString("original_file", "???"));
 		exportedFile.SetFullPath(file.GetString("exported_file", "???"));
 		name = file.GetString("resource_name", "unamed");
+		OnLoad(file);
 	}
 
 protected:
+	virtual void OnSave(JsonFile& file) {}
+	virtual void OnLoad(JsonFile& file) {}
 	virtual bool LoadInMemory() = 0;
 	virtual bool RemoveFromMemory() = 0;
 

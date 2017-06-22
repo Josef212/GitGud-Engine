@@ -35,7 +35,6 @@ M_ResourceManager::M_ResourceManager(const char* name, bool startEnabled) : Modu
 	shaderImporter = new ImporterShader();
 }
 
-
 M_ResourceManager::~M_ResourceManager()
 {
 	_LOG("Resource manager: Destroying.");

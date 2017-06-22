@@ -16,7 +16,6 @@ void _log(const char file[], int line, const char* format, ...)
 	//OutputDebugString(tmpString2);
 	SDL_Log(tmpString2);
 
-	//TODO: Log to app
 	if (app)
 	{
 		sprintf_s(tmpString2, 4096, "%s\n", tmpString);

@@ -28,7 +28,6 @@ bool Material::SetResource(UID resUID)
 			if (res->LoadToMemory())
 			{
 				resource = resUID;
-				object->RecalcBox();
 				ret = true;
 			}
 		}

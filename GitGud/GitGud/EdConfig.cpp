@@ -127,8 +127,8 @@ void EdConfig::Draw()
 			if (ImGui::Checkbox("Fullscreen", &fullscreen)) app->win->SetFullScreen(fullscreen);
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Resizable", &resizable)) app->win->SetResizable(resizable);
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(0.69, 0.13, 0.13, 1), "Reset app too apply."); //TODO: add functionality to save and load to change resizale
+			if (ImGui::IsItemHovered()) ImGui::SetTooltip("Reset app too apply."); //TODO: add functionality to save and load to change resizale
+
 			if (ImGui::Checkbox("Borderless", &borderless)) app->win->SetBorderless(borderless);
 			ImGui::SameLine();
 			if (ImGui::Checkbox("FullDesktop", &fullscreenDesktop)) app->win->SetFullScreenDesktop(fullscreenDesktop);
