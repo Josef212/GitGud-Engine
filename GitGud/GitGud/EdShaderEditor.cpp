@@ -6,7 +6,12 @@
 #include "M_ResourceManager.h"
 #include "M_FileSystem.h"
 
+#include <string>
 #include <vector>
+
+#define BUFFER_APPEND_SIZE 512
+#define SUCCES_COMPILE ImVec4(0, 1, 0, 1), "COMPILED"
+#define FAILED_COMPILE ImVec4(1, 0, 0, 1), "FAILED"
 
 EdShaderEditor::EdShaderEditor(bool startEnabled) : EdWin(startEnabled)
 {
@@ -48,6 +53,7 @@ void EdShaderEditor::Draw()
 					}
 				}
 				ImGui::MenuItem("Load shader", nullptr, &loadMenu);
+				if (ImGui::MenuItem("Save shader")) SaveCurrentShader();
 				if (ImGui::MenuItem("Force Compile"))
 				{
 					SaveCurrentShader();
@@ -84,17 +90,35 @@ void EdShaderEditor::Draw()
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d.", currentShader->GetShaderID());
 
+			ImGui::Text("Shader status: ");
+			ImGui::SameLine();
+			if (currentShader->IsUsable()) ImGui::TextColored(SUCCES_COMPILE); else ImGui::TextColored(FAILED_COMPILE);
+
 			if (!shaderLoaded) shaderLoaded = LoadCurrentShader();
 
 			if (shaderLoaded)
 			{
 				if (editingVertex)
 				{
-					ImGui::InputTextMultiline("###vertex_code", vertexFile, strlen(vertexFile), ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
-				}//(int)(sizeof(vertexFile)/sizeof(*vertexFile))
+					ImGui::InputTextMultiline("###vertex_code", vertexFile, vertexBufferSize * sizeof(char), ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
+
+					/*if (strlen(vertexFile) >= vertexBufferSize - 4)
+					{
+						//Resize vertex file
+						vertexBufferSize = strlen(vertexFile) + BUFFER_APPEND_SIZE;
+						ResizeBuffer(vertexFile, vertexBufferSize);
+					}*/
+				}
 				else
 				{
-					ImGui::InputTextMultiline("###fragment_code", fragmentFile, strlen(fragmentFile), ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
+					ImGui::InputTextMultiline("###fragment_code", fragmentFile, fragBufferSize * sizeof(char), ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
+
+					/*if (strlen(fragmentFile) >= fragBufferSize - 4)
+					{
+						//Resize frgament file
+						fragBufferSize = strlen(fragmentFile) + BUFFER_APPEND_SIZE;
+						ResizeBuffer(fragmentFile, fragBufferSize);
+					}*/
 				}
 			}
 		}
@@ -134,13 +158,10 @@ bool EdShaderEditor::SaveCurrentShader()
 			currentShader->fragmentFile.SetExtension("fragment");
 		}
 
-		uint vSize = strlen(vertexFile);
-		uint fSize = strlen(fragmentFile);
-
-		if (app->fs->Save(currentShader->vertexFile.GetFullPath(), vertexFile, vSize) != vSize)
+		if (app->fs->Save(currentShader->vertexFile.GetFullPath(), vertexFile, vertexBufferSize) != vertexBufferSize)
 			_LOG("ERROR: Could not save vertex shader into [%s].", currentShader->vertexFile.GetFullPath());
 
-		if (app->fs->Save(currentShader->fragmentFile.GetFullPath(), fragmentFile, fSize) != fSize)
+		if (app->fs->Save(currentShader->fragmentFile.GetFullPath(), fragmentFile, fragBufferSize) != fragBufferSize)
 			_LOG("ERROR: Could not save fragment shader into [%s].", currentShader->fragmentFile.GetFullPath());
 		
 		return true;
@@ -164,7 +185,9 @@ bool EdShaderEditor::LoadCurrentShader()
 	if (vSize > 0 && fSize > 0)
 	{
 		vertexFile[vSize] = '\0';
+		vertexBufferSize = vSize;
 		fragmentFile[fSize] = '\0';
+		fragBufferSize = fSize;
 		shaderLoaded = true;
 	}
 	else
@@ -180,10 +203,7 @@ void EdShaderEditor::LoadNewShaderFile()
 	RELEASE_ARRAY(vertexFile);
 	RELEASE_ARRAY(fragmentFile);
 
-	vertexFile = new char[512];
-	fragmentFile = new char[256];
-
-	static const char v[512] = 
+	static std::string v(
 		"#version 330 core\n"
 		"layout(location = 0) in vec3 position;\n"
 		"layout(location = 1) in vec3 normal;\n"
@@ -202,9 +222,9 @@ void EdShaderEditor::LoadNewShaderFile()
 		"	outUv = uv;\n"
 		"	outColor = color;\n"
 		"}\n"
-	;
+	);
 	
-	static const char f[256] =
+	static std::string f(
 		"#version 330 core\n"
 		"in vec3 outNormal;\n"
 		"in vec2 outUv; \n"
@@ -216,10 +236,16 @@ void EdShaderEditor::LoadNewShaderFile()
 		"	//FragColor = vec4(0.7, 0.7, 0.7, 1.0); \n"
 		"	FragColor = vec4(outNormal, 1.0); \n"
 		"}\n"
-		;
+		);
 
-	sprintf_s(vertexFile, 512, v);
-	sprintf_s(fragmentFile, 256, f);
+	vertexFile = new char[v.size()];
+	fragmentFile = new char[f.size()];
+
+	sprintf_s(vertexFile, 512, v.c_str());
+	sprintf_s(fragmentFile, 256, f.c_str());
+
+	vertexBufferSize = v.size();
+	fragBufferSize = f.size();
 
 	shaderLoaded = true;
 }
@@ -238,7 +264,7 @@ void EdShaderEditor::LoadShaderMenu()
 			ResourceShader* s = (ResourceShader*)sh[i];
 			if (s)
 			{
-				if (ImGui::TreeNodeEx(s->name.c_str(), ((sel == i) ? ImGuiTreeNodeFlags_Selected : ImGuiTreeNodeFlags_Leaf)))
+				if (ImGui::TreeNodeEx(s->name.c_str(), ((sel == i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_Leaf))
 					ImGui::TreePop();
 
 				if (ImGui::IsItemClicked())
@@ -265,4 +291,12 @@ void EdShaderEditor::LoadShaderMenu()
 
 		ImGui::End();
 	}
+}
+
+void EdShaderEditor::ResizeBuffer(char * buffer, int newSize)
+{
+	char* tmp = new char[newSize];
+	sprintf_s(tmp, newSize, buffer);
+	RELEASE_ARRAY(buffer);
+	buffer = tmp;
 }

@@ -6,7 +6,10 @@
 
 #include "App.h"
 #include "HrdInfo.h"
+
+#ifdef _DEBUG
 #include "mmgr/mmgr.h"
+#endif // _DEBUG
 
 #include "M_Renderer.h"
 #include "M_Window.h"
@@ -60,7 +63,7 @@ void EdConfig::Draw()
 				ImGui::PlotHistogram("##milliseconds", &ms[0], arraySize, 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 			}
 
-#ifdef TEST_MEMORY
+#ifdef _DEBUG
 			// Memory --------------------
 			sMStats stats = m_getMemoryStatistics();
 			static int speed = 0;
@@ -91,7 +94,7 @@ void EdConfig::Draw()
 			ImGui::Text("Total Alloc Unit Count: %u", stats.totalAllocUnitCount);
 			ImGui::Text("Peak Alloc Unit Count: %u", stats.peakAllocUnitCount);
 
-#endif
+#endif //_DEBUG
 		}
 
 		if (ImGui::CollapsingHeader("Window"))
