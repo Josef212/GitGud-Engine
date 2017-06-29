@@ -87,9 +87,6 @@
     <ClCompile Include="App.cpp">
       <Filter>Engine\MAIN</Filter>
     </ClCompile>
-    <ClCompile Include="mmgr\mmgr.cpp">
-      <Filter>3rdParty\mmgr</Filter>
-    </ClCompile>
     <ClCompile Include="Globals.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
@@ -349,12 +346,6 @@
     </ClInclude>
     <ClInclude Include="App.h">
       <Filter>Engine\MAIN</Filter>
-    </ClInclude>
-    <ClInclude Include="mmgr\mmgr.h">
-      <Filter>3rdParty\mmgr</Filter>
-    </ClInclude>
-    <ClInclude Include="mmgr\nommgr.h">
-      <Filter>3rdParty\mmgr</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Tools</Filter>

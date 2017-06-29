@@ -59,7 +59,8 @@ void EdConfig::Draw()
 				sprintf_s(title, 25, "Milliseconds %0.1f", ms[arraySize - 1]);
 				ImGui::PlotHistogram("##milliseconds", &ms[0], arraySize, 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 			}
-			
+
+#ifdef TEST_MEMORY
 			// Memory --------------------
 			sMStats stats = m_getMemoryStatistics();
 			static int speed = 0;
@@ -90,6 +91,7 @@ void EdConfig::Draw()
 			ImGui::Text("Total Alloc Unit Count: %u", stats.totalAllocUnitCount);
 			ImGui::Text("Peak Alloc Unit Count: %u", stats.peakAllocUnitCount);
 
+#endif
 		}
 
 		if (ImGui::CollapsingHeader("Window"))

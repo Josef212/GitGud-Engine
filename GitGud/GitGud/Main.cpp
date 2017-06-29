@@ -2,7 +2,7 @@
 #include "Globals.h"
 #include "App.h"
 
-#ifdef _DEBUG
+#ifdef TEST_MEMORY//_DEBUG
 	#include "mmgr\mmgr.h"
 #endif // DEBUG
 
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
 	RELEASE(app);
 
 
-#ifdef _DEBUG
+#ifdef TEST_MEMORY
 	int leaks = MAX(0, m_getMemoryStatistics().totalAllocUnitCount - 23);
 	_LOG("Exiting with %d memory leaks!\n", (leaks > 0) ? leaks : 0);
 #else

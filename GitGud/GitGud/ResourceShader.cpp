@@ -5,6 +5,8 @@
 
 #include "OpenGL.h"
 
+#include <string>
+
 ResourceShader::ResourceShader(UID uuid) : Resource(uuid, RES_SHADER)
 {
 }
@@ -76,6 +78,8 @@ void ResourceShader::OnLoad(JsonFile & file)
 {
 	vertexFile.SetFullPath(file.GetString("vertex_file_full_path", "???"));
 	fragmentFile.SetFullPath(file.GetString("fragment_file_full_path", "???"));
+
+	CompileShader();
 }
 
 uint ResourceShader::CompileVertex()
@@ -83,12 +87,21 @@ uint ResourceShader::CompileVertex()
 	char* buffer = nullptr;
 	uint size = app->fs->Load(vertexFile.GetFullPath(), &buffer);
 
+	uint ret = 0;
+
 	if (buffer && size > 0)
 	{
-		buffer[size] = '\0';
+		//I dont really like this but cant modify directly the char buffer to avoid errors on release 
+		//and cant pass directly the string.c_str as parameter.
 
-		uint vertex = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertex, 1, &buffer, nullptr);
+		std::string tmp = buffer;
+		tmp[size] = '\0';
+		const GLchar* str = (const GLchar*)tmp.c_str();
+
+		//------------------------------------------------
+
+		GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertex, 1, &str, nullptr);
 		glCompileShader(vertex);
 
 		GLint succes;
@@ -101,13 +114,13 @@ uint ResourceShader::CompileVertex()
 		}
 		else
 		{
-			return vertex;
+			ret = vertex;
 		}
 	}
 
 	RELEASE_ARRAY(buffer);
 
-	return 0;
+	return ret;
 }
 
 uint ResourceShader::CompileFragment()
@@ -115,12 +128,21 @@ uint ResourceShader::CompileFragment()
 	char* buffer = nullptr;
 	uint size = app->fs->Load(fragmentFile.GetFullPath(), &buffer);
 
+	uint ret = 0;
+
 	if (buffer && size > 0)
 	{
-		buffer[size] = '\0';
+		//I dont really like this but cant modify directly the char buffer to avoid errors on release 
+		//and cant pass directly the string.c_str as parameter.
 
-		uint fragment = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragment, 1, &buffer, nullptr);
+		std::string tmp = buffer;
+		tmp[size] = '\0';
+		const GLchar* str = (const GLchar*)tmp.c_str();
+
+		//------------------------------------------------
+
+		GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragment, 1, &str, nullptr);
 		glCompileShader(fragment);
 
 		GLint succes;
@@ -129,15 +151,15 @@ uint ResourceShader::CompileFragment()
 		{
 			GLchar infoLog[512];
 			glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
-			_LOG("Vertex shader compilation error: %s.", infoLog);
+			_LOG("Fragment shader compilation error: %s.", infoLog);
 		}
 		else
 		{
-			return fragment;
+			ret = fragment;
 		}
 	}
 
 	RELEASE_ARRAY(buffer);
 
-	return 0;
+	return ret;
 }
