@@ -56,8 +56,7 @@ void EdShaderEditor::Draw()
 				if (ImGui::MenuItem("Save shader")) SaveCurrentShader();
 				if (ImGui::MenuItem("Force Compile"))
 				{
-					SaveCurrentShader();
-					if (currentShader) currentShader->CompileShader(); 
+					if (SaveCurrentShader()) currentShader->CompileShader();
 				}
 
 				ImGui::EndMenu();
@@ -100,7 +99,7 @@ void EdShaderEditor::Draw()
 			{
 				if (editingVertex)
 				{
-					ImGui::InputTextMultiline("###vertex_code", vertexFile, vertexBufferSize * sizeof(char), ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
+					ImGui::InputTextMultiline("###vertex_code", vertexFile, vertexBufferSize, ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
 
 					/*if (strlen(vertexFile) >= vertexBufferSize - 4)
 					{
@@ -111,7 +110,7 @@ void EdShaderEditor::Draw()
 				}
 				else
 				{
-					ImGui::InputTextMultiline("###fragment_code", fragmentFile, fragBufferSize * sizeof(char), ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
+					ImGui::InputTextMultiline("###fragment_code", fragmentFile, fragBufferSize, ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
 
 					/*if (strlen(fragmentFile) >= fragBufferSize - 4)
 					{
@@ -184,9 +183,9 @@ bool EdShaderEditor::LoadCurrentShader()
 
 	if (vSize > 0 && fSize > 0)
 	{
-		vertexFile[vSize] = '\0';
+		//vertexFile[vSize] = '\0';
 		vertexBufferSize = vSize;
-		fragmentFile[fSize] = '\0';
+		//fragmentFile[fSize] = '\0';
 		fragBufferSize = fSize;
 		shaderLoaded = true;
 	}
