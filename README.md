@@ -12,6 +12,18 @@
 
 <h2>CHANGELOG</h2>
 
+<h3>v0.1.7</h3>
+<p>Some shader progress.</p>
+<ul>
+	<li>Default used hardcoded and given by a resource.</li>
+	<li>Can create shaders from MainMenu->Resources->ShaderEditor => File->CreateNew. The set the name and create.</li>
+	<li>Edit shaders with extern tools, shaders files are located under Data/Library/Shaders/name.vertex-fragment</li>
+	<li>Shaders are compiled on engine load or forced from Shader editor File->Force compile</li>
+	<li>Shader text is displayed, for now can't be edited from the engine.</li>
+	<li>Shaders will be only used when materials are implemented.</li>
+	<li>Also added gpu info displayed in Configuration->Information window.</li> 
+</ul>
+
 <h3>v0.1.6</h3>
 <p>Small progress.</p>
 <ul>
