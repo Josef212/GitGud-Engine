@@ -61,7 +61,12 @@ bool M_ResourceManager::Start()
 
 	//ImportFile("Data/Assets/MechaT/MechaT.fbx");
 	//ImportFile("Data/Assets/Brute.fbx");
-	LoadBasicResources();
+	if (!LoadBasicResources())
+	{
+		_LOG("ERROR loading basic resources.");
+		return false;
+	}
+
 	LoadResources();
 
 	return true;
@@ -343,27 +348,29 @@ void M_ResourceManager::SaveResources()
 	RELEASE_ARRAY(buffer);
 }
 
-void M_ResourceManager::LoadBasicResources()
+bool M_ResourceManager::LoadBasicResources()
 {
 	checkers = (ResourceTexture*)CreateResource(RES_TEXTURE, 1);
-	textureImporter->LoadChequers(checkers);
+	if (!textureImporter->LoadChequers(checkers)) return false;
 	checkers->AddInstance();
 
 	cube = (ResourceMesh*)CreateResource(RES_MESH, 2);
-	meshImporter->LoadCube(cube);
+	if (!meshImporter->LoadCube(cube)) return false;
 	cube->AddInstance();
 
 	quad = (ResourceMesh*)CreateResource(RES_MESH, 3);
-	meshImporter->LoadQuad(quad);
+	if(!meshImporter->LoadQuad(quad)) return false;
 	quad->AddInstance();
 
 	plane = (ResourceMesh*)CreateResource(RES_MESH, 4);
-	meshImporter->LoadPlane(plane);
+	if (!meshImporter->LoadPlane(plane)) return false;
 	plane->AddInstance();
 
 	sphere = (ResourceMesh*)CreateResource(RES_MESH, 5);
-	meshImporter->LoadSphere(sphere);
+	if (!meshImporter->LoadSphere(sphere)) return false;
 	sphere->AddInstance();
 
-
+	defaultShader = (ResourceShader*)CreateResource(RES_SHADER, 6);
+	if (!shaderImporter->PrepareDefaultShader(defaultShader)) return false;
+	defaultShader->AddInstance();
 }

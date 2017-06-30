@@ -50,7 +50,7 @@ public:
 private:
 	void LoadResources();
 	void SaveResources();
-	void LoadBasicResources();
+	bool LoadBasicResources();
 
 public:
 	ImporterMesh*		meshImporter = nullptr;

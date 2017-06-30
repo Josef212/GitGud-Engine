@@ -5,6 +5,7 @@
 
 class ResourceShader : public Resource
 {
+	friend class  ImporterShader;
 public:
 	ResourceShader(UID uuid);
 	virtual ~ResourceShader();

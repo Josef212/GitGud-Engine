@@ -13,6 +13,7 @@
 #include "Camera.h"
 
 #include "ResourceMesh.h"
+#include "ResourceShader.h"
 
 //TMP
 #include "Math.h"
@@ -105,7 +106,7 @@ bool M_Renderer::Start()
 	_LOG("Renderer: Start.");
 
 	//TMP
-	CreateShader();
+	PrepareShaderLocs();
 
 	//-----------------
 
@@ -217,7 +218,7 @@ void M_Renderer::DrawObject(GameObject * object, Camera * cam)
 		ResourceMesh* mesh = (ResourceMesh*)meshCmp->GetResource();
 		if (mesh)
 		{
-			glUseProgram(shader);
+			glUseProgram(app->resources->defaultShader->GetShaderID());
 
 			glBindVertexArray(mesh->idContainer);
 
@@ -237,89 +238,9 @@ void M_Renderer::DrawObject(GameObject * object, Camera * cam)
 	}
 }
 
-void M_Renderer::CreateShader()
+void M_Renderer::PrepareShaderLocs()
 {
-	std::string vertexCode = std::string(
-		"#version 330 core\n"
-		"layout(location = 0) in vec3 position;\n"
-		"layout(location = 1) in vec3 normal;\n"
-		"layout(location = 2) in vec2 uv;\n"
-		"layout(location = 3) in vec3 color;\n"
-		"uniform mat4 model;\n"
-		"uniform mat4 view;\n"
-		"uniform mat4 projection;\n"
-		"out vec3 outNormal;\n"
-		"out vec2 outUv; \n"
-		"out vec3 outColor;\n"
-		"void main()\n"
-		"{\n"
-		"	gl_Position = projection * view * model * vec4(position, 1.0);\n"
-		"	outNormal = normal;\n"
-		"	outUv = uv;\n"
-		"	outColor = color;\n"
-		"}\n"
-	);
-
-	std::string fragCode = std::string(
-		"#version 330 core\n"
-		"in vec3 outNormal;\n"
-		"in vec2 outUv; \n"
-		"in vec3 outColor;\n"
-		"out vec4 FragColor;\n"
-		"void main()\n"
-		"{\n"
-		"	//FragColor = vec4(outColor, 1.0);\n"
-		"	//FragColor = vec4(0.7, 0.7, 0.7, 1.0); \n"
-		"	FragColor = vec4(outNormal, 1.0); \n"
-		"}\n"
-	);
-
-	const char* str = vertexCode.c_str();
-	uint vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &str, nullptr);
-	glCompileShader(vertexShader);
-
-	GLint success;
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (success == 0)
-	{
-		GLchar infoLog[512];
-		glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-		_LOG("Vertex shader compilation error: %s.", infoLog);
-	}
-
-	str = fragCode.c_str();
-	uint fragShader;
-	fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragShader, 1, &str, nullptr);
-	glCompileShader(fragShader);
-
-	glGetShaderiv(fragShader, GL_COMPILE_STATUS, &success);
-	if (success == 0)
-	{
-		GLchar infoLog[512];
-		glGetShaderInfoLog(fragShader, 512, nullptr, infoLog);
-		_LOG("Fragment shader compilation error: %s.", infoLog);
-	}
-
-	shader = glCreateProgram();
-	glAttachShader(shader, vertexShader);
-	glAttachShader(shader, fragShader);
-	glLinkProgram(shader);
-
-	glGetProgramiv(shader, GL_LINK_STATUS, &success);
-	if (success == 0)
-	{
-		GLchar infoLog[512];
-		glGetProgramInfoLog(shader, 512, nullptr, infoLog);
-		_LOG("Shader link error: %s.", infoLog);
-	}
-
-	glDetachShader(shader, vertexShader);
-	glDetachShader(shader, fragShader);
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragShader);
+	uint shader = app->resources->defaultShader->GetShaderID();
 
 	viewLoc = glGetUniformLocation(shader, "view");
 	modelLoc = glGetUniformLocation(shader, "model");

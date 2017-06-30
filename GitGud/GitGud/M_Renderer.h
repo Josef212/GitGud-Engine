@@ -34,10 +34,9 @@ private:
 
 	//****
 	//TMP
-	uint shader;
 	int viewLoc, modelLoc, projLoc;
 
-	void CreateShader();
+	void PrepareShaderLocs();
 
 	void DrawChilds(GameObject* object, Camera* cam);
 
