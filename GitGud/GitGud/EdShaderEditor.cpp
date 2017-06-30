@@ -47,10 +47,7 @@ void EdShaderEditor::Draw()
 				if (ImGui::MenuItem("Create new shader")) 
 				{
 					if (SaveCurrentShader())
-					{
-						currentShader = (ResourceShader*)app->resources->CreateResource(RES_SHADER);
-						//LoadNewShaderFile();
-					}
+						createMenu = true;
 				}
 				ImGui::MenuItem("Load shader", nullptr, &loadMenu);
 				if (ImGui::MenuItem("Save shader")) SaveCurrentShader();
@@ -72,14 +69,13 @@ void EdShaderEditor::Draw()
 			ImGui::EndMenuBar();
 		}
 
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "This feature is still in revision so is normal if its bugged.");
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "This feature is still in revision so is normal if its bugged, for now is in read only so edit shaders in a text extern editor.");
 		
 		if (currentShader)
 		{
-			static char _name[64];
-			sprintf_s(_name, 64, currentShader->name.c_str());
-			ImGui::Text("Shader name: "); ImGui::SameLine();
-			if (ImGui::InputText("", _name, 64)) currentShader->name = _name;
+			ImGui::Text("Shader name: "); 
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), currentShader->name.c_str());
 			
 			ImGui::SameLine(0.75 * size.x);
 			ImGui::Text("UID: ");
@@ -94,41 +90,41 @@ void EdShaderEditor::Draw()
 			ImGui::SameLine();
 			if (currentShader->IsUsable()) ImGui::TextColored(SUCCES_COMPILE); else ImGui::TextColored(FAILED_COMPILE);
 
-			//if (!shaderLoaded) shaderLoaded = LoadCurrentShader();
-			//
-			//if (shaderLoaded)
-			//{
-			//	if (editingVertex)
-			//	{
-			//		ImGui::SameLine();
-			//		ImGui::Text("\tVertex file length: %d, vertex buffer size: %d.", strlen(vertexFile.c_str()), vertexBufferSize);
-			//
-			//		ImGui::InputTextMultiline("###vertex_code", (char*)vertexFile.c_str(), vertexBufferSize, ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput /*| ImGuiInputTextFlags_ReadOnly*/ | 0);
-			//
-			//		if (strlen(vertexFile.c_str()) >= vertexBufferSize - 16)
-			//		{
-			//			//Resize vertex file
-			//			vertexBufferSize = strlen(vertexFile.c_str()) + BUFFER_APPEND_SIZE;
-			//			_LOG("Resizing vertex buffer from %d to %d.", strlen(vertexFile.c_str()), vertexBufferSize);
-			//			vertexFile.resize(vertexBufferSize);
-			//		}
-			//	}
-			//	else
-			//	{
-			//		ImGui::SameLine();
-			//		ImGui::Text("\tFragment file length: %d, fragment buffer size: %d.", fragmentFile.size(), fragBufferSize);
-			//
-			//		ImGui::InputTextMultiline("###fragment_code", (char*)fragmentFile.c_str(), fragBufferSize, ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput /*| ImGuiInputTextFlags_ReadOnly*/ | 0);
-			//
-			//		if (strlen(fragmentFile.c_str()) >= fragBufferSize - 16)
-			//		{
-			//			//Resize fragment file
-			//			fragBufferSize = strlen(fragmentFile.c_str()) + BUFFER_APPEND_SIZE;
-			//			_LOG("Resizing fragment buffer from %d to %d.", strlen(fragmentFile.c_str()), fragBufferSize);
-			//			fragmentFile.resize(fragBufferSize);
-			//		}
-			//	}
-			//}
+			if (!shaderLoaded) shaderLoaded = LoadCurrentShader();
+			
+			if (shaderLoaded)
+			{
+				if (editingVertex)
+				{
+					//ImGui::SameLine();
+					//ImGui::Text("\tVertex file length: %d, vertex buffer size: %d.", strlen(vertexFile.c_str()), vertexBufferSize);
+			
+					ImGui::InputTextMultiline("###vertex_code", (char*)vertexFile.c_str(), vertexBufferSize, ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
+			
+					//if (strlen(vertexFile.c_str()) >= vertexBufferSize - 16)
+					//{
+					//	//Resize vertex file
+					//	vertexBufferSize = strlen(vertexFile.c_str()) + BUFFER_APPEND_SIZE;
+					//	_LOG("Resizing vertex buffer from %d to %d.", strlen(vertexFile.c_str()), vertexBufferSize);
+					//	vertexFile.resize(vertexBufferSize);
+					//}
+				}
+				else
+				{
+					//ImGui::SameLine();
+					//ImGui::Text("\tFragment file length: %d, fragment buffer size: %d.", fragmentFile.size(), fragBufferSize);
+			
+					ImGui::InputTextMultiline("###fragment_code", (char*)fragmentFile.c_str(), fragBufferSize, ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
+			
+					//if (strlen(fragmentFile.c_str()) >= fragBufferSize - 16)
+					//{
+					//	//Resize fragment file
+					//	fragBufferSize = strlen(fragmentFile.c_str()) + BUFFER_APPEND_SIZE;
+					//	_LOG("Resizing fragment buffer from %d to %d.", strlen(fragmentFile.c_str()), fragBufferSize);
+					//	fragmentFile.resize(fragBufferSize);
+					//}
+				}
+			}
 			
 		}
 		
@@ -136,6 +132,7 @@ void EdShaderEditor::Draw()
 	}
 
 	if (loadMenu) LoadShaderMenu();
+	if (createMenu) CreateShaderMenu();
 }
 
 void EdShaderEditor::SetShader(ResourceShader * shader)
@@ -218,7 +215,7 @@ bool EdShaderEditor::LoadCurrentShader()
 	return shaderLoaded;
 }
 
-void EdShaderEditor::LoadNewShaderFile()
+void EdShaderEditor::LoadNewShaderFile(ResourceShader* sh)
 {
 	//RELEASE_ARRAY(vertexFile);
 	//RELEASE_ARRAY(fragmentFile);
@@ -316,6 +313,27 @@ void EdShaderEditor::LoadShaderMenu()
 					_LOG("Could not save current shader before loading new one.");
 				}
 			}
+		}
+
+		ImGui::End();
+	}
+}
+
+void EdShaderEditor::CreateShaderMenu()
+{
+	ImGui::Begin("Create shader", &createMenu);
+	{
+		static char newName[64];
+		ImGui::InputText("New shader name", newName, 64);
+
+		if (ImGui::Button("Create"))
+		{
+			currentShader = (ResourceShader*)app->resources->CreateResource(RES_SHADER);
+			currentShader->name = newName;
+			//LoadNewShaderFile(); //TODO: Do this
+			SaveCurrentShader();
+
+			createMenu = false;
 		}
 
 		ImGui::End();

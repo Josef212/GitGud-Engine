@@ -21,21 +21,27 @@ public:
 private:
 	bool SaveCurrentShader();
 	bool LoadCurrentShader();
-	void LoadNewShaderFile();
+
+	void LoadNewShaderFile(ResourceShader* sh);
+
 	void LoadShaderMenu();
+	void CreateShaderMenu();
 
 	void ResizeBuffer(char** buffer, int newSize);
 
 private:
 	std::string vertexFile = "";
 	std::string fragmentFile = "";
-	ResourceShader* currentShader = nullptr;
-	bool editingVertex = true; //Else edit fragment
-	bool shaderLoaded = false;
-	bool loadMenu = false;
-
 	unsigned int vertexBufferSize = 0;
 	unsigned int fragBufferSize = 0;
+
+	ResourceShader* currentShader = nullptr;
+
+	bool editingVertex = true; //Else edit fragment
+	bool shaderLoaded = false;
+
+	bool loadMenu = false;
+	bool createMenu = false;
 
 	//TODO: Set a small viewport with a shader visualitzation render
 
