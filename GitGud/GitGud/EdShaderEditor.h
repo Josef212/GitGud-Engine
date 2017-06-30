@@ -3,6 +3,8 @@
 
 #include "EdWin.h"
 
+#include <string>
+
 class ResourceShader;
 
 class EdShaderEditor : public EdWin
@@ -22,11 +24,11 @@ private:
 	void LoadNewShaderFile();
 	void LoadShaderMenu();
 
-	void ResizeBuffer(char* buffer, int newSize);
+	void ResizeBuffer(char** buffer, int newSize);
 
 private:
-	char* vertexFile = nullptr;
-	char* fragmentFile = nullptr;
+	std::string vertexFile = "";
+	std::string fragmentFile = "";
 	ResourceShader* currentShader = nullptr;
 	bool editingVertex = true; //Else edit fragment
 	bool shaderLoaded = false;

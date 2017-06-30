@@ -97,7 +97,7 @@ uint ResourceShader::CompileVertex()
 		std::string tmp = buffer;
 		tmp[size] = '\0';
 		const GLchar* str = (const GLchar*)tmp.c_str();
-
+		//_LOG("Vertex shader:\n%s", str);
 		//------------------------------------------------
 
 		GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -138,7 +138,7 @@ uint ResourceShader::CompileFragment()
 		std::string tmp = buffer;
 		tmp[size] = '\0';
 		const GLchar* str = (const GLchar*)tmp.c_str();
-
+		//_LOG("Fragment shader:\n%s", str);
 		//------------------------------------------------
 
 		GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
