@@ -125,6 +125,8 @@ private:
 
 	std::vector<Component*> componentsToRemove;
 
+	int currentCMPs = 0;
+
 };
 
 #endif // !__GAME_OBJECT_H__

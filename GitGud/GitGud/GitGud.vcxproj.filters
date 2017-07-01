@@ -342,6 +342,7 @@
     <ClCompile Include="mmgr\mmgr.cpp">
       <Filter>3rdParty\mmgr</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -722,6 +723,7 @@
     <ClInclude Include="mmgr\nommgr.h">
       <Filter>3rdParty\mmgr</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\include\Geometry\KDTree.inl">

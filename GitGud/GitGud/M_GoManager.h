@@ -11,6 +11,7 @@ class GGOctree;
 class GameObject;
 class Component;
 class Camera;
+class Light;
 
 class M_GoManager : public Module
 {
@@ -42,6 +43,10 @@ public:
 
 	void GetToDrawStaticObjects(std::vector<GameObject*>& objects, Camera* cam);
 	std::list<GameObject*>* GetDynamicObjects();
+
+	void AddLight(Light* l);
+	void RemoveLight(Light* l);
+	std::list<Light*>* GetLightsList();
 
 	void SaveScene();
 	void LoadScene(); //TODO: Must adapt this to use scene resource and a way to change scenes, etc.
@@ -79,6 +84,8 @@ private:
 	//TODO: Have a vector of all static objects in the camera. Update it only if camera has changed.
 	std::list<GameObject*> dynamicGameObjects;
 	std::vector<GameObject*> objectsToDelete;
+
+	std::list<Light*> lights;
 
 	GGOctree* octree = nullptr;
 

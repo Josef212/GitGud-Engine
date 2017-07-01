@@ -9,6 +9,7 @@
 #include "Mesh.h"
 #include "Camera.h"
 #include "Material.h"
+#include "Light.h"
 
 GameObject::GameObject(GameObject * parent, UID uuid) : parent(parent), uuid(uuid)
 {
@@ -59,22 +60,40 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE type)
 	switch (type)
 	{
 	case CMP_TRANSFORM:
-		if (!transform && !HasComponent(CMP_TRANSFORM))
+		if (!transform && !(currentCMPs & CMP_TRANSFORM))
 		{
 			transform = new Transform(this);
 			ret = transform;
+			currentCMPs |= CMP_TRANSFORM;
 		}
 		break;
 	case CMP_MESH:
-		ret = new Mesh(this);
+		if (!(currentCMPs & CMP_MESH))
+		{
+			ret = new Mesh(this);
+			currentCMPs |= CMP_MESH;
+		}
 		break;
 	case CMP_MATERIAL:
-		ret = new Material(this);
+		if (!(currentCMPs & CMP_MATERIAL))
+		{
+			ret = new Material(this);
+			currentCMPs |= CMP_MATERIAL;
+		}
 		break;
 	case CMP_CAMERA:
+	{
 		ret = new Camera(this);
-		break;
+		if (!(currentCMPs & CMP_CAMERA))
+			currentCMPs |= CMP_CAMERA;
+	}
+	break;
 	case CMP_LIGHT:
+	{
+		ret = new Light(this);
+		if (!(currentCMPs & CMP_LIGHT))
+			currentCMPs |= CMP_LIGHT;
+	}
 		break;
 	default:
 		_LOG("Invalid component type!");
@@ -271,6 +290,28 @@ void GameObject::PreUpdate()
 			{
 				components.erase(it);
 				cmp->OnFinish();
+
+				switch (cmp->GetType())
+				{
+				case CMP_TRANSFORM:
+					currentCMPs &= ~CMP_TRANSFORM;
+					break;
+				case CMP_MESH:
+					currentCMPs &= ~CMP_MESH;
+					break;
+				case CMP_MATERIAL:
+					currentCMPs &= ~CMP_MATERIAL;
+					break;
+				case CMP_CAMERA:
+					if (CountComponents(CMP_CAMERA) == 1)
+						currentCMPs &= ~CMP_CAMERA;
+					break;
+				case CMP_LIGHT:
+					if (CountComponents(CMP_LIGHT) == 1)
+						currentCMPs &= ~CMP_LIGHT;
+					break;
+				}
+
 				RELEASE(cmp);
 			}
 		}
