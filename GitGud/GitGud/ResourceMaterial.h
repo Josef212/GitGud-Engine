@@ -4,9 +4,12 @@
 #include "Resource.h"
 #include "ResourceTexture.h"
 #include "Color.h"
+
 #include <string>
 #include <vector>
 #include <map>
+
+class ResourceTexture;
 
 enum SHADING_MODE
 {
@@ -42,22 +45,6 @@ enum RENDER_MODE
 	RENDER_TRANSPARENT = 0x2
 };
 
-struct MaterialProperty
-{
-	union Data
-	{
-		bool b;
-		float f;
-		int i;
-		uint ui;
-		std::string str;
-	}data;
-
-	DATA_TYPE dataType;
-	std::string propertyName;
-
-};
-
 class ResourceMaterial : public Resource
 {
 public:
@@ -67,14 +54,28 @@ public:
 	bool LoadInMemory()override;
 	bool RemoveFromMemory()override;
 
+	void GetLocations();
+
+	void SendMaterialToShader(float* model, float* camView, float* camProj);
+
+protected:
+	virtual void OnGetLocations(uint shaderGLID) {}
+	virtual void OnSendInfo(uint shaderGLID) {}
+
+private:
+
 public:
-	//TODO: Must find a way to organiza propertirs. For now will hardcode a generic material based on unity standard material shader
+	//TODO: Must find a way to organiza properties. For now will hardcode a generic material based on unity standard material shader
 	
 	UID shader = 0;
 
-	enum RENDER_MODE renderMode = RENDER_OPAQUE;
+	uint modelLoc = 0;
+	uint viewLoc = 0;
+	uint projLoc = 0;
+
+	//enum RENDER_MODE renderMode = RENDER_OPAQUE;
 	
-	UID ambientTexture = 0;
+	/*UID ambientTexture = 0;
 	Color ambientColor = White;
 
 	UID diffuseTexture = 0;
@@ -106,7 +107,7 @@ public:
 	UID detailMask = 0;
 	 //TODO: Tiling/offset
 	//TODO: Secondaty maps
-	
+	*/
 
 };
 

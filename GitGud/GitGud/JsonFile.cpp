@@ -114,13 +114,13 @@ float3 JsonFile::GetFloat3(const char* name, float3 default)
 	return float3(GetFloat(name, default.x, 0), GetFloat(name, default.y, 1), GetFloat(name, default.z, 2));
 }
 
-/*Color JsonFile::GetColor(const char* name, Color default)
+Color JsonFile::GetColor(const char * name, Color default)
 {
 	return Color(GetFloat(name, default.r, 0),
 		GetFloat(name, default.g, 1),
 		GetFloat(name, default.b, 2),
 		GetFloat(name, default.a, 3));
-}*/
+}
 
 //--------------------------------------
 
@@ -254,10 +254,10 @@ bool JsonFile::AddFloat3(const char* name, float3 vec)
 	return AddFloatArray(name, vec.ptr(), 3);
 }
 
-/*bool JsonFile::AddColor(const char* name, Color col)
+bool JsonFile::AddColor(const char * name, Color col)
 {
 	return AddFloatArray(name, &col, 4);
-}*/
+}
 
 //--------------------------------------
 

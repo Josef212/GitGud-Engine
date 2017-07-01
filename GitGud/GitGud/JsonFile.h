@@ -3,7 +3,7 @@
 
 #include "Globals.h"
 #include "MathGeoLib\include\Math\float3.h"
-//TODO: Colors
+#include "Color.h"
 
 typedef struct json_object_t JSON_Object;
 typedef struct json_value_t  JSON_Value;
@@ -32,7 +32,7 @@ public:
 	int GetArraySize(const char* name)const;
 
 	float3 GetFloat3(const char* name, float3 default);
-	//Color GetColor(const char* name, Color default);
+	Color GetColor(const char* name, Color default);
 
 	bool AddString(const char* name, const char* value);
 	bool AddBool(const char* name, bool value);
@@ -44,7 +44,7 @@ public:
 	bool AddArrayEntry(const JsonFile& file);
 
 	bool AddFloat3(const char* name, float3 vec);
-	//bool AddColor(const char* name, Color col);
+	bool AddColor(const char* name, Color col);
 
 	bool AddIntArray(const char* name, int* iArray, uint size);
 	bool AddFloatArray(const char* name, float* fArray, uint size);
