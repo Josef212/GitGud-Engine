@@ -207,6 +207,28 @@ std::list<GameObject*>* M_GoManager::GetDynamicObjects()
 	return &dynamicGameObjects;
 }
 
+void M_GoManager::AddLight(Light * l)
+{
+	lights.push_back(l);
+}
+
+void M_GoManager::RemoveLight(Light * l)
+{
+	std::list<Light*>::iterator it;
+	for (it = lights.begin(); it != lights.end(); ++it)
+	{
+		if (*it == l)
+			break;
+	}
+	if(it != lights.end())
+		lights.erase(it);
+}
+
+std::list<Light*>* M_GoManager::GetLightsList()
+{
+	return &lights;
+}
+
 void M_GoManager::SaveScene()
 {
 	mustSave = true;

@@ -9,6 +9,7 @@
 #include "Transform.h"
 #include "Mesh.h"
 #include "Camera.h"
+#include "Light.h"
 
 #include "ResourceMesh.h"
 
@@ -71,6 +72,9 @@ void EdInspector::Draw()
 						break;
 					case CMP_CAMERA:
 						DrawCamera(selected, (Camera*)cmp);
+						break;
+					case CMP_LIGHT:
+						DrawLights(selected, (Light*)cmp);
 						break;
 					}
 				}
@@ -199,7 +203,7 @@ void EdInspector::DrawCamera(GameObject * selected, Camera * cam)
 
 			CAM_TYPE type = cam->GetType();
 
-			static int index = 0;
+			int index = 0;
 			if (ImGui::Combo("Type", &index, "Perspective\0Orthographic"))
 			{
 				if (index == 0)
@@ -227,6 +231,42 @@ void EdInspector::DrawCamera(GameObject * selected, Camera * cam)
 			if (ImGui::Checkbox("Culling", &culling)) cam->SetCulling(culling);
 
 			//TODO: Make active
+		}
+	}
+}
+
+void EdInspector::DrawLights(GameObject * selected, Light * light)
+{
+	if (light)
+	{
+		if (ImGui::CollapsingHeader("Light"))
+		{
+			bool activeL = light->IsActive();
+			if (ImGui::Checkbox("Light active", &activeL)) light->SetActive(activeL);
+			ImGui::SameLine();
+			if (ImGui::Button("Remove light")) selected->RemoveComponent(light);
+
+			int lTypeIndex = (int)light->lightType;
+			if (ImGui::Combo("Light type", &lTypeIndex, "Directional\0Point\0Spot"))
+			{
+				light->SetType((LIGHT_TYPE)lTypeIndex);
+			}
+
+			ImGui::ColorEdit4("Light color", (float*)&light->color);
+			ImGui::DragFloat("Intensity", &light->intensity, 0.05f, 0.f);
+
+			if (light->lightType == LIGHT_TYPE::L_POINT)
+			{
+				ImGui::DragFloat("Range", &light->range);
+			}
+
+			if (light->lightType == LIGHT_TYPE::L_SPOT)
+			{
+				ImGui::DragFloat("Range", &light->range);
+				ImGui::DragFloat("Spot angle", &light->spotAngle);
+			}
+
+
 		}
 	}
 }

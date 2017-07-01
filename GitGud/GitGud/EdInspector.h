@@ -8,6 +8,7 @@ class Transform;
 class Mesh;
 class Material;
 class Camera;
+class Light;
 
 class EdInspector : public EdWin
 {
@@ -21,6 +22,7 @@ private:
 	void DrawTrans(GameObject* selected);
 	void DrawMesh(GameObject* selected, Mesh* mesh);
 	void DrawCamera(GameObject* selected, Camera* cam);
+	void DrawLights(GameObject* selected, Light* light);
 };
 
 #endif // !__EDINSPECTOR_H__

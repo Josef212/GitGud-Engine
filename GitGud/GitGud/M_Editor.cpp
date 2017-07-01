@@ -15,6 +15,7 @@
 #include "EdShaderEditor.h"
 
 #include "GameObject.h"
+#include "Light.h"
 #include "M_GoManager.h"
 
 #include <SDL.h>
@@ -120,6 +121,30 @@ UPDATE_RETURN M_Editor::Update(float dt)
 				app->goManager->CreateGameObject(selected); 
 			}
 
+			if (ImGui::BeginMenu("Light"))
+			{
+				if (ImGui::MenuItem("Directional light"))
+				{
+					GameObject* go = app->goManager->CreateGameObject();
+					Light* l = (Light*)go->CreateComponent(CMP_LIGHT);
+					l->SetType(LIGHT_TYPE::L_DIRECTIONAL);
+				}
+				if (ImGui::MenuItem("Point light"))
+				{
+					GameObject* go = app->goManager->CreateGameObject();
+					Light* l = (Light*)go->CreateComponent(CMP_LIGHT);
+					l->SetType(LIGHT_TYPE::L_POINT);
+				}
+				if (ImGui::MenuItem("Spot light"))
+				{
+					GameObject* go = app->goManager->CreateGameObject();
+					Light* l = (Light*)go->CreateComponent(CMP_LIGHT);
+					l->SetType(LIGHT_TYPE::L_SPOT);
+				}
+
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMenu();
 		}
 
@@ -130,6 +155,37 @@ UPDATE_RETURN M_Editor::Update(float dt)
 			if (ImGui::MenuItem("Transform")) if (selected) selected->CreateComponent(CMP_TRANSFORM);
 			if (ImGui::MenuItem("Mesh")) if (selected) selected->CreateComponent(CMP_MESH);
 			if (ImGui::MenuItem("Camera")) if (selected) selected->CreateComponent(CMP_CAMERA);
+			if (ImGui::BeginMenu("Light"))
+			{
+				if (ImGui::MenuItem("Directional"))
+				{
+					if (selected)
+					{
+						Light* l = (Light*)selected->CreateComponent(CMP_LIGHT);
+						l->SetType(L_DIRECTIONAL);
+					}
+				}
+
+				if (ImGui::MenuItem("Point"))
+				{
+					if (selected)
+					{
+						Light* l = (Light*)selected->CreateComponent(CMP_LIGHT);
+						l->SetType(L_POINT);
+					}
+				}
+
+				if (ImGui::MenuItem("Spot"))
+				{
+					if (selected)
+					{
+						Light* l = (Light*)selected->CreateComponent(CMP_LIGHT);
+						l->SetType(L_SPOT);
+					}
+				}
+
+				ImGui::EndMenu();
+			}
 
 			ImGui::EndMenu();
 		}
