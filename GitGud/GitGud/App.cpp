@@ -40,6 +40,7 @@ App::App(int argv, char** argc) : currentConfigSaveFileDir(CONFIG_PATH + (std::s
 	}
 	ReadArgs();
 
+	clock = new GG_Clock();
 	info = new HrdInfo();
 	console = new Console();
 	random = new RandGen();
@@ -86,6 +87,7 @@ App::~App()
 	RELEASE(info);
 	RELEASE(console);
 	RELEASE(random);
+	RELEASE(clock);
 }
 
 /**
@@ -342,8 +344,7 @@ void App::ResetConfig()
 */
 void App::PrepareUpdate()
 {
-	dt = (float)msTimer.ReadSec();
-	msTimer.Start();
+	clock->OnPrepareUpdate(PLAY_STATE::STOP); //TODO: Pass the app state
 }
 
 /**
@@ -366,23 +367,13 @@ void App::FinishUpdate()
 	}
 
 
-	++frames;
-	++fpsCounter;
+	clock->OnFinishUpdate();
 
-	if (fpsTimer.Read() >= 1000)
-	{
-		lastFps = fpsCounter;
-		fpsCounter = 0;
-		fpsTimer.Start();
-	}
-
-	lastFrameMs = msTimer.Read();
-
-	if (cappedMs > 0 && (lastFrameMs < cappedMs))
-		SDL_Delay(cappedMs - lastFrameMs);
+	if (cappedMs > 0 && (clock->LastFrameMs() < cappedMs))
+		SDL_Delay(cappedMs - clock->LastFrameMs());
 
 	if (editor)
-		editor->LogFPS((float)lastFps, (float)lastFrameMs);
+		editor->LogFPS((float)clock->LastFPS(), (float)clock->LastFrameMs());
 }
 
 /**
