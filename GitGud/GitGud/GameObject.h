@@ -127,6 +127,9 @@ private:
 
 	int currentCMPs = 0;
 
+	std::string tag = "untagged";
+	Layer layer;
+
 };
 
 #endif // !__GAME_OBJECT_H__

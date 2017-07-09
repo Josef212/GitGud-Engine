@@ -144,6 +144,7 @@
     <ClCompile Include="EdResources.cpp" />
     <ClCompile Include="EdShaderEditor.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GG_Clock.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="gpudetect\DeviceId.cpp" />
     <ClCompile Include="HrdInfo.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="EdWin.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GGOctree.h" />
+    <ClInclude Include="GG_Clock.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="gpudetect\DeviceId.h" />
     <ClInclude Include="gpudetect\dxgi1_4.h" />

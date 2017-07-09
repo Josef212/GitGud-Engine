@@ -42,11 +42,20 @@ typedef unsigned __int64 uint64;
 typedef unsigned char uchar;
 typedef unsigned __int32 UID;
 
+typedef int Layer;
+
 enum UPDATE_RETURN
 {
 	UPDT_CONTINUE = 0,
 	UPDT_STOP,
 	UPDT_ERROR
+};
+
+enum PLAY_STATE
+{
+	PLAY = 0,
+	PAUSE = 1,
+	STOP = 2
 };
 
 enum DATA_TYPE
