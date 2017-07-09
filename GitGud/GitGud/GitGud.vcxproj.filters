@@ -345,7 +345,9 @@
     <ClCompile Include="Light.cpp">
       <Filter>Engine\GamObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="GG_Clock.cpp" />
+    <ClCompile Include="GG_Clock.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -729,7 +731,9 @@
     <ClInclude Include="Light.h">
       <Filter>Engine\GamObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="GG_Clock.h" />
+    <ClInclude Include="GG_Clock.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\include\Geometry\KDTree.inl">
