@@ -51,12 +51,18 @@ enum UPDATE_RETURN
 	UPDT_ERROR
 };
 
-enum PLAY_STATE
+enum APP_STATE
 {
 	PLAY = 0,
-	PAUSE = 1,
-	STOP = 2
+	STOP,
+	PAUSE,
+	WAITING_TO_PLAY,
+	WAITING_TO_STOP,
+	WAITING_TO_PAUSE,
+	WAITING_TO_UNPAUSE
 };
+
+const char* GetAppStateStr(APP_STATE state);
 
 enum DATA_TYPE
 {

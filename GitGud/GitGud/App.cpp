@@ -339,12 +339,79 @@ void App::ResetConfig()
 	currentConfigSaveFileDir = (CONFIG_PATH + std::string("default_config.json"));
 }
 
+APP_STATE App::GetState() const
+{
+	return state;
+}
+
+bool App::IsPlay() const
+{
+	return state == APP_STATE::PLAY;
+}
+
+bool App::IsPause() const
+{
+	return state == APP_STATE::PAUSE;
+}
+
+bool App::IsStop() const
+{
+	return state == APP_STATE::STOP;
+}
+
+void App::Play()
+{
+	if (state == APP_STATE::STOP)
+		state = APP_STATE::WAITING_TO_PLAY;
+	else if (state == APP_STATE::PAUSE)
+		UnPause();
+}
+
+void App::Pause()
+{
+	if (state == APP_STATE::PLAY)
+		state = APP_STATE::WAITING_TO_PAUSE;
+}
+
+void App::Stop()
+{
+	if (state == APP_STATE::PLAY || state == APP_STATE::PAUSE)
+		state = APP_STATE::WAITING_TO_STOP;
+}
+
+void App::UnPause()
+{
+	if (state == APP_STATE::PAUSE)
+		state = APP_STATE::WAITING_TO_UNPAUSE;
+}
+
 /**
 *	- PrepareUpdate: Calculate dt.
 */
 void App::PrepareUpdate()
 {
-	clock->OnPrepareUpdate(PLAY_STATE::STOP); //TODO: Pass the app state
+	clock->OnPrepareUpdate(state);
+
+	//TODO: Broadcast events on play, pause, unpause and stop
+	switch (state)
+	{
+	case WAITING_TO_PLAY:
+		state = APP_STATE::PLAY;
+		clock->Play();
+		break;
+	case WAITING_TO_STOP:
+		state = APP_STATE::STOP;
+		clock->Stop();
+		break;
+	case WAITING_TO_PAUSE:
+		state = APP_STATE::PAUSE;
+		clock->Pause();
+		break;
+	case WAITING_TO_UNPAUSE:
+		state = APP_STATE::PLAY;
+
+		break;
+	}
 }
 
 /**

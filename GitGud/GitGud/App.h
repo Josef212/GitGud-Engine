@@ -60,6 +60,20 @@ public:
 	void SetConfigSavePath(const char* path);
 	void ResetConfig();
 
+	//----------------
+
+	APP_STATE GetState()const;
+	bool IsPlay()const;
+	bool IsPause()const;
+	bool IsStop()const;
+
+	void Play();
+	void Pause();
+	void Stop();
+	void UnPause();
+
+	//----------------
+
 
 private:
 	void PrepareUpdate();
@@ -86,7 +100,8 @@ public:
 	M_Camera3D* camera = nullptr;
 
 	M_Renderer* renderer = nullptr;
-	
+
+	GG_Clock* clock = nullptr;
 
 	bool debugMode = false;
 	bool quit = false;
@@ -105,7 +120,7 @@ private:
 	bool saveNextFrame = false;
 	bool loadNextFrame = false;
 
-	GG_Clock* clock = nullptr;
+	APP_STATE state = APP_STATE::STOP; //TODO: Args??
 	uint32	cappedMs = 0;
 
 

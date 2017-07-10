@@ -11,7 +11,7 @@ public:
 	GG_Clock();
 	virtual ~GG_Clock();
 
-	void OnPrepareUpdate(PLAY_STATE appState);
+	void OnPrepareUpdate(APP_STATE appState);
 	void OnFinishUpdate();
 
 	void OnSceneLoaded();
@@ -19,7 +19,7 @@ public:
 	void Pause();
 	void UnPause();
 	void Stop();
-	void Play(PLAY_STATE lastState);
+	void Play();
 
 	//Some getters---------------
 	float DT()const;

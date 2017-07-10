@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include <SDL.h>
 #include "App.h"
+#include <assert.h>
 
 void _log(const char file[], int line, const char* format, ...)
 {
@@ -21,4 +22,15 @@ void _log(const char file[], int line, const char* format, ...)
 		sprintf_s(tmpString2, 4096, "%s\n", tmpString);
 		app->Log(tmpString2);
 	}
+}
+
+const char* GetAppStateStr(APP_STATE state)
+{
+	static const char* states[] = {
+		"PLAY", "STOP", "PAUSE", "WAITING_TO_PLAY", "WAITING_TO_STOP", "WAITING_TO_PAUSE", "WAITING_TO_UNPAUSE"
+	};
+
+	assert(state >= 0 && state <= WAITING_TO_UNPAUSE);
+
+	return states[state];
 }

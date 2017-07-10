@@ -141,8 +141,10 @@
     <ClCompile Include="EdHierarchy.cpp" />
     <ClCompile Include="EdInspector.cpp" />
     <ClCompile Include="EdMaterialCreator.cpp" />
+    <ClCompile Include="EdPlayMenu.cpp" />
     <ClCompile Include="EdResources.cpp" />
     <ClCompile Include="EdShaderEditor.cpp" />
+    <ClCompile Include="EdTimeDisplay.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GG_Clock.cpp" />
     <ClCompile Include="Globals.cpp" />
@@ -233,8 +235,10 @@
     <ClInclude Include="EdHierarchy.h" />
     <ClInclude Include="EdInspector.h" />
     <ClInclude Include="EdMaterialCreator.h" />
+    <ClInclude Include="EdPlayMenu.h" />
     <ClInclude Include="EdResources.h" />
     <ClInclude Include="EdShaderEditor.h" />
+    <ClInclude Include="EdTimeDisplay.h" />
     <ClInclude Include="EdWin.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GGOctree.h" />

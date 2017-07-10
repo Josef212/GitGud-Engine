@@ -348,6 +348,12 @@
     <ClCompile Include="GG_Clock.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="EdPlayMenu.cpp">
+      <Filter>Engine\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="EdTimeDisplay.cpp">
+      <Filter>Engine\Editor\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -733,6 +739,12 @@
     </ClInclude>
     <ClInclude Include="GG_Clock.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="EdPlayMenu.h">
+      <Filter>Engine\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="EdTimeDisplay.h">
+      <Filter>Engine\Editor\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
