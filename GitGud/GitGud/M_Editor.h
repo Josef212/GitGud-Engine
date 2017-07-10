@@ -18,6 +18,8 @@ class EdInspector;
 class EdMaterialCreator;
 class EdResources;
 class EdShaderEditor;
+class EdPlayMenu;
+class EdTimeDisplay;
 
 class M_Editor : public Module
 {
@@ -54,6 +56,8 @@ public:
 	EdResources* resources = nullptr;
 	EdMaterialCreator* materialCreator = nullptr;
 	EdShaderEditor* shaderEditor = nullptr;
+	EdPlayMenu* playMenu = nullptr;
+	EdTimeDisplay* timeDisplay = nullptr;
 
 private:
 	std::list<EdWin*> editorWins;

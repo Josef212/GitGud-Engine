@@ -13,6 +13,8 @@
 #include "EdResources.h"
 #include "EdMaterialCreator.h"
 #include "EdShaderEditor.h"
+#include "EdPlayMenu.h"
+#include "EdTimeDisplay.h"
 
 #include "GameObject.h"
 #include "Light.h"
@@ -34,6 +36,8 @@ M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnab
 	hierarchy = new EdHierarchy(true);
 	inspector = new EdInspector(true);
 	resources = new EdResources(true);
+	playMenu = new EdPlayMenu(true);
+	timeDisplay = new EdTimeDisplay(false);
 	materialCreator = new EdMaterialCreator(false);
 	shaderEditor = new EdShaderEditor(false);
 
@@ -43,6 +47,8 @@ M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnab
 	editorWins.push_back(hierarchy);
 	editorWins.push_back(inspector);
 	editorWins.push_back(resources);
+	editorWins.push_back(playMenu);
+	editorWins.push_back(timeDisplay);
 	editorWins.push_back(materialCreator);
 	editorWins.push_back(shaderEditor);
 }
@@ -108,6 +114,7 @@ UPDATE_RETURN M_Editor::Update(float dt)
 			ImGui::MenuItem("Hierarchy", nullptr, &hierarchy->active);
 			ImGui::MenuItem("Inspector", nullptr, &inspector->active);
 			ImGui::MenuItem("Resource", nullptr, &resources->active);
+			ImGui::MenuItem("Time", nullptr, &timeDisplay->active);
 			ImGui::MenuItem("SetStyle", nullptr, &styleEditor);
 
 			ImGui::EndMenu();
