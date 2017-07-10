@@ -105,14 +105,6 @@ private:
 	bool saveNextFrame = false;
 	bool loadNextFrame = false;
 
-	Timer	msTimer;
-	Timer	fpsTimer;
-	uint64		frames = 0;
-	float		dt = 0.f;
-	int			fpsCounter = 0;
-	uint32		lastFrameMs = -1;
-	int			lastFps = -1;
-
 	GG_Clock* clock = nullptr;
 	uint32	cappedMs = 0;
 

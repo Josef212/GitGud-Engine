@@ -142,7 +142,7 @@ UPDATE_RETURN App::Update()
 	for (it = modules.begin(); it != modules.end() && ret == UPDT_CONTINUE; ++it)
 	{
 		if ((*it)->IsEnable())
-			ret = (*it)->PreUpdate(dt);
+			ret = (*it)->PreUpdate(clock->DT()); //TODO: Dont pass dt, let each module get each dt
 	}
 
 	if (ret == UPDT_ERROR)
@@ -151,7 +151,7 @@ UPDATE_RETURN App::Update()
 	for (it = modules.begin(); it != modules.end() && ret == UPDT_CONTINUE; ++it)
 	{
 		if ((*it)->IsEnable())
-			ret = (*it)->Update(dt);
+			ret = (*it)->Update(clock->DT()); //TODO: Dont pass dt, let each module get each dt
 	}
 
 	if (ret == UPDT_ERROR)
@@ -160,7 +160,7 @@ UPDATE_RETURN App::Update()
 	for (it = modules.begin(); it != modules.end() && ret == UPDT_CONTINUE; ++it)
 	{
 		if ((*it)->IsEnable())
-			ret = (*it)->PostUpdate(dt);
+			ret = (*it)->PostUpdate(clock->DT()); //TODO: Dont pass dt, let each module get each dt
 	}
 
 	if (ret == UPDT_ERROR)
