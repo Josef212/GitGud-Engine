@@ -54,7 +54,6 @@ void EdPlayMenu::Draw()
 	ImGui::SameLine();
 	ImGui::Checkbox("Draw debug", &app->debugMode);
 
-	//ImGui::SameLine();
 	float scl = app->clock->GetScale();
 	if (ImGui::DragFloat("Time scale", &scl, 0.05f, 0.0f, 20.0f, "%.2f"))
 		app->clock->SetScale(scl);

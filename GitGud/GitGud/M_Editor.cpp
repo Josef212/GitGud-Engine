@@ -24,10 +24,14 @@
 #include "imGui/imgui.h"
 #include "imGui\imgui_impl_sdl_gl3.h"
 
+#include <algorithm>
+
 
 M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
 	_LOG("Editor: Creation.");
+
+	selectedFile[0] = '\0';
 
 	//Creating panels
 	//TODO: Start enabled according to engine start state
@@ -103,6 +107,10 @@ UPDATE_RETURN M_Editor::Update(float dt)
 		{
 			if (ImGui::MenuItem("Save scene")) app->goManager->SaveScene(); //TMP
 			if (ImGui::MenuItem("Load scene")) app->goManager->LoadScene();
+			if (ImGui::MenuItem("File explorer"))
+			{
+				if (FileDialog(nullptr, "Data"));
+			}
 			if (ImGui::MenuItem("Quit")) app->quit = true;
 			ImGui::EndMenu();
 		}
@@ -248,6 +256,12 @@ UPDATE_RETURN M_Editor::Update(float dt)
 
 	if (styleEditor) SetStyleEditorWin();
 
+	if (fileDialog == OPENED)
+		LoadFile(fileDialogFilter.length() > 0 ? fileDialogFilter.c_str() : nullptr, 
+			fileDialogOrigin.length() > 0 ? fileDialogOrigin.c_str() : nullptr);
+	else
+		inModal = false;
+
 	if (showImGuiDemo)
 	{
 		ImGui::ShowTestWindow(&showImGuiDemo);
@@ -284,6 +298,37 @@ void M_Editor::LogFPS(float fps, float ms)
 {
 	if (config)
 		config->PushFps(fps, ms);
+}
+
+bool M_Editor::FileDialog(const char * extension, const char * fromFolder)
+{
+	bool ret = true;
+
+	switch (fileDialog)
+	{
+	case M_Editor::CLOSED:
+		selectedFile[0] = '\0';
+		fileDialogFilter = (extension) ? extension : "";
+		fileDialogOrigin = (fromFolder) ? fromFolder : "";
+		fileDialog = OPENED;
+		break;
+	case M_Editor::OPENED:
+		ret = false;
+		break;
+	}
+
+	return ret;
+}
+
+const char * M_Editor::CloseFileDialog()
+{
+	if (fileDialog == READY_TO_CLOSE)
+	{
+		fileDialog = CLOSED;
+		return selectedFile[0] ? selectedFile : nullptr;
+	}
+
+	return nullptr;
 }
 
 void M_Editor::SetStyle(const char* filename)
@@ -452,5 +497,87 @@ void M_Editor::SetStyleEditorWin()
 		if (ImGui::Button("Set default imgui style")) SetStyle((CONFIG_PATH + std::string("default_imgui_style.json")).c_str());
 
 		ImGui::End();
+	}
+}
+
+void M_Editor::LoadFile(const char * filterExt, const char * fromDir)
+{
+	ImGui::OpenPopup("Load file");
+	if (ImGui::BeginPopupModal("Load file", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		inModal = true;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildWindowRounding, 5.0f);
+		ImGui::BeginChild("File browser", ImVec2(0, 300), true);
+		DrawDirRec(fromDir, filterExt);
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
+
+		ImGui::PushItemWidth(250.f);
+		if (ImGui::InputText("##file_selector", selectedFile, FILE_MAX_SIZE, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+			fileDialog = READY_TO_CLOSE;
+
+		ImGui::PopItemWidth();
+
+		ImGui::SameLine();
+		if (ImGui::Button("Ok", ImVec2(50, 20)))
+			fileDialog = READY_TO_CLOSE;
+
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(50, 20)))
+		{
+			fileDialog = READY_TO_CLOSE;
+			selectedFile[0] = '\0';
+		}
+
+		ImGui::EndPopup();
+	}
+	else
+	{
+		inModal = false;
+	}
+}
+
+void M_Editor::DrawDirRec(const char * directory, const char * filterExt)
+{
+	std::vector<std::string> files;
+	std::vector<std::string> dirs;
+
+	std::string dir((directory) ? directory : "");
+	dir += "/";
+
+	app->fs->GetFilesAndDirs(dir.c_str(), files, dirs);
+
+	for (std::vector<std::string>::iterator it = dirs.begin(); it != dirs.end(); ++it)
+	{
+		if (ImGui::TreeNodeEx((dir + (*it)).c_str(), 0, "%s/", (*it).c_str()))
+		{
+			DrawDirRec((dir + (*it)).c_str(), filterExt);
+			ImGui::TreePop();
+		}
+	}
+
+	std::sort(files.begin(), files.end());
+
+	for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it)
+	{
+		const std::string& str = *it;
+		bool ok = true;
+
+		if (filterExt && str.substr(str.find_last_of(".") + 1) != filterExt)
+			ok = false;
+
+		if (ok && ImGui::TreeNodeEx(str.c_str(), ImGuiTreeNodeFlags_Leaf))
+		{
+			if (ImGui::IsItemClicked())
+			{
+				sprintf_s(selectedFile, FILE_MAX_SIZE, "%s%s", dir.c_str(), str.c_str());
+
+				if (ImGui::IsMouseDoubleClicked(0))
+					fileDialog = READY_TO_CLOSE;
+			}
+
+			ImGui::TreePop();
+		}
 	}
 }

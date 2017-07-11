@@ -42,7 +42,7 @@ typedef unsigned __int64 uint64;
 typedef unsigned char uchar;
 typedef unsigned __int32 UID;
 
-typedef int Layer;
+typedef unsigned int Layer;
 
 enum UPDATE_RETURN
 {

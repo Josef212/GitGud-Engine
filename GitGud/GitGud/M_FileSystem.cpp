@@ -222,12 +222,12 @@ uint M_FileSystem::GetFilesAndDirs(const char * dir, std::vector<std::string>& f
 {
 	uint ret = 0;
 
-	dirs.push_back(dir);
+	std::string directory(dir);
 
 	char** rc = PHYSFS_enumerateFiles(dir);
 	for (char** it = rc; *it != nullptr; ++it)
 	{
-		if (IsDirectory(*it))
+		if (IsDirectory((directory + *it).c_str()))
 			dirs.push_back(*it);
 		else
 			files.push_back(*it);

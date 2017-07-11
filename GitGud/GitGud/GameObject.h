@@ -101,6 +101,14 @@ public:
 
 	//--------------------------
 
+	const char* GetTag()const;
+	void SetTag(const char* _tag);
+
+	Layer GetLayer()const;
+	void SetLayer(Layer _layer);
+
+	//--------------------------
+
 
 
 private:

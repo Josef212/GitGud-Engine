@@ -565,3 +565,23 @@ bool GameObject::OnLoadGo(JsonFile * sect, std::map<GameObject*, uint>& relation
 
 	return ret;
 }
+
+const char * GameObject::GetTag() const
+{
+	return tag.c_str();
+}
+
+void GameObject::SetTag(const char * _tag)
+{
+	tag = _tag;
+}
+
+Layer GameObject::GetLayer() const
+{
+	return layer;
+}
+
+void GameObject::SetLayer(Layer _layer)
+{
+	layer = _layer;
+}

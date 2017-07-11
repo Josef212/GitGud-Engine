@@ -23,6 +23,7 @@ private:
 	void DrawMesh(GameObject* selected, Mesh* mesh);
 	void DrawCamera(GameObject* selected, Camera* cam);
 	void DrawLights(GameObject* selected, Light* light);
+	void DrawMaterial(GameObject* selected, Material* mat);
 };
 
 #endif // !__EDINSPECTOR_H__

@@ -79,6 +79,9 @@
     <Filter Include="3rdParty\gpu_detection">
       <UniqueIdentifier>{cab6edfa-f647-45d3-a60f-ee25b5e1569e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tools\Time">
+      <UniqueIdentifier>{b397d964-bcfe-4297-8795-4fc80dd73509}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -222,12 +225,6 @@
     <ClCompile Include="EdConsole.cpp">
       <Filter>Engine\Editor\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="PerfTimer.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
     <ClCompile Include="JsonFile.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
@@ -345,14 +342,20 @@
     <ClCompile Include="Light.cpp">
       <Filter>Engine\GamObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="GG_Clock.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
     <ClCompile Include="EdPlayMenu.cpp">
       <Filter>Engine\Editor\Panels</Filter>
     </ClCompile>
     <ClCompile Include="EdTimeDisplay.cpp">
       <Filter>Engine\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="GG_Clock.cpp">
+      <Filter>Tools\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="PerfTimer.cpp">
+      <Filter>Tools\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Tools\Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -584,12 +587,6 @@
     <ClInclude Include="EdConsole.h">
       <Filter>Engine\Editor\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="PerfTimer.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
     <ClInclude Include="JsonFile.h">
       <Filter>Tools</Filter>
     </ClInclude>
@@ -737,14 +734,20 @@
     <ClInclude Include="Light.h">
       <Filter>Engine\GamObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="GG_Clock.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
     <ClInclude Include="EdPlayMenu.h">
       <Filter>Engine\Editor\Panels</Filter>
     </ClInclude>
     <ClInclude Include="EdTimeDisplay.h">
       <Filter>Engine\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="GG_Clock.h">
+      <Filter>Tools\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="PerfTimer.h">
+      <Filter>Tools\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Tools\Time</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

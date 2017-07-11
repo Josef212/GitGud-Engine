@@ -76,6 +76,9 @@ void EdInspector::Draw()
 					case CMP_LIGHT:
 						DrawLights(selected, (Light*)cmp);
 						break;
+					case CMP_MATERIAL:
+						DrawMaterial(selected, (Material*)cmp);
+						break;
 					}
 				}
 			}
@@ -269,4 +272,8 @@ void EdInspector::DrawLights(GameObject * selected, Light * light)
 
 		}
 	}
+}
+
+void EdInspector::DrawMaterial(GameObject * selected, Material * mat)
+{
 }

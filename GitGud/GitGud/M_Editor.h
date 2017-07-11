@@ -6,6 +6,8 @@
 #include <list>
 #include <string>
 
+#define FILE_MAX_SIZE 250
+
 class EdWin;
 union SDL_Event;
 
@@ -42,11 +44,17 @@ public:
 	bool UsingKeyboard()const { return isUsingKeyboard; }
 	bool UsingMouse()const { return isUsingMouse; }
 
+	bool FileDialog(const char* extension = nullptr, const char* fromFolder = nullptr);
+	const char* CloseFileDialog();
+
 
 private:
 	void SetStyle(const char* filename);
 	void SaveStyle(ImGuiStyle* style);
 	void SetStyleEditorWin();
+
+	void LoadFile(const char* filterExt = nullptr, const char* fromDir = nullptr);
+	void DrawDirRec(const char* directory, const char* filterExt);
 
 public:
 	EdConfig* config = nullptr;
@@ -61,6 +69,19 @@ public:
 
 private:
 	std::list<EdWin*> editorWins;
+
+	enum
+	{
+		CLOSED,
+		OPENED,
+		READY_TO_CLOSE
+	} fileDialog = CLOSED;
+
+	std::string fileDialogFilter;
+	std::string fileDialogOrigin;
+
+	bool inModal = false;
+	char selectedFile[FILE_MAX_SIZE];
 
 	bool isUsingMouse = false;
 	bool isUsingKeyboard = false;
