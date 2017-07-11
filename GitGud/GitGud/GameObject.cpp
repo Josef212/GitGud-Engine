@@ -118,17 +118,13 @@ Component * GameObject::GetComponent(COMPONENT_TYPE type)
 	return nullptr;
 }
 
-std::vector<Component*> GameObject::GetComponents(COMPONENT_TYPE types)
+void GameObject::GetComponents(COMPONENT_TYPE types, std::vector<Component*>& cmps)
 {
-	std::vector<Component*> ret;
-
 	for (auto cmp : components)
 	{
 		if (types & cmp->GetType())
-			ret.push_back(cmp);
+			cmps.push_back(cmp);
 	}
-
-	return ret;
 }
 
 bool GameObject::HasComponent(COMPONENT_TYPE type)

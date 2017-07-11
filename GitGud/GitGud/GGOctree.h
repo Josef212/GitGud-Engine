@@ -6,6 +6,7 @@
 #include <vector>
 #include <stack>
 #include <queue>
+#include <map>
 #include "GameObject.h"
 
 #define NODE_MAX_ITEMS 10
@@ -91,6 +92,11 @@ public:
 			}
 		}
 	}
+
+	template<typename TYPE>
+	void CollectIntersections(std::map<float, GameObject*>& objects, const TYPE& primitive)const;
+	template<typename TYPE>
+	void CollectIntersections(std::vector<GameObject*>& objects, const TYPE& primitive)const;
 
 private:
 	void DivideNode()
@@ -234,6 +240,11 @@ public:
 			root->CollectBoxes(vec);
 	}
 
+	template<typename TYPE>
+	void CollectIntersections(std::map<float, GameObject*>& objects, const TYPE& primitive)const;
+	template<typename TYPE>
+	void CollectIntersections(std::vector<GameObject*>& objects, const TYPE& primitive)const;
+
 private:
 	void Clear()
 	{
@@ -245,5 +256,56 @@ private:
 public:
 	GGOctreeNode* root = nullptr;
 };
+
+//-------------------------------------------------------
+
+template<typename TYPE>
+inline void GGOctree::CollectIntersections(std::map<float, GameObject*>& objects, const TYPE& primitive)const
+{
+	if (root)
+		root->CollectIntersections(objects, primitive);
+}
+
+template<typename TYPE>
+inline void GGOctree::CollectIntersections(std::vector<GameObject*>& objects, const TYPE& primitive)const
+{
+	if (root)
+		root->CollectIntersections(objects, primitive);
+}
+
+
+
+template<typename TYPE>
+inline void GGOctreeNode::CollectIntersections(std::map<float, GameObject*>& objects, const TYPE& primitive)const
+{
+	if (primitive.Intersects(box))
+	{
+		float nearHit, farHit;
+		for (std::vector<GameObject*>::const_iterator it = this->objects.begin(); it != this->objects.end(); ++it)
+		{
+			if (primitive.Intersects((*it)->enclosingBox, nearHit, farHit))
+				objects[nearHit] = *it;
+		}
+
+		for (unsigned int i = 0; i < 8; ++i)
+			if (childs[i]) childs[i]->CollectIntersections(objects, primitive);
+	}
+}
+
+template<typename TYPE>
+inline void GGOctreeNode::CollectIntersections(std::vector<GameObject*>& objects, const TYPE& primitive)const
+{
+	if (primitive.Intersects(box))
+	{
+		for (std::vector<GameObject*>::const_iterator it = this->objects.begin(); it != this->objects.end(); ++it)
+		{
+			if (primitive.Intersects((*it)->enclosingBox))
+				objects.push_back(*it);
+		}
+
+		for (unsigned int i = 0; i < 8; ++i)
+			if (childs[i]) childs[i]->CollectIntersections(objects, primitive);
+	}
+}
 
 #endif // !__GGOCTREE_H__

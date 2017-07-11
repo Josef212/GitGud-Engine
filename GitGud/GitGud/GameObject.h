@@ -35,7 +35,7 @@ public:
 	Component* CreateComponent(COMPONENT_TYPE type);
 
 	Component* GetComponent(COMPONENT_TYPE type);
-	std::vector<Component*> GetComponents(COMPONENT_TYPE types);
+	void GetComponents(COMPONENT_TYPE types, std::vector<Component*>& cmps);
 	bool HasComponent(COMPONENT_TYPE type);
 	uint CountComponents(COMPONENT_TYPE type);
 
