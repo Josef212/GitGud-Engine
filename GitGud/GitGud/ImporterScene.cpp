@@ -56,10 +56,13 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 		{
 			meshesImported.clear();
 
+			JsonFile metaFile;
+			metaFile.AddString("original_scene_file", originalFile.GetFullPath());
+
 			GameObject* go = app->goManager->CreateGameObject();
 			go->SetName(originalFile.GetFileName());
 
-			RecImport(scene, scene->mRootNode, go, originalFile);
+			RecImport(scene, scene->mRootNode, go, originalFile, metaFile);
 
 			//TODO: bones
 
@@ -84,6 +87,8 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 			if (app->fs->Save(exportedFile.GetFullPath(), buff, s) == s)
 				ret = true;
 
+			//TODO: save meta json file
+
 			RELEASE_ARRAY(buff);
 			//go->Destroy();	//TODO
 		}
@@ -96,8 +101,36 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 	return ret;
 }
 
-void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameObject * parent, Path& file)
+void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameObject * parent, Path& file, JsonFile& metaFile)
 {
+	/*for (uint i = 0; i < node->mMetaData->mNumProperties; ++i)
+	{
+
+		aiMetadataEntry* it = &node->mMetaData->mValues[i];
+		void* data = it->mData;
+		switch (it->mType)
+		{
+		case AI_BOOL:
+			static_cast<bool*>(data);
+			break;
+		case AI_INT:
+			static_cast<int*>(data);
+			break;
+		case AI_UINT64:
+			static_cast<uint64_t*>(data);
+			break;
+		case AI_FLOAT:
+			static_cast<float*>(data);
+			break;
+		case AI_AISTRING:
+			static_cast<aiString*>(data);
+			break;
+		case AI_AIVECTOR3D:
+			static_cast<aiVector3D*>(data);
+			break;
+		}
+	}*/
+
 	static std::string name;
 	name = (node->mName.length > 0) ? node->mName.C_Str() : "unnamed";
 
@@ -180,7 +213,7 @@ void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameOb
 	}
 
 	for (uint i = 0; i < node->mNumChildren; ++i)
-		RecImport(scene, node->mChildren[i], go, file);
+		RecImport(scene, node->mChildren[i], go, file, metaFile);
 	
 
 }

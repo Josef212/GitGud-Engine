@@ -2,6 +2,7 @@
 #define __IMPORTER_SCENE_H__
 
 #include "Importer.h"
+#include "JsonFile.h"
 #include <string>
 #include <map>
 
@@ -34,7 +35,7 @@ public:
 	bool LoadResource(Resource* resource)override;
 
 private:
-	void RecImport(const aiScene* scene, const aiNode* node, GameObject* parent, Path& file);
+	void RecImport(const aiScene* scene, const aiNode* node, GameObject* parent, Path& file, JsonFile& metaFile);
 
 private:
 	std::map<int, ResourceMesh*> meshesImported;
