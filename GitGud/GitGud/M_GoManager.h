@@ -2,6 +2,7 @@
 #define __M_GOMANAGER_H__
 
 #include "Module.h"
+#include "Math.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -51,6 +52,9 @@ public:
 	void SaveScene();
 	void LoadScene(); //TODO: Must adapt this to use scene resource and a way to change scenes, etc.
 
+	GameObject* CastRay(const LineSegment& segment, float& distance)const;
+	GameObject* CastRay(const Ray& ray, float& distance)const;
+
 private:
 	void OnPlay();
 	void DoOnPlay(GameObject* obj);
@@ -63,6 +67,13 @@ private:
 
 	void DoPreUpdate(GameObject* obj);
 	void DoUpdate(GameObject* obj, float dt);
+
+	//-------------
+
+	void RecursiveTestRay(const LineSegment& segment, float& distance, GameObject** best)const;
+	void RecursiveTestRay(const Ray& ray, float& distance, GameObject** best)const;
+
+	//-------------
 
 	GameObject* GetGoFromUID(GameObject* obj, UID uuid)const;
 

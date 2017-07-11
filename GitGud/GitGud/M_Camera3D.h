@@ -32,6 +32,8 @@ private:
 	void Orbit(float dx, float dy);
 	void Zoom(float dt);
 
+	GameObject* Pick()const;
+
 public:
 	float movSpeed = 5.f;
 	float rotSpeed = 2.f;

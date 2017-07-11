@@ -2,6 +2,8 @@
 
 #include "App.h"
 #include "M_Input.h"
+#include "M_GoManager.h"
+#include "M_Window.h"
 #include "M_Editor.h"
 #include <SDL_scancode.h>
 #include <SDL_mouse.h>
@@ -52,6 +54,11 @@ UPDATE_RETURN M_Camera3D::Update(float dt)
 	{
 		Rotate(dt);
 		Zoom(dt);
+
+		if (app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		{
+			app->goManager->SelectGo(Pick());
+		}
 	}
 
 	return UPDT_CONTINUE;
@@ -164,4 +171,30 @@ void M_Camera3D::Orbit(float dx, float dt)
 
 void M_Camera3D::Zoom(float dt)
 {
+}
+
+GameObject * M_Camera3D::Pick() const
+{
+	/**
+	*	-1, 1   ----------------   1, 1
+	*			|				|
+	*			|				|
+	*			|				|
+	*	-1, -1  ----------------   1, -1
+	*/
+
+	float w = (float)app->win->GetWidth();
+	float h = (float)app->win->GetHeight();
+
+	int x, y;
+	app->input->GetMouseScreenPos(x, y);
+
+	float normX = -(1.f - ((float)x * 2.f) / w);
+	float normY = 1.f - ((float)y * 2.f) / h;
+
+	LineSegment picking = editorCamera->frustum.UnProjectLineSegment(normX, normY);
+	float dist;
+	GameObject* hit = app->goManager->CastRay(picking, dist);
+
+	return hit;
 }

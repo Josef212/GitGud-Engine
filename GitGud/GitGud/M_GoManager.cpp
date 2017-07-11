@@ -14,6 +14,8 @@
 #include "Camera.h"
 #include "Mesh.h"
 
+#include "ResourceMesh.h"
+
 #define OCTREE_SIZE 100 / 2
 
 M_GoManager::M_GoManager(const char* name, bool startEnabled) : Module(name, startEnabled)
@@ -239,6 +241,22 @@ void M_GoManager::LoadScene()
 	mustLoad = true;
 }
 
+GameObject * M_GoManager::CastRay(const LineSegment & segment, float & distance) const
+{
+	distance = inf;
+	GameObject* candidate = nullptr;
+	RecursiveTestRay(segment, distance, &candidate);
+	return candidate;
+}
+
+GameObject * M_GoManager::CastRay(const Ray & ray, float & distance) const
+{
+	distance = inf;
+	GameObject* candidate = nullptr;
+	RecursiveTestRay(ray, distance, &candidate);
+	return candidate;
+}
+
 void M_GoManager::OnPlay()
 {
 	for (auto obj : root->childs)
@@ -345,6 +363,109 @@ void M_GoManager::DoUpdate(GameObject * obj, float dt)
 		for (auto go : obj->childs)
 		{
 			DoUpdate(go, dt);
+		}
+	}
+}
+
+void M_GoManager::RecursiveTestRay(const LineSegment & segment, float & distance, GameObject ** best)const
+{
+	std::map<float, GameObject*> objects;
+	octree->CollectIntersections(objects, segment);
+
+	for (const auto& it : dynamicGameObjects)
+	{
+		float nearHit, farHit;
+		if (segment.Intersects(it->enclosingBox, nearHit, farHit))
+			objects[nearHit] = it;
+	}
+
+	for (std::map<float, GameObject*>::const_iterator it = objects.begin(); it != objects.end(); ++it)
+	{
+		GameObject* go = it->second;
+		std::vector<Component*> meshes;
+		go->GetComponents(CMP_MESH, meshes);
+
+		if (meshes.size() > 0)
+		{
+			const Mesh* m = (const Mesh*)meshes[0];
+			const ResourceMesh* r = (const ResourceMesh*)m->GetResource();
+
+			if (r)
+			{
+				LineSegment localSeg(segment);
+				localSeg.Transform(go->transform->GetGlobalTransform().Inverted());
+
+				Triangle tri;
+				for (uint i = 0; i < r->numIndices;)
+				{
+					tri.a.Set(&r->vertices[r->indices[i++]*3]);
+					tri.b.Set(&r->vertices[r->indices[i++] * 3]);
+					tri.c.Set(&r->vertices[r->indices[i++] * 3]);
+
+					float dist;
+					float3 hitPoint;
+					if (localSeg.Intersects(tri, &dist, &hitPoint))
+					{
+						if (dist < distance)
+						{
+							distance = dist;
+							*best = go;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void M_GoManager::RecursiveTestRay(const Ray & ray, float & distance, GameObject ** best) const
+{
+	std::map<float, GameObject*> objects;
+	octree->CollectIntersections(objects, ray);
+
+	for (const auto& it : dynamicGameObjects)
+	{
+		float nearHit, farHit;
+		if (ray.Intersects(it->enclosingBox, nearHit, farHit))
+			objects[nearHit] = it;
+	}
+
+	for (std::map<float, GameObject*>::const_iterator it = objects.begin(); it != objects.end(); ++it)
+	{
+		GameObject* go = it->second;
+		std::vector<Component*> meshes;
+		go->GetComponents(CMP_MESH, meshes);
+
+		if (meshes.size() > 0)
+		{
+			const Mesh* m = (const Mesh*)meshes[0];
+			const ResourceMesh* r = (const ResourceMesh*)m->GetResource();
+
+			if (r)
+			{
+				Ray localRay(ray);
+				localRay.Transform(go->transform->GetGlobalTransform().Inverted());
+				localRay.dir.Normalize();
+
+				Triangle tri;
+				for (uint i = 0; i < r->numIndices;)
+				{
+					tri.a.Set(&r->vertices[r->indices[i++] * 3]);
+					tri.b.Set(&r->vertices[r->indices[i++] * 3]);
+					tri.c.Set(&r->vertices[r->indices[i++] * 3]);
+
+					float dist;
+					float3 hitPoint;
+					if (localRay.Intersects(tri, &dist, &hitPoint))
+					{
+						if (dist < distance)
+						{
+							distance = dist;
+							*best = go;
+						}
+					}
+				}
+			}
 		}
 	}
 }
