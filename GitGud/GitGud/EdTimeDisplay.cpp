@@ -36,7 +36,7 @@ void EdTimeDisplay::Draw()
 
 		ImGui::Text("Dt: ");
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.3f", app->clock->DT());
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.4f", app->clock->DT());
 
 		ImGui::SameLine();
 
@@ -63,7 +63,7 @@ void EdTimeDisplay::Draw()
 
 		ImGui::Text("Game dt: ");
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.3f", app->clock->GameDT());
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.4f", app->clock->GameDT());
 
 		ImGui::SameLine();
 
