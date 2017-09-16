@@ -12,23 +12,19 @@
 
 Camera::Camera(GameObject* object) : Component(object, CMP_CAMERA)
 {
+	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	if (object && object->transform)
 	{
 		float4x4 mat = object->transform->GetLocalTransform();
-		frustum.SetPos(mat.TranslatePart());
-		frustum.SetFront(mat.WorldZ());
-		frustum.SetUp(mat.WorldY());
+		frustum.SetFrame(mat.TranslatePart(), mat.WorldZ(), mat.WorldY());
 	}
 	else
 	{
-		frustum.SetPos(float3(0.f, 0.f, 0.f));
-		frustum.SetFront(float3::unitZ);
-		frustum.SetUp(float3::unitY);
+		frustum.SetFrame(float3(0.f, 0.f, 0.f), float3::unitZ, float3::unitY);
 	}
 
 	frustum.SetViewPlaneDistances(1.f, 100.f);
 	frustum.SetVerticalFovAndAspectRatio(45.f * DEGTORAD, aspectRatio);
-	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 
 	camType = CAM_PERSPECTIVE;
 }
@@ -158,10 +154,7 @@ void Camera::OnTransformUpdate(Transform * trans)
 	if (trans)
 	{
 		float4x4 mat = trans->GetGlobalTransform();
-
-		frustum.SetPos(mat.TranslatePart());
-		frustum.SetFront(mat.WorldZ());
-		frustum.SetUp(mat.WorldY());
+		frustum.SetFrame(mat.TranslatePart(), mat.WorldZ(), mat.WorldY());
 	}
 }
 
@@ -195,7 +188,6 @@ void Camera::Look(const float3 spot, const float3 pos)
 {
 	frustum.SetPos(pos);
 	LookAt(spot);
-	projectionMatChaged = true;
 }
 
 void Camera::LookAt(const float3 spot)
@@ -205,6 +197,7 @@ void Camera::LookAt(const float3 spot)
 
 	frustum.SetFront(mat.MulDir(frustum.Front()).Normalized());
 	frustum.SetUp(mat.MulDir(frustum.Up()).Normalized());
+	projectionMatChaged = true;
 }
 
 void Camera::OnSaveCmp(JsonFile & sect) const
