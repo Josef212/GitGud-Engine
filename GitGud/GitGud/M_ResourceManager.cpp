@@ -366,11 +366,13 @@ bool M_ResourceManager::LoadBasicResources()
 	if (!meshImporter->LoadPlane(plane)) return false;
 	plane->AddInstance();
 
-	sphere = (ResourceMesh*)CreateResource(RES_MESH, 5);
-	if (!meshImporter->LoadSphere(sphere)) return false;
-	sphere->AddInstance();
+	//sphere = (ResourceMesh*)CreateResource(RES_MESH, 5);
+	//if (!meshImporter->LoadSphere(sphere)) return false;
+	//sphere->AddInstance();
 
 	defaultShader = (ResourceShader*)CreateResource(RES_SHADER, 6);
 	if (!shaderImporter->PrepareDefaultShader(defaultShader)) return false;
 	defaultShader->AddInstance();
+
+	return true;
 }

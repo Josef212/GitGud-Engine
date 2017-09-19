@@ -10,3 +10,4 @@ Color Pink = Color(1.f, 0.f, 1.f, 1.f);
 Color ClearBlue = Color(0.f, 1.f, 1.f, 1.f);
 Color Grey = Color(0.3f, 0.3f, 0.3f, 1.f);
 Color ClearGrey = Color(0.7f, 0.7f, 0.7f, 1.f);
+Color DarkGrey = Color(0.1f, 0.1f, 0.1f, 1.f);

@@ -53,7 +53,7 @@ bool ImporterShader::PrepareDefaultShader(ResourceShader * sh)
 			"{\n"
 			"	//FragColor = vec4(outColor, 1.0);\n"
 			"	//FragColor = vec4(0.7, 0.7, 0.7, 1.0); \n"
-			"	FragColor = vec4(outNormal, 1.0); \n"
+			"	FragColor = vec4(abs(outNormal), 1.0); \n"
 			"}\n"
 			;
 

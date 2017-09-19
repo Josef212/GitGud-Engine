@@ -39,5 +39,6 @@ extern Color Pink;
 extern Color ClearBlue;
 extern Color Grey;
 extern Color ClearGrey;
+extern Color DarkGrey;
 
 #endif // !__COLOR_H__

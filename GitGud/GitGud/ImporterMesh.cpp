@@ -362,13 +362,13 @@ bool ImporterMesh::LoadCube(ResourceMesh * res)
 		//Right
 		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,
 		//Back
-		0.0f, 0.0f, u,		0.0f, 0.0f, u,		0.0f, 0.0f, u,		0.0f, 0.0f, u,
+		0.0f, 0.0f, -u,		0.0f, 0.0f, -u,		0.0f, 0.0f, -u,		0.0f, 0.0f, -u,
 		//Left
-		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,		u, 0.0f, 0.0f,
+		-u, 0.0f, 0.0f,		-u, 0.0f, 0.0f,		-u, 0.0f, 0.0f,		-u, 0.0f, 0.0f,
 		//Top
 		0.0f, u, 0.0f,		0.0f, u, 0.0f,		0.0f, u, 0.0f,		0.0f, u, 0.0f,
 		//Bot
-		0.0f, u, 0.0f,		0.0f, u, 0.0f,		0.0f, u, 0.0f,		0.0f, u, 0.0f
+		0.0f, -u, 0.0f,		0.0f, -u, 0.0f,		0.0f, -u, 0.0f,		0.0f, -u, 0.0f
 	};
 
 	res->normals = new float[res->numVertices * 3];
@@ -493,7 +493,8 @@ bool ImporterMesh::LoadQuad(ResourceMesh * res)
 	return true;
 }
 
-bool ImporterMesh::LoadPlane(ResourceMesh * res) //TODO: Fix
+//TODO: Fix
+bool ImporterMesh::LoadPlane(ResourceMesh * res)
 {
 	if (!res) return false;
 
@@ -587,6 +588,7 @@ bool ImporterMesh::LoadPlane(ResourceMesh * res) //TODO: Fix
 	return true;
 }
 
+//TODO: Actually do it
 bool ImporterMesh::LoadCone(ResourceMesh * res)
 {
 	if (!res) return false;
@@ -598,6 +600,7 @@ bool ImporterMesh::LoadCone(ResourceMesh * res)
 	return true;
 }
 
+//TODO: Actually do it
 bool ImporterMesh::LoadCylinder(ResourceMesh * res)
 {
 	if (!res) return false;
@@ -609,6 +612,7 @@ bool ImporterMesh::LoadCylinder(ResourceMesh * res)
 	return true;
 }
 
+//TODO: Actually do it
 bool ImporterMesh::LoadTorus(ResourceMesh * res)
 {
 	if (!res) return false;
@@ -620,6 +624,7 @@ bool ImporterMesh::LoadTorus(ResourceMesh * res)
 	return true;
 }
 
+//TODO: Actually do it
 bool ImporterMesh::LoadSphere(ResourceMesh * res)
 {
 	if (!res) return false;

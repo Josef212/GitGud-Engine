@@ -137,12 +137,12 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 
 	//TMP: Testing compatibility mode vs core
 
-	glLineWidth(2.0f);
-	glBegin(GL_LINES);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(10.0f, 0.0f, 0.0f);
-	glEnd();
-	glLineWidth(1.0f);
+	//glLineWidth(2.0f);
+	//glBegin(GL_LINES);
+	//glVertex3f(0.0f, 0.0f, 0.0f);
+	//glVertex3f(10.0f, 0.0f, 0.0f);
+	//glEnd();
+	//glLineWidth(1.0f);
 
 	//-------------------------
 
