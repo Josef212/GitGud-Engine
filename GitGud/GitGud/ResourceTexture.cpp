@@ -4,6 +4,8 @@
 #include "M_ResourceManager.h"
 #include "ImporterTexture.h"
 
+#include "OpenGL.h"
+
 ResourceTexture::ResourceTexture(UID uuid) : Resource(uuid, RES_TEXTURE)
 {
 }
@@ -20,6 +22,23 @@ bool ResourceTexture::LoadInMemory()
 
 bool ResourceTexture::RemoveFromMemory()
 {
+	width = 0;
+	height = 0;
+	depth = 0;
+	bpp = 0;
+	mips = 0;
+	bytes = 0;
+
+	format = UNKNOWN;
+	textureType = TEX_NONE;
+
+	if (texID > 0)
+	{
+		glDeleteBuffers(1, &texID);
+		texID = 0;
+		return true;
+	}
+
 	return false;
 }
 
