@@ -27,6 +27,8 @@ bool ResourceShader::RemoveFromMemory()
 	return false;
 }
 
+/*TODO: Change shader load system to load it from jason. This probably must be related
+somehow to materials since jsons files will contain info for them*/
 bool ResourceShader::CompileShader()
 {
 	if (vertexFile.Empty() || fragmentFile.Empty())
