@@ -33,7 +33,7 @@ bool ResourceShader::CompileShader()
 {
 	if (vertexFile.Empty() || fragmentFile.Empty())
 	{
-		_LOG("ERROR: Invalid shader files.");
+		_LOG(LOG_WARN, "Invalid shader files.");
 		return false;
 	}
 
@@ -51,7 +51,7 @@ bool ResourceShader::CompileShader()
 	{
 		GLchar infoLog[512];
 		glGetProgramInfoLog(retID, 512, nullptr, infoLog);
-		_LOG("Shader link error: %s.", infoLog);
+		_LOG(LOG_ERROR, "Shader link error: %s.", infoLog);
 
 		usable = false;
 	}
@@ -59,7 +59,7 @@ bool ResourceShader::CompileShader()
 	{
 		shaderID = retID;
 		usable = true;
-		_LOG("Shader %s compiled and linked successfully.", name.c_str());
+		_LOG(LOG_INFO, "Shader %s compiled and linked successfully.", name.c_str());
 	}
 
 	glDetachShader(retID, v);
@@ -112,7 +112,7 @@ uint ResourceShader::CompileVertex()
 		{
 			GLchar infoLog[512];
 			glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
-			_LOG("Vertex shader compilation error: %s.", infoLog);
+			_LOG(LOG_ERROR, "Vertex shader compilation error: %s.", infoLog);
 		}
 		else
 		{
@@ -153,7 +153,7 @@ uint ResourceShader::CompileFragment()
 		{
 			GLchar infoLog[512];
 			glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
-			_LOG("Fragment shader compilation error: %s.", infoLog);
+			_LOG(LOG_ERROR, "Fragment shader compilation error: %s.", infoLog);
 		}
 		else
 		{

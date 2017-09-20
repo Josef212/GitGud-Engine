@@ -12,7 +12,7 @@
 
 ImporterTexture::ImporterTexture()
 {
-	_LOG("Texture importer: Created.");
+	_LOG(LOG_INFO, "Texture importer: Created.");
 
 	ilInit();
 	iluInit();
@@ -22,7 +22,7 @@ ImporterTexture::ImporterTexture()
 	ILuint devilError = ilGetError();
 	if (devilError != IL_NO_ERROR)
 	{
-		_LOG("Error while Devil Init: %s\n", iluErrorString(devilError));
+		_LOG(LOG_ERROR, "Error while Devil Init: %s\n", iluErrorString(devilError));
 	}
 }
 
@@ -46,7 +46,7 @@ bool ImporterTexture::Import(Path originalFile, Path & exportedFile, UID & resUI
 	RELEASE_ARRAY(buffer);
 
 	if (!ret)
-		_LOG("Could not import texture %s.", originalFile.GetFullPath());
+		_LOG(LOG_WARN, "Could not import texture %s.", originalFile.GetFullPath());
 
 	return ret;
 }
@@ -88,7 +88,7 @@ bool ImporterTexture::ImportBuff(const void* buffer, uint size, Path& exportedFi
 				if (app->fs->Save(exportedFile.GetFullPath(), (const char*)data, _size) == _size)
 					ret = true;
 				else
-					_LOG("Error importing texture.");
+					_LOG(LOG_WARN, "Error importing texture.");
 			}
 
 			//7-Release the image buffer to avoid memory leaks

@@ -165,10 +165,10 @@ bool EdShaderEditor::SaveCurrentShader()
 		}
 
 		if (app->fs->Save(currentShader->vertexFile.GetFullPath(), vertexFile.c_str(), vertexBufferSize) != vertexBufferSize)
-			_LOG("ERROR: Could not save vertex shader into [%s].", currentShader->vertexFile.GetFullPath());
+			_LOG(LOG_ERROR, "Could not save vertex shader into [%s].", currentShader->vertexFile.GetFullPath());
 
 		if (app->fs->Save(currentShader->fragmentFile.GetFullPath(), fragmentFile.c_str(), fragBufferSize) != fragBufferSize)
-			_LOG("ERROR: Could not save fragment shader into [%s].", currentShader->fragmentFile.GetFullPath());
+			_LOG(LOG_ERROR, "Could not save fragment shader into [%s].", currentShader->fragmentFile.GetFullPath());
 		
 		return true;
 	}
@@ -310,7 +310,7 @@ void EdShaderEditor::LoadShaderMenu()
 				}
 				else
 				{
-					_LOG("Could not save current shader before loading new one.");
+					_LOG(LOG_WARN, "Could not save current shader before loading new one.");
 				}
 			}
 		}

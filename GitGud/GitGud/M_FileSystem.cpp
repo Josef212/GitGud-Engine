@@ -10,7 +10,7 @@
 
 M_FileSystem::M_FileSystem(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
-	_LOG("FileSystem: Creation.");
+	_LOG(LOG_INFO, "FileSystem: Creation.");
 
 	char* basePath = SDL_GetBasePath();
 	//TODO: Path according to DEBUG / RELEASE???
@@ -24,28 +24,28 @@ M_FileSystem::M_FileSystem(const char* name, bool startEnabled) : Module(name, s
 
 M_FileSystem::~M_FileSystem()
 {
-	_LOG("FileSystem: Destroying.");
+	_LOG(LOG_INFO, "FileSystem: Destroying.");
 	PHYSFS_deinit();
 }
 
 bool M_FileSystem::Init(JsonFile* file)
 {
-	_LOG("FileSystem: Init.");
+	_LOG(LOG_INFO, "FileSystem: Init.");
 	bool ret = true;
 
 	char* writePath = SDL_GetBasePath();
 
 	if (PHYSFS_setWriteDir(writePath) == 0)
 	{
-		_LOG("FS_ERROR: Could not set write dir: %s\n", PHYSFS_getLastError());
+		_LOG(LOG_ERROR, "Could not set write dir: %s\n", PHYSFS_getLastError());
 		ret = false;
 	}
 	else
 	{
-		_LOG("FS: Write dir is %s\n", writePath);
+		_LOG(LOG_INFO, "FS: Write dir is %s\n", writePath);
 		AddPath(writePath, GetSaveDir());
 
-		_LOG("Fs: Base path: %s\n", GetBaseDir());
+		_LOG(LOG_INFO, "Fs: Base path: %s\n", GetBaseDir());
 
 	}
 
@@ -58,7 +58,7 @@ bool M_FileSystem::Init(JsonFile* file)
 
 bool M_FileSystem::CleanUp()
 {
-	_LOG("FileSystem: CleanUp.");
+	_LOG(LOG_INFO, "FileSystem: CleanUp.");
 	return true;
 }
 
@@ -82,11 +82,11 @@ bool M_FileSystem::MakeDir(const char * path, const char* mount) const
 
 		if (PHYSFS_mkdir(newDir) == 0)
 		{
-			_LOG("FS_ERROR: Could not create dir: %s. Error: %s", newDir, PHYSFS_getLastError());
+			_LOG(LOG_ERROR, "Could not create dir: %s. Error: %s", newDir, PHYSFS_getLastError());
 		}
 		else
 		{
-			_LOG("Just created a new dir: %s.", newDir);
+			_LOG(LOG_INFO, "Just created a new dir: %s.", newDir);
 			ret = true;
 		}
 	}
@@ -107,7 +107,7 @@ const char * M_FileSystem::GetBaseDir() const
 void M_FileSystem::DisplaySearchPaths() const
 {
 	for (char** i = PHYSFS_getSearchPath(); *i != NULL; ++i)
-		_LOG("[%s] is in search path.", *i);
+		_LOG(LOG_INFO, "[%s] is in search path.", *i);
 }
 
 int M_FileSystem::GetSearchPaths(std::vector<std::string>& paths)
@@ -134,7 +134,7 @@ uint M_FileSystem::Load(const char * file, char ** buffer) const
 			PHYSFS_sint64 readed = PHYSFS_read(fsFile, *buffer, 1, (PHYSFS_sint32)size);
 			if (readed != size)
 			{
-				_LOG("FS_ERROR: Error while reading from file %s: %s\n", file, PHYSFS_getLastError());
+				_LOG(LOG_ERROR, "Error while reading from file %s: %s\n", file, PHYSFS_getLastError());
 				RELEASE(buffer);
 			}
 			else
@@ -144,11 +144,11 @@ uint M_FileSystem::Load(const char * file, char ** buffer) const
 		}
 
 		if (PHYSFS_close(fsFile) == 0)
-			_LOG("FS_ERROR: Error while closing file %s: %s\n", file, PHYSFS_getLastError());
+			_LOG(LOG_ERROR, "Error while closing file %s: %s\n", file, PHYSFS_getLastError());
 	}
 	else
 	{
-		_LOG("FS_ERROR: Error while opening file %s: %s\n", file, PHYSFS_getLastError());
+		_LOG(LOG_ERROR, "Error while opening file %s: %s\n", file, PHYSFS_getLastError());
 	}
 
 	return ret;
@@ -184,7 +184,7 @@ uint M_FileSystem::Save(const char * file, const void * buffer, uint size) const
 		PHYSFS_sint64 written = PHYSFS_write(fsFile, (const void*)buffer, 1, size);
 		if (written != size)
 		{
-			_LOG("FS_ERROR: Error while writing to file %s: %s\n", file, PHYSFS_getLastError());
+			_LOG(LOG_ERROR, "Error while writing to file %s: %s\n", file, PHYSFS_getLastError());
 		}
 		else
 		{
@@ -192,11 +192,11 @@ uint M_FileSystem::Save(const char * file, const void * buffer, uint size) const
 		}
 
 		if (PHYSFS_close(fsFile) == 0)
-			_LOG("FS_ERROR: Error while closing file %s: %s\n", file, PHYSFS_getLastError());
+			_LOG(LOG_ERROR, "Error while closing file %s: %s\n", file, PHYSFS_getLastError());
 	}
 	else
 	{
-		_LOG("FS_ERROR: Error while opening file %s: %s\n", file, PHYSFS_getLastError());
+		_LOG(LOG_ERROR, "Error while opening file %s: %s\n", file, PHYSFS_getLastError());
 	}
 
 	return ret;
@@ -277,12 +277,12 @@ bool M_FileSystem::DuplicateFile(const char * src, const char * dst) const
 	if (size > 0)
 	{
 		int succes = Save(dst, buffer, size);
-		_LOG("Fs: Duplicated file from src [%s] to dst [%s].", src, dst);
+		_LOG(LOG_INFO, "Fs: Duplicated file from src [%s] to dst [%s].", src, dst);
 		ret = (succes == size);
 	}
 	else
 	{
-		_LOG("FS_ERROR: Could not duplicate file from src [%s] to dst [%s].", src, dst);
+		_LOG(LOG_ERROR, "Could not duplicate file from src [%s] to dst [%s].", src, dst);
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -357,7 +357,7 @@ bool M_FileSystem::AddPath(const char * pathOrZip, const char * mountPoint)
 
 	if (PHYSFS_mount(pathOrZip, mountPoint, 1) == 0)
 	{
-		_LOG("FS_ERROR: Error while adding a path or zip(%s): %s.", pathOrZip, PHYSFS_getLastError());
+		_LOG(LOG_ERROR, "Error while adding a path or zip(%s): %s.", pathOrZip, PHYSFS_getLastError());
 	}
 	else
 	{

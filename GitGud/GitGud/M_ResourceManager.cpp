@@ -26,7 +26,7 @@
 /** M_ResourceManager: Creates all importers. */
 M_ResourceManager::M_ResourceManager(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
-	_LOG("Resource manager: Creation.");
+	_LOG(LOG_INFO, "Resource manager: Creation.");
 
 	meshImporter = new ImporterMesh();
 	textureImporter = new ImporterTexture();
@@ -38,7 +38,7 @@ M_ResourceManager::M_ResourceManager(const char* name, bool startEnabled) : Modu
 /** ~M_ResourceManager: Destroy all importers. */
 M_ResourceManager::~M_ResourceManager()
 {
-	_LOG("Resource manager: Destroying.");
+	_LOG(LOG_INFO, "Resource manager: Destroying.");
 
 	RELEASE(meshImporter);
 	RELEASE(textureImporter);
@@ -50,7 +50,7 @@ M_ResourceManager::~M_ResourceManager()
 /** M_ResourceManager - Init: Just get the resource file name from the config file. */
 bool M_ResourceManager::Init(JsonFile * conf)
 {
-	_LOG("Resource manager: Init.");
+	_LOG(LOG_INFO, "Resource manager: Init.");
 
 	resourceFile = conf->GetString("resource_file", "resources.json");
 
@@ -60,13 +60,13 @@ bool M_ResourceManager::Init(JsonFile * conf)
 /** M_ResourceManager - Start: Create all basic resources and load the resources from the resource file. */
 bool M_ResourceManager::Start()
 {
-	_LOG("Resource manager: Start.");
+	_LOG(LOG_INFO, "Resource manager: Start.");
 
 	//ImportFile("Data/Assets/MechaT/MechaT.fbx");
 	//ImportFile("Data/Assets/Brute.fbx");
 	if (!LoadBasicResources())
 	{
-		_LOG("ERROR loading basic resources.");
+		_LOG(LOG_ERROR, "Error loading basic resources.");
 		return false;
 	}
 
@@ -84,7 +84,7 @@ UPDATE_RETURN M_ResourceManager::PreUpdate(float dt)
 /** M_ResourceManager - CleanUp: Save all the resources into the resource file and clean up the memory. */
 bool M_ResourceManager::CleanUp()
 {
-	_LOG("Resource manager: CleanUp.");
+	_LOG(LOG_INFO, "Resource manager: CleanUp.");
 
 	SaveResources();
 	//TODO: Once all resources are saved, should cleanup all the resources.
@@ -153,11 +153,11 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 		r->name = source.GetFileName();
 		ret = r->GetUID();
 
-		_LOG("Imported file [%s] to [%s].", r->GetOriginalFile(), r->GetExportedFile());
+		_LOG(LOG_INFO, "Imported file [%s] to [%s].", r->GetOriginalFile(), r->GetExportedFile());
 	}
 	else
 	{
-		_LOG("Could not import file [%s].", fileName);
+		_LOG(LOG_ERROR, "Could not import file [%s].", fileName);
 	}
 	
 	return ret;
@@ -201,11 +201,11 @@ UID M_ResourceManager::ImportBuf(const void * buffer, RESOURCE_TYPE type, uint s
 		res->originalFile.SetFullPath((sourceFile) ? sourceFile->GetFullPath() : "unknown");
 		res->exportedFile.SetFullPath(output.GetFullPath());
 		res->name = sourceFile ? sourceFile->GetFileName() : "unamed";
-		_LOG("Imported a buffer succesfully [%s].", output.GetFullPath());
+		_LOG(LOG_INFO, "Imported a buffer succesfully [%s].", output.GetFullPath());
 	}
 	else
 	{
-		_LOG("ERROR: Could not import the buffer.");
+		_LOG(LOG_WARN, "Could not import the buffer.");
 	}
 
 	return ret;
@@ -363,7 +363,7 @@ void M_ResourceManager::SaveResources()
 
 	if (app->fs->Save((RESOURCES_PATH + resourceFile).c_str(), buffer, size) != size)
 	{
-		_LOG("Resource manager ERROR: Could no save resources!");
+		_LOG(LOG_ERROR, "Could not save resources!");
 	}
 
 	RELEASE_ARRAY(buffer);

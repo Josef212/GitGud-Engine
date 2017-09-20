@@ -51,31 +51,31 @@ void HrdInfo::SetInfo()
 
 void HrdInfo::LogHrdInfo()
 {
-	_LOG("---Hardware information:  ---");
-	_LOG("CPU cores: %d.", info.cpuCores);
-	_LOG("CPU cache size: %dKb.", info.cpuCacheSize);
-	_LOG(" System RAM: %dMb.", info.ram);
-	_LOG("Caps:");
+	_LOG(LOG_INFO, "---Hardware information:  ---");
+	_LOG(LOG_INFO, "CPU cores: %d.", info.cpuCores);
+	_LOG(LOG_INFO, "CPU cache size: %dKb.", info.cpuCacheSize);
+	_LOG(LOG_INFO, " System RAM: %dMb.", info.ram);
+	_LOG(LOG_INFO, "Caps:");
 	if (info.hasAVX)
-		_LOG("HasAVX");
+		_LOG(LOG_INFO, "HasAVX");
 	if (info.hasAltiVec)
-		_LOG("HasAltiVec");
+		_LOG(LOG_INFO, "HasAltiVec");
 	if (info.hasMMX)
-		_LOG("HasMMX");
+		_LOG(LOG_INFO, "HasMMX");
 	if (info.hasRDTSC)
-		_LOG("HasRDTSC");
+		_LOG(LOG_INFO, "HasRDTSC");
 	if (info.hasSSE)
-		_LOG("HasSSE");
+		_LOG(LOG_INFO, "HasSSE");
 	if (info.hasSSE2)
-		_LOG("HasSSE2");
+		_LOG(LOG_INFO, "HasSSE2");
 	if (info.hasSSE3)
-		_LOG("HasSSE3");
+		_LOG(LOG_INFO, "HasSSE3");
 	if (info.hasSSE41)
-		_LOG("HasSSE41");
+		_LOG(LOG_INFO, "HasSSE41");
 	if (info.hasSSE42)
-		_LOG("HasSSE42");
+		_LOG(LOG_INFO, "HasSSE42");
 	if (info.has3DNow)
-		_LOG("Has3DNow");
+		_LOG(LOG_INFO, "Has3DNow");
 }
 
 const Hrd * HrdInfo::GetInfo()

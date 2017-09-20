@@ -20,7 +20,7 @@
 
 M_GoManager::M_GoManager(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
-	_LOG("GoManager: Creation.");
+	_LOG(LOG_INFO, "GoManager: Creation.");
 
 	root = new GameObject(nullptr, 0);
 	root->SetName("SceneRoot");
@@ -29,13 +29,13 @@ M_GoManager::M_GoManager(const char* name, bool startEnabled) : Module(name, sta
 
 M_GoManager::~M_GoManager()
 {
-	_LOG("GoManager: Destroying.");
+	_LOG(LOG_INFO, "GoManager: Destroying.");
 	RELEASE(root);
 }
 
 bool M_GoManager::Init(JsonFile * conifg)
 {
-	_LOG("GoManager: Init.");
+	_LOG(LOG_INFO, "GoManager: Init.");
 
 	octreeSize = conifg->GetInt("octree_size", OCTREE_SIZE);
 	
@@ -47,7 +47,7 @@ bool M_GoManager::Init(JsonFile * conifg)
 
 bool M_GoManager::Start()
 {
-	_LOG("GoManager: Start.");
+	_LOG(LOG_INFO, "GoManager: Start.");
 
 	GameObject* go = CreateGameObject();
 	Mesh* m = (Mesh*)go->CreateComponent(CMP_MESH);
@@ -119,7 +119,7 @@ UPDATE_RETURN M_GoManager::Update(float dt)
 
 bool M_GoManager::CleanUp()
 {
-	_LOG("GoManager: CleanUp.");
+	_LOG(LOG_INFO, "GoManager: CleanUp.");
 	RELEASE(octree);
 	return true;
 }
@@ -514,12 +514,12 @@ void M_GoManager::SaveSceneNow()
 
 			if (app->fs->Save(path.c_str(), buffer, size) != size)
 			{
-				_LOG("ERROR while saving scene.");
+				_LOG(LOG_ERROR, "Error while saving scene.");
 			}
 			else
 			{
 				ret = true;
-				_LOG("Just saved scene into [%s].", path.c_str());
+				_LOG(LOG_INFO, "Just saved scene into [%s].", path.c_str());
 			}
 		}
 
@@ -577,5 +577,5 @@ void M_GoManager::LoadSceneNow()
 
 	RELEASE_ARRAY(buffer);
 
-	_LOG("Scene loaded [%s].", path.c_str());
+	_LOG(LOG_INFO, "Scene loaded [%s].", path.c_str());
 }

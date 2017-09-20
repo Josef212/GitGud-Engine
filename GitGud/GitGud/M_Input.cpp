@@ -11,7 +11,7 @@
 
 M_Input::M_Input(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
-	_LOG("Input: Creation.");
+	_LOG(LOG_INFO, "Input: Creation.");
 
 	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
@@ -21,13 +21,13 @@ M_Input::M_Input(const char* name, bool startEnabled) : Module(name, startEnable
 
 M_Input::~M_Input()
 {
-	_LOG("Input: Destroying.");
+	_LOG(LOG_INFO, "Input: Destroying.");
 	RELEASE_ARRAY(keyboard);
 }
 
 bool M_Input::Init(JsonFile* file)
 {
-	_LOG("Input: Init.");
+	_LOG(LOG_INFO, "Input: Init.");
 
 	bool ret = true;
 
@@ -35,7 +35,7 @@ bool M_Input::Init(JsonFile* file)
 
 	if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
-		_LOG("INPUT_ERROR: Could not init sdl events! SDL_Error: %s\n", SDL_GetError());
+		_LOG(LOG_ERROR, "Could not init sdl events! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 
@@ -148,7 +148,7 @@ UPDATE_RETURN M_Input::PreUpdate(float dt)
 
 bool M_Input::CleanUp()
 {
-	_LOG("Input: CleanUp.");
+	_LOG(LOG_INFO, "Input: CleanUp.");
 
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 

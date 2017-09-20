@@ -7,19 +7,19 @@
 
 M_Window::M_Window(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
-	_LOG("Window: Creation.");
+	_LOG(LOG_INFO, "Window: Creation.");
 }
 
 
 M_Window::~M_Window()
 {
-	_LOG("Window: Destroying.");
+	_LOG(LOG_INFO, "Window: Destroying.");
 }
 
 /** M_Window - Init: Create the window and sets some window flags and other properties from config file. */
 bool M_Window::Init(JsonFile* file)
 {
-	_LOG("Window: Init");
+	_LOG(LOG_INFO, "Window: Init");
 
 	app->console->AddCommand(&cResize);
 	app->console->AddCommand(&cSetFlags);
@@ -29,7 +29,7 @@ bool M_Window::Init(JsonFile* file)
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		_LOG("WIN_Error: SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
+		_LOG(LOG_ERROR, "SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
 	else
 	{
@@ -62,7 +62,7 @@ bool M_Window::Init(JsonFile* file)
 
 		if (!window)
 		{
-			_LOG("WIN_Error: Could not create window! SDL_Error: %s\n", SDL_GetError());
+			_LOG(LOG_ERROR, "Could not create window! SDL_Error: %s\n", SDL_GetError());
 		}
 		else
 		{
@@ -77,7 +77,7 @@ bool M_Window::Init(JsonFile* file)
 /** M_Window - CleanUp: Destroy the window and quits sdl. */
 bool M_Window::CleanUp()
 {
-	_LOG("Window: CleanUp");
+	_LOG(LOG_INFO, "Window: CleanUp");
 
 	if (window)
 		SDL_DestroyWindow(window);
@@ -142,19 +142,19 @@ void M_Window::SetFullScreen(bool set)
 			if (fullscreen == true)
 			{
 				if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) != 0)
-					_LOG("Could not switch to fullscreen: %s\n", SDL_GetError());
+					_LOG(LOG_WARN, "Could not switch to fullscreen: %s\n", SDL_GetError());
 				fullscreenDesktop = false;
 			}
 			else
 			{
 				if (SDL_SetWindowFullscreen(window, 0) != 0)
-					_LOG("Could not switch to windowed: %s\n", SDL_GetError());
+					_LOG(LOG_WARN, "Could not switch to windowed: %s\n", SDL_GetError());
 			}
 		}
 	}
 	else
 	{
-		_LOG("Error setting fullscreen, window pointer is nullptr");
+		_LOG(LOG_ERROR, "Error setting fullscreen, window pointer is nullptr");
 	}
 }
 
@@ -180,13 +180,13 @@ void M_Window::SetFullScreenDesktop(bool set)
 		if (fullscreenDesktop)
 		{
 			if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
-				_LOG("Could not switch to fullscreen desktop: %s\n", SDL_GetError());
+				_LOG(LOG_WARN, "Could not switch to fullscreen desktop: %s\n", SDL_GetError());
 			fullscreen = false;
 		}
 		else
 		{
 			if (SDL_SetWindowFullscreen(window, 0) != 0)
-				_LOG("Could not switch to windowed: %s\n", SDL_GetError());
+				_LOG(LOG_WARN, "Could not switch to windowed: %s\n", SDL_GetError());
 		}
 	}
 }
@@ -201,7 +201,7 @@ void M_Window::SetBorder(bool set)
 			SDL_SetWindowBordered(window, SDL_FALSE);
 	}
 	else
-		_LOG("Could not set border, because of fullscreen.");
+		_LOG(LOG_WARN, "Could not set border, because of fullscreen.");
 }
 
 void M_Window::SetGrab(bool set)
@@ -262,11 +262,11 @@ bool M_Window::SetBrightness(float bright)
 		if (SDL_SetWindowBrightness(window, bright) < 0)
 		{
 			ret = false;
-			_LOG("Error setting brightness, SDL_Error: %s.\n", SDL_GetError());
+			_LOG(LOG_WARN, "Error setting brightness, SDL_Error: %s.\n", SDL_GetError());
 		}
 	}
 	else
-		_LOG("Error setting brightness, window pointer is nullptr");
+		_LOG(LOG_ERROR, "Error setting brightness, window pointer is nullptr");
 
 	return ret;
 }
@@ -299,7 +299,7 @@ void M_Window::GetRange(int & minW, int & minH, int & maxW, int & maxH) const
 	SDL_DisplayMode dm;
 	if (SDL_GetDesktopDisplayMode(0, &dm) != 0)
 	{
-		_LOG("SDL_GetDesktopDisplayMode failed: %s", SDL_GetError());
+		_LOG(LOG_WARN, "SDL_GetDesktopDisplayMode failed: %s", SDL_GetError());
 	}
 	else
 	{
@@ -315,7 +315,7 @@ int M_Window::GetRefresh() const
 	SDL_DisplayMode dm;
 	if (SDL_GetDesktopDisplayMode(0, &dm) != 0)
 	{
-		_LOG("Error getting refresh rate: %s", SDL_GetError());
+		_LOG(LOG_WARN, "Error getting refresh rate: %s", SDL_GetError());
 	}
 	else
 		ret = dm.refresh_rate;

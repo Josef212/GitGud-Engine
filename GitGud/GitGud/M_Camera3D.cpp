@@ -14,7 +14,7 @@
 /** M_Camera3D: Creates the editor camera using a camera component. */
 M_Camera3D::M_Camera3D(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
-	_LOG("EditrCamera3D: Creation.");
+	_LOG(LOG_INFO, "EditrCamera3D: Creation.");
 
 	editorCameraObj = new GameObject(nullptr, 0);
 	if (editorCameraObj)
@@ -31,20 +31,20 @@ M_Camera3D::~M_Camera3D()
 {
 	RELEASE(editorCameraObj);
 
-	_LOG("EditrCamera3D: Destroying.");
+	_LOG(LOG_INFO, "EditrCamera3D: Destroying.");
 }
 
 /** M_Camera3D - Init:  */
 bool M_Camera3D::Init(JsonFile * conf)
 {
-	_LOG("EditrCamera3D: Init.");
+	_LOG(LOG_INFO, "EditrCamera3D: Init.");
 	return true;
 }
 
 /** M_Camera3D - Start:  */
 bool M_Camera3D::Start()
 {
-	_LOG("EditrCamera3D: Start.");
+	_LOG(LOG_INFO, "EditrCamera3D: Start.");
 	return true;
 }
 
@@ -70,7 +70,7 @@ UPDATE_RETURN M_Camera3D::Update(float dt)
 
 bool M_Camera3D::CleanUp()
 {
-	_LOG("EditrCamera3D: CleanUp.");
+	_LOG(LOG_INFO, "EditrCamera3D: CleanUp.");
 	return true;
 }
 

@@ -5,7 +5,7 @@
 
 ImporterShader::ImporterShader()
 {
-	_LOG("Shader importer: Created.");
+	_LOG(LOG_INFO, "Shader importer: Created.");
 }
 
 
@@ -69,7 +69,7 @@ bool ImporterShader::PrepareDefaultShader(ResourceShader * sh)
 		{
 			GLchar infoLog[512];
 			glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
-			_LOG("Vertex shader compilation error: %s.", infoLog);
+			_LOG(LOG_ERROR, "Vertex shader compilation error: %s.", infoLog);
 			suc = false;
 		}
 
@@ -86,7 +86,7 @@ bool ImporterShader::PrepareDefaultShader(ResourceShader * sh)
 			{
 				GLchar infoLog[512];
 				glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
-				_LOG("Fragment shader compilation error: %s.", infoLog);
+				_LOG(LOG_ERROR, "Fragment shader compilation error: %s.", infoLog);
 				suc = false;
 			}
 		}
@@ -106,13 +106,13 @@ bool ImporterShader::PrepareDefaultShader(ResourceShader * sh)
 			{
 				GLchar infoLog[512];
 				glGetProgramInfoLog(retID, 512, nullptr, infoLog);
-				_LOG("Shader link error: %s.", infoLog);
+				_LOG(LOG_ERROR, "Shader link error: %s.", infoLog);
 			}
 			else
 			{
 				 sh->shaderID = retID;
 				sh->usable = true;
-				_LOG("Default shader compiled and linked successfully.", );
+				_LOG(LOG_INFO, "Default shader compiled and linked successfully.", );
 			}
 		}
 

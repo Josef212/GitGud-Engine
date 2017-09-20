@@ -10,7 +10,7 @@
 
 ImporterMaterial::ImporterMaterial()
 {
-	_LOG("Material importer: Created.");
+	_LOG(LOG_INFO, "Material importer: Created.");
 }
 
 

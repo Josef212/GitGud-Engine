@@ -32,7 +32,7 @@ struct C_Quit : public Command
 */
 App::App(int argv, char** argc) : currentConfigSaveFileDir(CONFIG_PATH + (std::string("config.json")))
 {
-	_LOG("App: Creation  =======================");
+	_LOG(LOG_INFO, "App: Creation  =======================");
 	this->argv = argv;
 	for (uint i = 0; i < argv; ++i)
 	{
@@ -80,7 +80,7 @@ App::App(int argv, char** argc) : currentConfigSaveFileDir(CONFIG_PATH + (std::s
 */
 App::~App()
 {
-	_LOG("App: Destruction  =======================");
+	_LOG(LOG_INFO, "App: Destruction  =======================");
 	for (std::vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
 		RELEASE(*it);
 
@@ -99,7 +99,7 @@ App::~App()
 bool App::Init()
 {
 	bool ret = true;
-	_LOG("App: Init  =======================");
+	_LOG(LOG_INFO, "App: Init  =======================");
 
 	char* buffer = nullptr;
 	fs->Load(currentConfigSaveFileDir.c_str(), &buffer);
@@ -112,7 +112,7 @@ bool App::Init()
 		ret = (*it)->Init(&config.GetSection((*it)->name.c_str()));
 	}
 
-	_LOG("App: Start  =======================");
+	_LOG(LOG_INFO, "App: Start  =======================");
 	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 	{
 		if((*it)->IsEnable())
@@ -146,7 +146,7 @@ UPDATE_RETURN App::Update()
 	}
 
 	if (ret == UPDT_ERROR)
-		_LOG("ERROR: Exit preupdate with errors.");
+		_LOG(LOG_ERROR, "Exit preupdate with errors.");
 
 	for (it = modules.begin(); it != modules.end() && ret == UPDT_CONTINUE; ++it)
 	{
@@ -155,7 +155,7 @@ UPDATE_RETURN App::Update()
 	}
 
 	if (ret == UPDT_ERROR)
-		_LOG("ERROR: Exit update with errors.");
+		_LOG(LOG_ERROR, "Exit update with errors.");
 
 	for (it = modules.begin(); it != modules.end() && ret == UPDT_CONTINUE; ++it)
 	{
@@ -164,7 +164,7 @@ UPDATE_RETURN App::Update()
 	}
 
 	if (ret == UPDT_ERROR)
-		_LOG("ERROR: Exit postupdate with errors.");
+		_LOG(LOG_ERROR, "Exit postupdate with errors.");
 
 	FinishUpdate();
 
@@ -181,7 +181,7 @@ UPDATE_RETURN App::Update()
 bool App::CleanUp()
 {
 	bool ret = true;
-	_LOG("App: CleanUp  =======================");
+	_LOG(LOG_INFO, "App: CleanUp  =======================");
 
 	for (std::vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
 	{
@@ -269,10 +269,10 @@ void App::SetMaxFPS(uint _fps)
 /**
 *	- Log: Log to editor. 
 */
-void App::Log(const char * str)
+void App::Log(const char * str, LOG_TYPE type)
 {
 	if (editor)
-		editor->Log(str);
+		editor->Log(str, type);
 }
 
 /**
@@ -491,7 +491,7 @@ bool App::SaveNow()
 	{
 		if (fs->Save(currentConfigSaveFileDir.c_str(), buffer, size) != size)
 		{
-			_LOG("APP_ERROR: Could not save config.");
+			_LOG(LOG_ERROR, "Could not save config.");
 			ret = false;
 		}
 	}
@@ -528,7 +528,7 @@ bool App::LoadNow()
 
 	if (!ret)
 	{
-		_LOG("Could not load config from: [%s].", currentConfigSaveFileDir.c_str());
+		_LOG(LOG_ERROR, "Could not load config from: [%s].", currentConfigSaveFileDir.c_str());
 	}
 
 	RELEASE_ARRAY(buffer);

@@ -17,7 +17,7 @@
 
 ImporterMesh::ImporterMesh() : Importer()
 {
-	_LOG("Mesh importer: Created.");
+	_LOG(LOG_INFO, "Mesh importer: Created.");
 }
 
 ImporterMesh::~ImporterMesh()
@@ -43,7 +43,7 @@ bool ImporterMesh::ImportMesh(const aiMesh * mesh, Path& output, UID & id)
 		for (uint i = 0; i < mesh->mNumFaces; ++i)
 		{
 			if (mesh->mFaces[i].mNumIndices != 3)
-				_LOG("WARNING, geometry face with != 3 indices!");
+				_LOG(LOG_WARN, "WARNING, geometry face with != 3 indices!");
 			memcpy(&m.indices[i * 3], mesh->mFaces[i].mIndices, 3 * sizeof(uint));
 
 		}
@@ -297,7 +297,7 @@ UID ImporterMesh::SaveResource(ResourceMesh * res, Path& outputPath)
 
 	if (app->fs->Save(outputPath.GetFullPath(), data, size) != size)
 	{
-		_LOG("ERRRO: Saving mesh!!");
+		_LOG(LOG_ERROR, "ERRRO: Saving mesh!!");
 		ret = 0;
 	}
 

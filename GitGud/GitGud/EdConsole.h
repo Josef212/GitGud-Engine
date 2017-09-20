@@ -3,6 +3,8 @@
 
 #include "EdWin.h"
 #include "imGui\imgui.h"
+#include <vector>
+#include <string>
 
 class EdConsole : public EdWin
 {
@@ -12,11 +14,14 @@ public:
 
 	void Draw()override;
 
-	void PushMessage(const char* str);
+	void PushMessage(const char* str, LOG_TYPE type);
 
 private:
 	ImGuiTextBuffer logs;
 	bool scrollDown = true;
+	ImColor lastColor;
+	std::vector<ImColor> colors;
+	std::vector<std::string> log;
 };
 
 #endif //!__EDCONSOLE_H__

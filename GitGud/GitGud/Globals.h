@@ -5,9 +5,19 @@
 #include <stdio.h>
 #include "Path.h"
 
-#define _LOG(format, ...) _log(__FILE__, __LINE__, format, __VA_ARGS__);
+enum LOG_TYPE
+{
+	LOG_INFO = 0,
+	LOG_WARN = 1,
+	LOG_ERROR = 2,
+	LOG_CMD = 3
+};
 
-void _log(const char file[], int line, const char* format, ...);
+#define _LOG(type, format, ...) _log(type, __FILE__, __LINE__, format, __VA_ARGS__);
+
+void _log(LOG_TYPE type, const char file[], int line, const char* format, ...);
+
+const char* GetLogTypeStr(LOG_TYPE type);
 
 #define RELEASE( x )\
 	{\

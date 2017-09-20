@@ -54,14 +54,14 @@ void Console::OnCmdSubmision(const char * str)
 		Command* c = GetCommandByStr(args[0].c_str());
 		if (c)
 		{
-			_LOG(cmd.c_str());
+			_LOG(LOG_CMD, cmd.c_str());
 			args.erase(args.begin());
 			c->Function(args);
 			//TODO: Push command to vector
 		}
 		else
 		{
-			_LOG("ERROR: Could not find command [%s].", args[0].c_str());
+			_LOG(LOG_ERROR, "Could not find command [%s].", args[0].c_str());
 		}
 	}
 	
@@ -77,7 +77,7 @@ bool Console::AddCommand(Command * cmd)
 		if (it != commands.end())
 		{
 			//Error trying to add an existin command
-			_LOG("CONSOLE_ERROR: Trying to add an existing commandstr.");
+			_LOG(LOG_ERROR, "Trying to add an existing commandstr.");
 		}
 		else
 		{
@@ -118,15 +118,15 @@ void Console::CListCmd::Function(std::vector<std::string>& args)
 		Command* c = it->second;
 		if (c)
 		{
-			_LOG("Command name: %s.  Str: %s.", c->commandName.c_str(), c->commandStr.c_str());
+			_LOG(LOG_CMD, "Command name: %s.  Str: %s.", c->commandName.c_str(), c->commandStr.c_str());
 			if (showDesc)
 			{
-				_LOG("Description: %s.", c->commandDescription.c_str());
+				_LOG(LOG_CMD, "Description: %s.", c->commandDescription.c_str());
 			}
 		}
-		_LOG("-------------");
+		_LOG(LOG_CMD, "-------------");
 	}
-	_LOG("==================================");
+	_LOG(LOG_CMD, "==================================");
 }
 
 void Console::CHelp::Function(std::vector<std::string>& args)
@@ -140,9 +140,9 @@ void Console::CHelp::Function(std::vector<std::string>& args)
 		Command* c = app->console->GetCommandByStr(args[0].c_str());
 		if (c)
 		{
-			_LOG("Command name: %s.", c->commandName.c_str());
-			_LOG("Command str: %s.", c->commandStr.c_str());
-			_LOG("Command description: %s.", c->commandDescription.c_str());
+			_LOG(LOG_CMD, "Command name: %s.", c->commandName.c_str());
+			_LOG(LOG_CMD, "Command str: %s.", c->commandStr.c_str());
+			_LOG(LOG_CMD, "Command description: %s.", c->commandDescription.c_str());
 		}
 	}
 }

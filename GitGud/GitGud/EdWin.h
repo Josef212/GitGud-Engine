@@ -1,6 +1,8 @@
 #ifndef __EDWIN_H__
 #define __EDWIN_H__
 
+#include "Globals.h"
+
 class EdWin
 {
 public:

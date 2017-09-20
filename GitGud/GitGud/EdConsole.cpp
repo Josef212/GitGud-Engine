@@ -13,6 +13,8 @@ EdConsole::EdConsole(bool startEnabled) : EdWin(startEnabled)
 EdConsole::~EdConsole()
 {
 	logs.clear();
+	log.clear();
+	colors.clear();
 }
 
 void EdConsole::Draw()
@@ -32,12 +34,20 @@ void EdConsole::Draw()
 	{
 		if (ImGui::Button("Clear"))
 		{
-			logs.clear();
+			//logs.clear();
+			log.clear();
+			colors.clear();
 		}
 
 		ImGui::BeginChild("", ImVec2(sclx - 20, scly - 75), true);
 		{
-			ImGui::TextUnformatted(logs.begin());
+			//ImGui::TextUnformatted(logs.begin());
+
+			for (uint i = 0; i < colors.size(); ++i)
+			{
+				ImGui::TextColored(colors[i], log[i].c_str());
+			}
+
 			if (scrollDown)
 			{
 				ImGui::SetScrollHere(1.f);
@@ -64,11 +74,33 @@ void EdConsole::Draw()
 	}
 }
 
-void EdConsole::PushMessage(const char * str)
+void EdConsole::PushMessage(const char * str, LOG_TYPE type)
 {
 	if (str)
 	{
-		logs.append(str);
+		//logs.append(str);
 		scrollDown = true;
+
+		switch (type)
+		{
+		case LOG_INFO:
+			lastColor = ImColor(15, 149, 0);
+			break;
+		case LOG_WARN:
+			lastColor = ImColor(255, 255, 0);
+			break;
+		case LOG_ERROR:
+			lastColor = ImColor(255, 0, 0);
+			break;
+		case LOG_CMD:
+			lastColor = ImColor(51, 153, 255);
+			break;
+		default:
+			lastColor = ImColor(255, 255, 255);
+			break;
+		}
+
+		log.push_back(str);
+		colors.push_back(lastColor);
 	}
 }

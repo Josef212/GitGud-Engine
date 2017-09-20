@@ -48,7 +48,7 @@ public:
 	uint GetMaxFPS()const;
 	void SetMaxFPS(uint _fps);
 
-	void Log(const char* str);
+	void Log(const char* str, LOG_TYPE type);
 	void Browse(const char* url);
 
 	void Save(std::string saveFile);

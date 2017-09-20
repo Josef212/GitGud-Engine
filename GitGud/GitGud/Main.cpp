@@ -22,7 +22,7 @@ App* app = nullptr;
 
 int main(int argc, char** argv)
 {
-	_LOG("Starting engine %s from 'Josef21296'.", APP_TITLE);
+	_LOG(LOG_INFO, "Starting engine %s from 'Josef21296'.", APP_TITLE);
 
 	int mainRet = EXIT_FAILURE;
 	MAIN_STATE state = MAIN_CREATION;
@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 		{
 		case MAIN_CREATION:
 
-			_LOG("--------------- APP Creation ---------------");
+			_LOG(LOG_INFO, "--------------- APP Creation ---------------");
 			app = new App(argc, argv);
 			state = MAIN_START;
 
@@ -41,16 +41,16 @@ int main(int argc, char** argv)
 
 		case MAIN_START:
 
-			_LOG("--------------- APP Init ---------------");
+			_LOG(LOG_INFO, "--------------- APP Init ---------------");
 			if (!app->Init())
 			{
-				_LOG("App exits on init with errors!");
+				_LOG(LOG_ERROR, "App exits on init with errors!");
 				state = MAIN_EXIT;
 			}
 			else
 			{
 				state = MAIN_UPDATE;
-				_LOG("--------------- APP Update ---------------");
+				_LOG(LOG_INFO, "--------------- APP Update ---------------");
 			}
 
 			break;
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 
 			if (tmp == UPDT_ERROR)
 			{
-				_LOG("App exits on update with errors!");
+				_LOG(LOG_ERROR, "App exits on update with errors!");
 				state = MAIN_EXIT;
 			}
 
@@ -71,10 +71,10 @@ int main(int argc, char** argv)
 			break;
 
 		case MAIN_FINISH:
-			_LOG("--------------- APP CleanUp ---------------");
+			_LOG(LOG_INFO, "--------------- APP CleanUp ---------------");
 			if (!app->CleanUp())
 			{
-				_LOG("App exits on cleanup with errors!");
+				_LOG(LOG_ERROR, "App exits on cleanup with errors!");
 			}
 			else
 			{
@@ -93,9 +93,9 @@ int main(int argc, char** argv)
 
 #ifdef _DEBUG
 	int leaks = MAX(0, m_getMemoryStatistics().totalAllocUnitCount - 23);
-	_LOG("Exiting with %d memory leaks!\n", (leaks > 0) ? leaks : 0);
+	_LOG(LOG_WARN, "Exiting with %d memory leaks!\n", (leaks > 0) ? leaks : 0);
 #else
-	_LOG("Exiting game engine! GITGUD :)");
+	_LOG(LOG_INFO, "Exiting game engine! GITGUD :)");
 #endif // _DEBUG
 
 

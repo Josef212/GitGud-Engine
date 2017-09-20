@@ -29,7 +29,7 @@
 
 M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
-	_LOG("Editor: Creation.");
+	_LOG(LOG_INFO, "Editor: Creation.");
 
 	selectedFile[0] = '\0';
 
@@ -60,7 +60,7 @@ M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnab
 
 M_Editor::~M_Editor()
 {
-	_LOG("Editor: Destroying.");
+	_LOG(LOG_INFO, "Editor: Destroying.");
 
 	std::list<EdWin*>::reverse_iterator it = editorWins.rbegin();
 	for (; it != editorWins.rend(); ++it)
@@ -71,7 +71,7 @@ M_Editor::~M_Editor()
 
 bool M_Editor::Init(JsonFile* file)
 {
-	_LOG("Editor: Init.");
+	_LOG(LOG_INFO, "Editor: Init.");
 
 	ImGui_ImplSdlGL3_Init(app->win->GetWindow());
 
@@ -82,7 +82,7 @@ bool M_Editor::Init(JsonFile* file)
 
 bool M_Editor::Start()
 {
-	_LOG("Editor: Start.");
+	_LOG(LOG_INFO, "Editor: Start.");
 
 	return true;
 }
@@ -273,7 +273,7 @@ UPDATE_RETURN M_Editor::Update(float dt)
 
 bool M_Editor::CleanUp()
 {
-	_LOG("Editor: CleanUp.");
+	_LOG(LOG_INFO, "Editor: CleanUp.");
 
 	return true;
 }
@@ -288,10 +288,10 @@ void M_Editor::PassInput(SDL_Event* ev)
 	ImGui_ImplSdlGL3_ProcessEvent(ev);
 }
 
-void M_Editor::Log(const char * str)
+void M_Editor::Log(const char * str, LOG_TYPE type)
 {
 	if (console)
-		console->PushMessage(str);
+		console->PushMessage(str, type);
 }
 
 void M_Editor::LogFPS(float fps, float ms)
@@ -418,11 +418,11 @@ void M_Editor::SaveStyle(ImGuiStyle * style)
 		std::string savePath(CONFIG_PATH + std::string("style.json"));
 		if (app->fs->Save(savePath.c_str(), buffer, size) != size)
 		{
-			_LOG("EDITOR_ERROR: Could not save style file in [%s].", savePath.c_str());
+			_LOG(LOG_WARN, "Could not save style file in [%s].", savePath.c_str());
 		}
 		else
 		{
-			_LOG("Editor style saved: [%s].", savePath.c_str());
+			_LOG(LOG_INFO, "Editor style saved: [%s].", savePath.c_str());
 		}
 	}
 

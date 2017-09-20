@@ -24,7 +24,7 @@
 
 ImporterScene::ImporterScene()
 {
-	_LOG("Scene importer: Created.");
+	_LOG(LOG_INFO, "Scene importer: Created.");
 
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
@@ -95,7 +95,7 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 	}
 	else
 	{
-		_LOG("ERROR: Could not load scene: %s.", originalFile);
+		_LOG(LOG_ERROR, "Could not load scene: %s.", originalFile);
 	}
 
 	return ret;

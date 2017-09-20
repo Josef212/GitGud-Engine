@@ -96,7 +96,7 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE type)
 	}
 		break;
 	default:
-		_LOG("Invalid component type!");
+		_LOG(LOG_WARN, "Invalid component type!");
 		break;
 	}
 
@@ -555,7 +555,7 @@ bool GameObject::OnLoadGo(JsonFile * sect, std::map<GameObject*, uint>& relation
 		}
 		else
 		{
-			_LOG("Unknown component type for game object [%s].", name.c_str());
+			_LOG(LOG_WARN, "Unknown component type for game object [%s].", name.c_str());
 		}
 	}
 

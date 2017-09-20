@@ -28,18 +28,18 @@
 
 M_Renderer::M_Renderer(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
-	_LOG("Renderer: Creation.");
+	_LOG(LOG_INFO, "Renderer: Creation.");
 }
 
 
 M_Renderer::~M_Renderer()
 {
-	_LOG("Renderer: Destroying.");
+	_LOG(LOG_INFO, "Renderer: Destroying.");
 }
 
 bool M_Renderer::Init(JsonFile* file)
 {
-	_LOG("Renderer: Init.");
+	_LOG(LOG_INFO, "Renderer: Init.");
 	bool ret = true;
 
 	vsync = file->GetBool("vsync", true);
@@ -47,7 +47,7 @@ bool M_Renderer::Init(JsonFile* file)
 	context = SDL_GL_CreateContext(app->win->GetWindow());
 	if (context == nullptr)
 	{
-		_LOG("REND_Error: OpenGL could not create context! SDL_Error: %s\n", SDL_GetError());
+		_LOG(LOG_ERROR, "OpenGL could not create context! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 	else
@@ -56,17 +56,17 @@ bool M_Renderer::Init(JsonFile* file)
 		GLenum gl = glewInit();
 		if (gl != GLEW_OK)
 		{
-			_LOG("REND_Error: Glew lib could not init %s\n", glewGetErrorString(gl));
+			_LOG(LOG_ERROR, "Glew lib could not init %s\n", glewGetErrorString(gl));
 			ret = false;
 		}
 	}
 
 	if (ret)
 	{
-		_LOG("Vendor: %s", glGetString(GL_VENDOR));
-		_LOG("Renderer: %s", glGetString(GL_RENDERER));
-		_LOG("OpenGL version supported %s", glGetString(GL_VERSION));
-		_LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+		_LOG(LOG_INFO, "Vendor: %s", glGetString(GL_VENDOR));
+		_LOG(LOG_INFO, "Renderer: %s", glGetString(GL_RENDERER));
+		_LOG(LOG_INFO, "OpenGL version supported %s", glGetString(GL_VERSION));
+		_LOG(LOG_INFO, "GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 		
 		SetVSync(vsync);
@@ -74,7 +74,7 @@ bool M_Renderer::Init(JsonFile* file)
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			_LOG("REND_Error: Could not init OpenGL! %s\n", gluErrorString(error));
+			_LOG(LOG_ERROR, "Could not init OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 
@@ -85,7 +85,7 @@ bool M_Renderer::Init(JsonFile* file)
 		error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			_LOG("REND_Error: Could not init OpenGL! %s\n", gluErrorString(error));
+			_LOG(LOG_ERROR, "Could not init OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 
@@ -103,7 +103,7 @@ bool M_Renderer::Init(JsonFile* file)
 
 bool M_Renderer::Start()
 {
-	_LOG("Renderer: Start.");
+	_LOG(LOG_INFO, "Renderer: Start.");
 
 	//TMP
 	PrepareShaderLocs();
@@ -184,7 +184,7 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 
 bool M_Renderer::CleanUp()
 {
-	_LOG("Renderer: CleanUp.");
+	_LOG(LOG_INFO, "Renderer: CleanUp.");
 
 	SDL_GL_DeleteContext(context);
 
@@ -202,7 +202,7 @@ void M_Renderer::SetVSync(bool set)
 	{
 		vsync = set;
 		if (SDL_GL_SetSwapInterval(vsync ? 1 : 0) < 0)
-			_LOG("Warning: Unable to set VSync! SDL_Error: %s\n", SDL_GetError());
+			_LOG(LOG_WARN, "Unable to set VSync! SDL_Error: %s\n", SDL_GetError());
 	}
 }
 

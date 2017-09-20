@@ -38,7 +38,7 @@ public:
 	void DrawEditor();
 	void PassInput(SDL_Event* ev);
 
-	void Log(const char* str);
+	void Log(const char* str, LOG_TYPE type);
 	void LogFPS(float fps, float ms);
 
 	bool UsingKeyboard()const { return isUsingKeyboard; }
