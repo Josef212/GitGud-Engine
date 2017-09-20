@@ -14,6 +14,7 @@ public:
 	bool RemoveFromMemory()override;
 
 	void LoadToVRAM();
+	void FreeFromVRAM();
 
 public:
 	uint numIndices = 0;
