@@ -23,7 +23,7 @@
 
 #define RESERVED_RESOURCES 20
 
-
+/** M_ResourceManager: Creates all importers. */
 M_ResourceManager::M_ResourceManager(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
 	_LOG("Resource manager: Creation.");
@@ -35,6 +35,7 @@ M_ResourceManager::M_ResourceManager(const char* name, bool startEnabled) : Modu
 	shaderImporter = new ImporterShader();
 }
 
+/** ~M_ResourceManager: Destroy all importers. */
 M_ResourceManager::~M_ResourceManager()
 {
 	_LOG("Resource manager: Destroying.");
@@ -46,6 +47,7 @@ M_ResourceManager::~M_ResourceManager()
 	RELEASE(shaderImporter);
 }
 
+/** M_ResourceManager - Init: Just get the resource file name from the config file. */
 bool M_ResourceManager::Init(JsonFile * conf)
 {
 	_LOG("Resource manager: Init.");
@@ -55,6 +57,7 @@ bool M_ResourceManager::Init(JsonFile * conf)
 	return true;
 }
 
+/** M_ResourceManager - Start: Create all basic resources and load the resources from the resource file. */
 bool M_ResourceManager::Start()
 {
 	_LOG("Resource manager: Start.");
@@ -72,22 +75,25 @@ bool M_ResourceManager::Start()
 	return true;
 }
 
+/** M_ResourceManager - PreUpdate: Nothing for now. */
 UPDATE_RETURN M_ResourceManager::PreUpdate(float dt)
 {
 	return UPDT_CONTINUE;
 }
 
+/** M_ResourceManager - CleanUp: Save all the resources into the resource file and clean up the memory. */
 bool M_ResourceManager::CleanUp()
 {
 	_LOG("Resource manager: CleanUp.");
 
 	SaveResources();
+	//TODO: Once all resources are saved, should cleanup all the resources.
 
 	return true;
 }
 
 /**
-*	- ImportFile: Import any file that has to be imported into the engine.
+*	M_ResourceManager - ImportFile: Import any file that has to be imported into the engine.
 *		If the file is not located insife Assets it will DUPLICATE the file into assets root folder,
 *		if the file is already in Assets, no matter if is in a directory, will import it.
 *
@@ -157,7 +163,12 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 	return ret;
 }
 
-UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE type, Path* sourceFile)
+/** M_ResourceManager - ImportBuff: Import a buffer. Can be used to import meshes or materials casting the structure pointer to void pointer.
+						It is a bit dirty way but good for now.
+						Size nad source file parameter is not always needed but has to be passed.
+						Return the resource UID or 0 if fail.
+						*/
+UID M_ResourceManager::ImportBuf(const void * buffer, RESOURCE_TYPE type, uint size, Path* sourceFile)
 {
 	UID ret = 0;
 
@@ -200,12 +211,17 @@ UID M_ResourceManager::ImportBuf(const void * buffer, uint size, RESOURCE_TYPE t
 	return ret;
 }
 
+/** M_ResourceManager - GetResourceFromUID: Return a resource from its UID, nullptr if not founf. */
 Resource * M_ResourceManager::GetResourceFromUID(UID uuid)
 {
 	std::map<UID, Resource*>::iterator it = resources.find(uuid);
 	return it != resources.end() ? it->second : nullptr;
 }
 
+/** M_ResourceManager - CreateResource: Create a desired type resource. If no passed UID, 0 UID or 
+										already used UID a new one is randomly generated. 
+										The new resource is added to the resource map.
+										Return the created resource. */
 Resource * M_ResourceManager::CreateResource(RESOURCE_TYPE type, UID forceUID)
 {
 	Resource* ret = nullptr;
@@ -238,7 +254,7 @@ Resource * M_ResourceManager::CreateResource(RESOURCE_TYPE type, UID forceUID)
 	return ret;
 }
 
-//Compare with resources fullpath.
+/** M_ResourceManager - FindResourceFromOriginalFullPath: Get a resource from its original full path. Return nullptr if not found. */
 Resource * M_ResourceManager::FindResourceFromOriginalFullPath(const char * fullpath)
 {
 	for (auto it : resources)
@@ -250,6 +266,7 @@ Resource * M_ResourceManager::FindResourceFromOriginalFullPath(const char * full
 	return nullptr;
 }
 
+/** M_ResourceManager - GetTypeFromExtension: Return the reource type from a extension string. Res_none if not identified. */
 RESOURCE_TYPE M_ResourceManager::GetTypeFromExtension(const char * ext) const
 {
 	RESOURCE_TYPE ret = RES_NONE;
@@ -280,20 +297,23 @@ RESOURCE_TYPE M_ResourceManager::GetTypeFromExtension(const char * ext) const
 	return ret;
 }
 
+/** M_ResourceManager - GetNewUID: Return a new rnadom UID. */
 UID M_ResourceManager::GetNewUID() const
 {
 	return app->random->GetRandInt();
 }
 
+/** M_ResourceManager - GetResourcesOfType: Fill a passed vector with all resources of type. Sveral types can be passed at once. */
 void M_ResourceManager::GetResourcesOfType(std::vector<Resource*>& res, RESOURCE_TYPE type) const
 {
 	for (auto it : resources)
 	{
-		if (it.second->GetType() == type)
+		if (type & it.second->GetType())
 			res.push_back(it.second);
 	}
 }
 
+/** M_ResourceManager - LoadResources: Loads all resources from the resource file. */
 void M_ResourceManager::LoadResources()
 {
 	char* buffer = nullptr;
@@ -321,6 +341,7 @@ void M_ResourceManager::LoadResources()
 	RELEASE_ARRAY(buffer);
 }
 
+/** M_ResourceManager - SaveResources: Saves all resources into the resource file. */
 void M_ResourceManager::SaveResources()
 {
 	JsonFile save;
@@ -348,6 +369,7 @@ void M_ResourceManager::SaveResources()
 	RELEASE_ARRAY(buffer);
 }
 
+/** M_ResourceManager - LoadBasicResources: Create all basci resources such as primitives, checker texture, default shader, etc. */
 bool M_ResourceManager::LoadBasicResources()
 {
 	checkers = (ResourceTexture*)CreateResource(RES_TEXTURE, 1);

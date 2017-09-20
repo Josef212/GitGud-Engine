@@ -41,9 +41,11 @@ public:
 	bool Destroy(std::string filename)const;
 	bool DuplicateFile(const char* src, const char* dst)const;
 
+	// TODO: Check if this are really necessary since is use Path class to support paths.
 	void SplitPath(const char* originalPath, std::string* path, std::string* file = nullptr, std::string* extension = nullptr);
 	void NormalizePath(char* path);
 	void NormalizePath(std::string& path);
+	//-------------------------------------------------------------------------------------
 };
 
 

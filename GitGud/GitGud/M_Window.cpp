@@ -16,6 +16,7 @@ M_Window::~M_Window()
 	_LOG("Window: Destroying.");
 }
 
+/** M_Window - Init: Create the window and sets some window flags and other properties from config file. */
 bool M_Window::Init(JsonFile* file)
 {
 	_LOG("Window: Init");
@@ -73,6 +74,7 @@ bool M_Window::Init(JsonFile* file)
 	return ret;
 }
 
+/** M_Window - CleanUp: Destroy the window and quits sdl. */
 bool M_Window::CleanUp()
 {
 	_LOG("Window: CleanUp");
@@ -85,6 +87,7 @@ bool M_Window::CleanUp()
 	return true;
 }
 
+/** M_Window - SetTitle: Set the window title. */
 void M_Window::SetTitle(const char * title)
 {
 	if(title && window)

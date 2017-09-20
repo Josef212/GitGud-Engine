@@ -11,7 +11,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 
-
+/** M_Camera3D: Creates the editor camera using a camera component. */
 M_Camera3D::M_Camera3D(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
 	_LOG("EditrCamera3D: Creation.");
@@ -34,18 +34,21 @@ M_Camera3D::~M_Camera3D()
 	_LOG("EditrCamera3D: Destroying.");
 }
 
+/** M_Camera3D - Init:  */
 bool M_Camera3D::Init(JsonFile * conf)
 {
 	_LOG("EditrCamera3D: Init.");
 	return true;
 }
 
+/** M_Camera3D - Start:  */
 bool M_Camera3D::Start()
 {
 	_LOG("EditrCamera3D: Start.");
 	return true;
 }
 
+/** M_Camera3D - Update: Check the editor camera input. */
 UPDATE_RETURN M_Camera3D::Update(float dt)
 {
 	if (!app->editor->UsingKeyboard())

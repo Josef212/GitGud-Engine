@@ -89,7 +89,7 @@ bool M_Renderer::Init(JsonFile* file)
 			ret = false;
 		}
 
-		glEnable(GL_DEPTH_TEST);// | GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST); // | GL_CULL_FACE);
 		//glDepthFunc(GL_LESS);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //GL_FILL | GL_LINE

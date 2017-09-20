@@ -278,7 +278,7 @@ bool M_FileSystem::DuplicateFile(const char * src, const char * dst) const
 	{
 		int succes = Save(dst, buffer, size);
 		_LOG("Fs: Duplicated file from src [%s] to dst [%s].", src, dst);
-		ret = true;
+		ret = (succes == size);
 	}
 	else
 	{

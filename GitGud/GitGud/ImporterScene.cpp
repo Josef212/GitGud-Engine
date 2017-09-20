@@ -204,11 +204,11 @@ void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameOb
 		{
 			aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 			Material* cMat = (Material*)childGo->CreateComponent(CMP_MATERIAL);
-			//cMat->SetResource(app->resources->ImportBuf(mat, 0, RES_MATERIAL, &file));
+			//cMat->SetResource(app->resources->ImportBuf(mat, RES_MATERIAL, 0, &file));
 		}
 
 		Mesh* cMesh = (Mesh*)childGo->CreateComponent(CMP_MESH);
-		cMesh->SetResource(app->resources->ImportBuf(mesh, 0, RES_MESH, &file));
+		cMesh->SetResource(app->resources->ImportBuf(mesh, RES_MESH, 0, &file));
 		//TODO: Resource instances??
 	}
 
