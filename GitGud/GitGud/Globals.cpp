@@ -30,7 +30,7 @@ const char* GetLogTypeStr(LOG_TYPE type)
 		"INFO", "WARN", "ERROR", "CMD"
 	};
 
-	assert(type >= 0 && type < LOG_CMD);
+	assert(type >= 0 && type < LOG_MAX);
 
 	return types[type];
 }

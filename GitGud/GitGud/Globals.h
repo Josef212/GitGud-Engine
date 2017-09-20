@@ -10,7 +10,8 @@ enum LOG_TYPE
 	LOG_INFO = 0,
 	LOG_WARN = 1,
 	LOG_ERROR = 2,
-	LOG_CMD = 3
+	LOG_CMD = 3,
+	LOG_MAX = 4
 };
 
 #define _LOG(type, format, ...) _log(type, __FILE__, __LINE__, format, __VA_ARGS__);
