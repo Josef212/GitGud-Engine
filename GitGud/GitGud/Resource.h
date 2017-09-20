@@ -117,7 +117,7 @@ public:
 	{
 		if (instancesLoaded > 0)
 		{
-			if (instancesLoaded - 1 == 0)
+			if (instancesLoaded == 1)
 				RemoveFromMemory();
 			--instancesLoaded;
 		}

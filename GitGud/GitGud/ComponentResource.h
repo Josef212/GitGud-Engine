@@ -13,7 +13,7 @@ public:
 
 	virtual bool SetResource(UID res) = 0;
 	
-	const Resource* GetResource()const;
+	Resource* GetResource()const;
 	const UID GetResourceUID()const;
 
 protected:

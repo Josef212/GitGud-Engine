@@ -13,11 +13,13 @@ Light::~Light()
 	app->goManager->RemoveLight(this);
 }
 
+/** Light - SetType: Sets the light type. */
 void Light::SetType(LIGHT_TYPE _type)
 {
 	lightType = _type;
 }
 
+/** Light - GetType: Returns the light type. */
 LIGHT_TYPE Light::GetType() const
 {
 	return lightType;
@@ -33,16 +35,7 @@ void Light::OnDisable()
 	//TODO: Manage lights from go manager
 }
 
-void Light::OnGameObjectDestroyed()
-{
-	//TODO: Manage lights from go manager
-}
-
-void Light::OnTransformUpdate(Transform * trans)
-{
-	//Not really necessary since position and direction can be get from transform cmp
-}
-
+/** Light - OnSaveCmp: Saves the light info into the GO save file. */
 void Light::OnSaveCmp(JsonFile & sect) const
 {
 	sect.AddInt("light_type", (int)lightType);
@@ -53,6 +46,7 @@ void Light::OnSaveCmp(JsonFile & sect) const
 	
 }
 
+/** Light - OnLoadCmp: Laods the light info from the GO save file. */
 void Light::OnLoadCmp(JsonFile * sect)
 {
 	if (sect)

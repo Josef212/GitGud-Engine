@@ -25,10 +25,6 @@ public:
 	void OnEnable()override;
 	void OnDisable()override;
 
-	void OnGameObjectDestroyed()override;
-
-	void OnTransformUpdate(Transform* trans)override;
-
 	void OnSaveCmp(JsonFile& sect)const override;
 	void OnLoadCmp(JsonFile* sect)override;
 

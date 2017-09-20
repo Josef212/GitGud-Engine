@@ -27,6 +27,7 @@ bool Material::SetResource(UID resUID)
 		{
 			if (res->LoadToMemory())
 			{
+				//TODO: Should clear the current material??
 				resource = resUID;
 				ret = true;
 			}

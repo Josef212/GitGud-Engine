@@ -18,22 +18,26 @@ Transform::~Transform()
 		object->transform = nullptr;
 }
 
+/** Transform - OnEnable: Marks some flags to recalculate transforms when this transform is activated. */
 void Transform::OnEnable()
 {
 	localTransformHasChanged = true;
 	app->goManager->anyGOTransHasChanged = true;
 }
 
+/** Transform - GetLocalPosition: Return the local position. */
 float3 Transform::GetLocalPosition() const
 {
 	return transaltion;
 }
 
+/** Transform - GetGlobalPositon: Return the glboal position. */
 float3 Transform::GetGlobalPosition() const
 {
 	return globalTransform.TranslatePart();
 }
 
+/** Transform - SetLocalPositon: Sets the transform local position. */
 void Transform::SetLocalPosition(const float3 & pos)
 {
 	transaltion = pos;
@@ -41,11 +45,13 @@ void Transform::SetLocalPosition(const float3 & pos)
 	app->goManager->anyGOTransHasChanged = true;
 }
 
+/** Transform - GetLocalScale: Return the local scale. */
 float3 Transform::GetLocalScale() const
 {
 	return scale;
 }
 
+/** Transform - SetLocalScale: Sets the local scale. */
 void Transform::SetLocalScale(const float3 & scl)
 {
 	scale = scl;
@@ -53,16 +59,19 @@ void Transform::SetLocalScale(const float3 & scl)
 	app->goManager->anyGOTransHasChanged = true;
 }
 
+/** Transform - GetLocalRotation: Return the local rotation as euler angles. */
 float3 Transform::GetLocalRotation() const
 {
 	return editorRotation;
 }
 
+/** Transform - GetLocalQuatRotation: Returns the local rotation as quaternion. */
 Quat Transform::GetLocalQuatRotation() const
 {
 	return rotation;
 }
 
+/** Transform - SetLocalRotation: Sets the local rotation by euler angles. */
 void Transform::SetLocalRotation(float3 & eulerRot)
 {
 	float3 eRot = eulerRot - editorRotation;
@@ -73,6 +82,7 @@ void Transform::SetLocalRotation(float3 & eulerRot)
 	app->goManager->anyGOTransHasChanged = true;
 }
 
+/** Transform - SetLocalRotation: Sets the local rotation by a quaternion. */
 void Transform::SetLocalRotation(const Quat & rot)
 {
 	rotation = rot;
@@ -81,16 +91,19 @@ void Transform::SetLocalRotation(const Quat & rot)
 	app->goManager->anyGOTransHasChanged = true;
 }
 
+/** Transform - GetGlobalTransform: Return a 4x4 matrix of the global transform. */
 const float4x4 Transform::GetGlobalTransform() const
 {
 	return globalTransform;
 }
 
+/** Transform - GetLocalTransform: Return a 4x4 matrix of the local transform. */
 const float4x4 Transform::GetLocalTransform() const
 {
 	return localTransform;
 }
 
+/** Transform - SetLocalTransform: Sets the local 4x4 transform. */
 void Transform::SetLocalTransform(const float4x4 & transform)
 {
 	transform.Decompose(transaltion, rotation, scale);
@@ -99,11 +112,13 @@ void Transform::SetLocalTransform(const float4x4 & transform)
 	app->goManager->anyGOTransHasChanged = true;
 }
 
+/** Transform - GetGlobalTransformGL: Returns a float pointer of the global transform adapted to OpenGL math system. */
 const float * Transform::GetGlobalTransformGL() const
 {
 	return globalTransform.Transposed().ptr();
 }
 
+/** Transform - UpdateTransform: Updates the transform to match the hierarchy. */
 void Transform::UpdateTransform(const float4x4 & parentMat)
 {
 	localTransformHasChanged = false;
@@ -111,6 +126,7 @@ void Transform::UpdateTransform(const float4x4 & parentMat)
 	globalTransform = parentMat * localTransform;
 }
 
+/** Transform - OnSaveCmp: Save the transform into the GO save object. */
 void Transform::OnSaveCmp(JsonFile & sect) const
 {
 	sect.AddInt("cmp_type", (int)type);
@@ -122,6 +138,7 @@ void Transform::OnSaveCmp(JsonFile & sect) const
 	sect.AddFloatArray("rotation", (const float*)rotation.ptr(), 4);
 }
 
+/** Transform - OnLoadCmp: Loads the transform from the GO save file. */
 void Transform::OnLoadCmp(JsonFile * sect)
 {
 	if (!sect)return;

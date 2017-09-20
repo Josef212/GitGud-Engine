@@ -16,6 +16,7 @@ Mesh::~Mesh()
 	ClearMesh();
 }
 
+/** Mesh - GetBox: Recalculate the AABB passed according to the mesh AABB. */
 void Mesh::GetBox(AABB & box) const
 {
 	ResourceMesh* r = (ResourceMesh*)app->resources->GetResourceFromUID(resource);
@@ -23,11 +24,14 @@ void Mesh::GetBox(AABB & box) const
 		box.Enclose(r->aabb);
 }
 
+/** Mesh - ClearMesh: Remove an instance of the resource. */
 void Mesh::ClearMesh()
 {
-	//TODO:
+	Resource* m = GetResource();
+	if (m) { m->RemoveInstance(); resource = 0; }
 }
 
+/** Mesh - OnSaveCmp: Saves the mesh resource info into the GO save file. */
 void Mesh::OnSaveCmp(JsonFile & sect) const
 {
 	if (resource)
@@ -44,6 +48,7 @@ void Mesh::OnSaveCmp(JsonFile & sect) const
 	sect.AddBool("normals", renderNormals);
 }
 
+/** Mesh - OnLoadCmp: Loads the mesh resource info from the GO save file. */
 void Mesh::OnLoadCmp(JsonFile * sect)
 {
 	if (sect)
@@ -60,6 +65,7 @@ void Mesh::OnLoadCmp(JsonFile * sect)
 
 //-------------------------------------
 
+/** Mesh - SetResource: Sets the resource used by an UID. */
 bool Mesh::SetResource(UID resUID)
 {
 	bool ret = false;
@@ -71,6 +77,7 @@ bool Mesh::SetResource(UID resUID)
 		{
 			if (res->LoadToMemory())
 			{
+				ClearMesh(); //Before changing the mesh resource, clear the current one.
 				resource = resUID;
 				object->RecalcBox();
 				ret = true;

@@ -34,11 +34,13 @@ Camera::~Camera()
 {
 }
 
+/** Camera - GetFOV: Returns the camera vertical fov. */
 float Camera::GetFOV() const
 {
 	return frustum.VerticalFov() * RADTODEG;
 }
 
+/** Camera - SetFOV: Sets the vertical FOV. */
 void Camera::SetFOV(float vFov)
 {
 	if (vFov > 0.5f)
@@ -48,11 +50,13 @@ void Camera::SetFOV(float vFov)
 	}
 }
 
+/** Camera - GetOrthogonalSize: Return the orthogonal size. */
 float Camera::GetOthogonalSize() const
 {
 	return orthoSize;
 }
 
+/** Camera - SetOrthoSize: Sets the orthogonal size. */
 void Camera::SetOrthoSize(float size)
 {
 	//TODO: Should always be related to viewport size
@@ -60,11 +64,13 @@ void Camera::SetOrthoSize(float size)
 	projectionMatChaged = true;
 }
 
+/** Camera - GetFarPlaneDist: Return the far plane distance. */
 float Camera::GetFarPlaneDist() const
 {
 	return frustum.FarPlaneDistance();
 }
 
+/** Camera - SetFarPlaneDist: Sets the far plane distance. */
 void Camera::SetFarPlaneDist(float fD)
 {
 	if (fD > frustum.NearPlaneDistance())
@@ -74,11 +80,13 @@ void Camera::SetFarPlaneDist(float fD)
 	}
 }
 
+/** Camera - GetNearPlaneDist: Return the near plane distance. */
 float Camera::GetNearPlaneDist() const
 {
 	return frustum.NearPlaneDistance();
 }
 
+/** Camera - SetNearPlaneDist: Sets the near plane distance. */
 void Camera::SetNearPlaneDist(float nD)
 {
 	if (nD > 0.f && nD < frustum.FarPlaneDistance())
@@ -88,11 +96,13 @@ void Camera::SetNearPlaneDist(float nD)
 	}
 }
 
+/** Camera - GetAspectRatio: Return the camera aspect ratio. */
 float Camera::GetAspectRatio() const
 {
 	return aspectRatio;
 }
 
+/** Camera - SetAspectRatio: Sets the camera aspect ratio. */
 void Camera::SetAspectRatio(float ar)
 {
 	aspectRatio = ar;
@@ -100,21 +110,25 @@ void Camera::SetAspectRatio(float ar)
 	projectionMatChaged = true;
 }
 
+/** Camera - IsCulling: Return true if camera is setted to frustum cull. */
 bool Camera::IsCulling() const
 {
 	return culling;
 }
 
+/** Camera - SetCulling: Set the frustum culling flag. */
 void Camera::SetCulling(bool set)
 {
 	culling = set;
 }
 
+/** Camera - GetBackgorund: Return the camera background color. */
 Color Camera::GetBackground() const
 {
 	return backgorund;
 }
 
+/** Camera - GetBackgorund: Gives the camera background color by reference. */
 void Camera::GetBackground(float & r, float & g, float & b, float & a)
 {
 	r = backgorund.r;
@@ -123,16 +137,19 @@ void Camera::GetBackground(float & r, float & g, float & b, float & a)
 	a = backgorund.a;
 }
 
+/** Camera - SetBackground: Sets the camera background color. */
 void Camera::SetBackground(Color col)
 {
 	backgorund = col;
 }
 
+/** Camera - SetBackground: Sets the camera background color. */
 void Camera::SetBackground(float r, float g, float b, float a)
 {
 	backgorund.Set(r, g, b, a);
 }
 
+/** Camera - GetGLViewMatrix: Return the view matrix pointer for the view transformation. */
 float * Camera::GetGLViewMatrix()
 {
 	static float4x4 ret;
@@ -141,6 +158,7 @@ float * Camera::GetGLViewMatrix()
 	return (float*)ret.v;
 }
 
+/** Camera - GetGLProjectionMatrix: Return the projection matrix pointer for the view transformation. */
 float * Camera::GetGLProjectionMatrix()
 {
 	static float4x4 ret;
@@ -149,6 +167,7 @@ float * Camera::GetGLProjectionMatrix()
 	return (float*)ret.v;
 }
 
+/** Camera - OnTransformUpdate: Refactors the camera position, front vector and right vector. */
 void Camera::OnTransformUpdate(Transform * trans)
 {
 	if (trans)
@@ -158,17 +177,20 @@ void Camera::OnTransformUpdate(Transform * trans)
 	}
 }
 
+/** Camera - GetType: Return the camera type. */
 CAM_TYPE Camera::GetType() const
 {
 	return camType;
 }
 
+/** Camera - SetType: Set the camera type. */
 void Camera::SetType(CAM_TYPE type)
 {
 	if (type != camType)
 		SwapType();
 }
 
+/** Camera - SwapType: Swap the camera type. */
 void Camera::SwapType()
 {
 	//TODO: Ortho cam must be checked and prob fixed
@@ -184,12 +206,14 @@ void Camera::SwapType()
 	}
 }
 
+/** Camera - Look: Set the camera to look to a spot from a position. */
 void Camera::Look(const float3 spot, const float3 pos)
 {
 	frustum.SetPos(pos);
 	LookAt(spot);
 }
 
+/** Camera - LookAt: Set the camera to look to a spot from the same position. */
 void Camera::LookAt(const float3 spot)
 {
 	float3 dir = spot - frustum.Pos();
@@ -200,6 +224,7 @@ void Camera::LookAt(const float3 spot)
 	projectionMatChaged = true;
 }
 
+/** Camera - OnSaveCmp: Saves the camera component info into the GO save file. */
 void Camera::OnSaveCmp(JsonFile & sect) const
 {
 	sect.AddInt("type", (int)type);
@@ -219,6 +244,7 @@ void Camera::OnSaveCmp(JsonFile & sect) const
 	//TODO: Save if active
 }
 
+/** Camera - OnLoadCmp: Loads the camera component info from the GO save file. */
 void Camera::OnLoadCmp(JsonFile * sect)
 {
 	if (sect)
