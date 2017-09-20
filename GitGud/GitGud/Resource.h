@@ -145,9 +145,9 @@ public:
 	}
 
 protected:
-	/** OnSave: Pure virtual method called while saving the resource. */
+	/** OnSave: Virtual method called while saving the resource. */
 	virtual void OnSave(JsonFile& file) {}
-	/** OnLoad: Pure virtual method called while laoding the resource. */
+	/** OnLoad: Virtual method called while laoding the resource. */
 	virtual void OnLoad(JsonFile& file) {}
 	/** LoadInMemory: Pure virtual method called when want to actually load the resource into memory. For example a mesh or a texture. */
 	virtual bool LoadInMemory() = 0;
