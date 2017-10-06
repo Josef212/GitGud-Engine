@@ -181,7 +181,10 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 	//------------
 
 	//TODO: Debug draw
-	
+	if (app->debugMode)
+	{
+		app->DrawDebug();
+	}
 
 	//TODO: Editor state
 	app->editor->DrawEditor();

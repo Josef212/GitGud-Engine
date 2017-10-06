@@ -49,7 +49,7 @@ public:
 
 	//--------------------------
 
-	void DrawDebug();
+	void OnDrawDebug();
 
 	//--------------------------
 
@@ -128,6 +128,7 @@ private:
 	bool selfActive = true;
 	bool isStatic = false;
 
+	OBB orientedBox;
 
 	bool wasDirty = true;
 

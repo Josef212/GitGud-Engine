@@ -5,6 +5,8 @@
 #include "ResourceMesh.h"
 #include "M_ResourceManager.h"
 
+#include "DrawDebugTools.h"
+
 
 Mesh::Mesh(GameObject* object) : Component(object, CMP_MESH)
 {
@@ -86,4 +88,11 @@ bool Mesh::SetResource(UID resUID)
 	}
 
 	return ret;
+}
+
+void Mesh::OnDebugDraw()
+{
+	if (resource > 0)
+		DrawDebug::DrawAABB(object->enclosingBox, Green);
+	
 }

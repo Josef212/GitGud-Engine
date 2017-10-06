@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "Transform.h"
 
+#include "DrawDebugTools.h"
+
 #include "M_Renderer.h"
 
 #include "JsonFile.h"
@@ -264,4 +266,9 @@ void Camera::OnLoadCmp(JsonFile * sect)
 		frustum.SetViewPlaneDistances(n, fa);
 		frustum.SetVerticalFovAndAspectRatio(fov, ar);
 	}
+}
+
+void Camera::OnDebugDraw()
+{
+	DrawDebug::DrawFrustumDebug(frustum, Yellow);
 }

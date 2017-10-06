@@ -24,6 +24,8 @@ public:
 
 	bool SetResource(UID resUID);
 
+	void OnDebugDraw() override;
+
 public:
 	bool renderWirefreame = false;
 	bool renderNormals = false;

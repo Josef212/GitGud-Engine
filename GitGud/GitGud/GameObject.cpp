@@ -199,6 +199,15 @@ void GameObject::SetNewParent(GameObject * parent, bool force)
 	}
 }
 
+void GameObject::OnDrawDebug()
+{
+	for (auto it : components)
+	{
+		if (it->IsActive())
+			it->OnDebugDraw();
+	}
+}
+
 void GameObject::Destroy()
 {
 	app->goManager->RemoveGameObject(this);
@@ -453,11 +462,11 @@ void GameObject::RecCalcBoxes()
 	{
 		RecalcBox();
 
-		OBB o = enclosingBox;
-		if (o.IsFinite() && transform)
+		orientedBox = enclosingBox;
+		if (orientedBox.IsFinite() && transform)
 		{
-			o.Transform(transform->GetGlobalTransform());
-			enclosingBox.SetFrom(o);
+			orientedBox.Transform(transform->GetGlobalTransform());
+			enclosingBox.SetFrom(orientedBox);
 		}
 	}
 

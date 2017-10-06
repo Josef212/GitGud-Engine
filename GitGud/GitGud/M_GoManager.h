@@ -26,6 +26,8 @@ public:
 	UPDATE_RETURN Update(float dt)override;
 	bool CleanUp()override;
 
+	void DrawDebug() override;
+
 	GameObject* GetRoot()const;
 	GameObject* GetGOFromUid(UID uuid)const;
 
@@ -67,6 +69,8 @@ private:
 
 	void DoPreUpdate(GameObject* obj);
 	void DoUpdate(GameObject* obj, float dt);
+
+	void DoOnDrawDebug(GameObject* obj);
 
 	//-------------
 

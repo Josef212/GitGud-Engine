@@ -124,6 +124,18 @@ bool M_GoManager::CleanUp()
 	return true;
 }
 
+void M_GoManager::DrawDebug()
+{
+	if (root)
+	{
+		for (auto go : root->childs)
+		{
+			if (go->IsActive())
+				DoOnDrawDebug(go);
+		}
+	}
+}
+
 GameObject * M_GoManager::GetRoot() const
 {
 	return root;
@@ -364,6 +376,17 @@ void M_GoManager::DoUpdate(GameObject * obj, float dt)
 		{
 			DoUpdate(go, dt);
 		}
+	}
+}
+
+void M_GoManager::DoOnDrawDebug(GameObject* obj)
+{
+	if (obj && obj->IsActive())
+	{
+		obj->OnDrawDebug();
+
+		for (auto go : obj->childs)
+			DoOnDrawDebug(go);
 	}
 }
 

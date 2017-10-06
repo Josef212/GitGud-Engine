@@ -60,6 +60,8 @@ public:
 	void OnSaveCmp(JsonFile& sect)const override;
 	void OnLoadCmp(JsonFile* sect)override;
 
+	void OnDebugDraw() override;
+
 private:
 
 public:
