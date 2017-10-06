@@ -106,7 +106,77 @@ bool ImporterTexture::ImportBuff(const void* buffer, uint size, Path& exportedFi
 
 bool ImporterTexture::LoadResource(Resource * resource)
 {
-	return false;
+	bool ret = false;
+
+	if (!resource || resource->GetType() != RES_TEXTURE || resource->exportedFile.Empty())
+		return ret;
+
+	ResourceTexture* res = (ResourceTexture*)resource;
+
+	char* data = nullptr;
+	uint size = app->fs->Load(res->GetExportedFileFullPath(), &data);
+
+	if (data && size > 0)
+	{
+		ILuint image = 0;
+		ilGenImages(1, &image);
+		ilBindImage(image);
+
+		if (ilLoadL(IL_DDS, (const void*)data, size))
+		{
+			ILinfo info;
+			iluGetImageInfo(&info);
+
+			res->width = info.Width;
+			res->height = info.Height;
+			res->bpp = info.Bpp;
+			res->depth = info.Depth;
+			res->mips = info.NumMips;
+			res->bytes = info.SizeOfData;
+
+			switch (info.Format)
+			{
+			case IL_COLOUR_INDEX:
+				res->format = ResourceTexture::COLOR_INDEX;
+				break;
+			case IL_RGB:
+				res->format = ResourceTexture::RGB;
+				break;
+			case IL_RGBA:
+				res->format = ResourceTexture::RGBA;
+				break;
+			case IL_BGR:
+				res->format = ResourceTexture::BGR;
+				break;
+			case IL_BGRA:
+				res->format = ResourceTexture::BGRA;
+				break;
+			case IL_LUMINANCE:
+				res->format = ResourceTexture::LUMINANCE;
+				break;
+			default:
+				res->format = ResourceTexture::UNKNOWN;
+				break;
+			}
+
+			res->texID = ilutGLBindTexImage();
+			ilDeleteImages(1, &image);
+
+			ret = true;
+		}
+		else
+		{
+			_LOG(LOG_ERROR, "Devil could not load the texture resource [%s] from file [%s].", res->GetResourceName(), res->GetExportedFile());
+		}
+	}
+	else
+	{
+		_LOG(LOG_ERROR, "Could not load texture resource [%s] from file [%s].", res->GetResourceName(), res->GetExportedFile());
+	}
+
+	RELEASE_ARRAY(data);
+
+	return ret;
 }
 
 #define CHECKERS_WIDHT 64
