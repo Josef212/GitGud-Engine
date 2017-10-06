@@ -150,7 +150,7 @@ void M_Camera3D::Rotate(float dt)
 		int motX = app->input->GetMouseMotionX();
 		int motY = app->input->GetMouseMotionY();
 
-		if (!(motX != 0 && motY != 0))
+		if (motX == 0 && motY == 0)
 			return;
 
 		float speed;
