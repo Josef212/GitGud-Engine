@@ -357,6 +357,9 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Tools\Time</Filter>
     </ClCompile>
+    <ClCompile Include="DrawDebugTools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -748,6 +751,9 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Tools\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawDebugTools.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

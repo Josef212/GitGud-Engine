@@ -136,6 +136,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentResource.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="DrawDebugTools.cpp" />
     <ClCompile Include="EdConfig.cpp" />
     <ClCompile Include="EdConsole.cpp" />
     <ClCompile Include="EdHierarchy.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentResource.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="DrawDebugTools.h" />
     <ClInclude Include="EdConfig.h" />
     <ClInclude Include="EdConsole.h" />
     <ClInclude Include="EdHierarchy.h" />

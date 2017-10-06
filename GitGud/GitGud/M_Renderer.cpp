@@ -15,6 +15,8 @@
 #include "ResourceMesh.h"
 #include "ResourceShader.h"
 
+#include "DrawDebugTools.h"
+
 //TMP
 #include "Math.h"
 
@@ -146,6 +148,12 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 
 	//-------------------------
 
+	if (showGrid)
+	{
+		DrawDebug::DrawAxis(float3(0.f, 0.f, 0.f));
+		DrawDebug::DrawGrid();
+	}
+
 	Camera* cam = currentCamera ? currentCamera : app->camera->GetEditorCamera(); //TODO: AppState, editor/game?
 
 	std::vector<GameObject*> objects;
@@ -173,6 +181,7 @@ UPDATE_RETURN M_Renderer::PostUpdate(float dt)
 	//------------
 
 	//TODO: Debug draw
+	
 
 	//TODO: Editor state
 	app->editor->DrawEditor();

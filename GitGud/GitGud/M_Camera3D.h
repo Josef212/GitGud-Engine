@@ -35,8 +35,8 @@ private:
 	GameObject* Pick()const;
 
 public:
-	float movSpeed = 5.f;
-	float rotSpeed = 2.f;
+	float movSpeed = 3.f;
+	float rotSpeed = 1.f;
 	float zoomSpeed = 500.f;
 
 private:
