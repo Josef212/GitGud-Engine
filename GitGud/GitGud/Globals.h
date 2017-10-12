@@ -113,6 +113,7 @@ enum DATA_TYPE
 #define MATERIAL_EXTENSION "ggmat"
 #define SCENE_EXTENSION "ggscene"
 #define PREFAB_EXTENSION "json"//"ggprefab"
+#define SHADER_EXTENSION "json"//"ggshader"
 
 // URLS ========================
 

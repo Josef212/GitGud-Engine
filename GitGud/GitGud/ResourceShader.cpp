@@ -215,7 +215,7 @@ void ResourceShader::OnLoad(JsonFile & file)
 
 void ResourceShader::OnCreation()
 {
-	shaderFile.Set(SHADER_SAVE_PATH, name.c_str(), "json");
+	shaderFile.Set(SHADER_SAVE_PATH, name.c_str(), SHADER_EXTENSION);
 
 	static const char* v =
 		"#version 330 core\n"
