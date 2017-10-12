@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/83to2wdrv5p7kmt8?svg=true)](https://ci.appveyor.com/project/Josef212/gitgud-engine)
+
 <h1>GitGud-Engine</h1>
 
 <p>GitGud is an OpenGL engine done for educational purposes as a continuation of <a href="https://github.com/Josef212/JayEngine">JayEngine</a> done for the game engine assignement.</p>
