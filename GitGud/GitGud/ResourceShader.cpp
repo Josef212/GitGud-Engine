@@ -2,6 +2,8 @@
 
 #include "App.h"
 #include "M_FileSystem.h"
+#include "M_ResourceManager.h"
+#include "ImporterShader.h"
 
 #include "OpenGL.h"
 
@@ -14,110 +16,202 @@ ResourceShader::ResourceShader(UID uuid) : Resource(uuid, RES_SHADER)
 
 ResourceShader::~ResourceShader()
 {
-	if (shaderID != 0) glDeleteProgram(shaderID);
+	RemoveFromMemory();
 }
 
 bool ResourceShader::LoadInMemory()
 {
-	return false;
+	return app->resources->shaderImporter->LoadResource(this);
 }
 
 bool ResourceShader::RemoveFromMemory()
 {
-	return false;
+	if (shaderID != 0) glDeleteProgram(shaderID);
+
+	if (!vertexCode.empty()) vertexCode.clear();
+	if (!fragmentCode.empty()) fragmentCode.clear();
+	if (!geometryCode.empty()) geometryCode.clear();
+
+	return true;
 }
 
-/*TODO: Change shader load system to load it from jason. This probably must be related
-somehow to materials since jsons files will contain info for them*/
-bool ResourceShader::CompileShader()
+uint ResourceShader::CompileCode(SHADER_TYPE type, const char * code)
 {
-	if (vertexFile.Empty() || fragmentFile.Empty())
+	uint ret = 0;
+
+	if (!code && !codeIsLoaded)
 	{
-		_LOG(LOG_WARN, "Invalid shader files.");
-		return false;
+		_LOG(LOG_WARN, "Must load shader code begore compiling it.");
+		return ret;
 	}
 
-	uint v = CompileVertex();
-	uint f = CompileFragment();
-
-	GLuint retID = glCreateProgram();
-	glAttachShader(retID, v);
-	glAttachShader(retID, f);
-	glLinkProgram(retID);
-
-	GLint success;
-	glGetProgramiv(retID, GL_LINK_STATUS, &success);
-	if (success == 0)
+	if (!code)
 	{
-		GLchar infoLog[512];
-		glGetProgramInfoLog(retID, 512, nullptr, infoLog);
-		_LOG(LOG_ERROR, "Shader link error: %s.", infoLog);
+		switch (type)
+		{
+		case ResourceShader::SH_VERTEX:
+			code = vertexCode.c_str();
+			break;
+		case ResourceShader::SH_FRAGMENT:
+			code = vertexCode.c_str();
+			break;
+		case ResourceShader::SH_GEOMETRY:
+			code = vertexCode.c_str();
+			break;
+		default:
+			_LOG(LOG_ERROR, "No shader code passed to compile.");
+			break;
+		}
+	}
 
-		usable = false;
+	if (code)
+	{
+		uint sh = 0;
+
+		switch (type)
+		{
+		case ResourceShader::SH_VERTEX:
+			sh = glCreateShader(GL_VERTEX_SHADER);
+			break;
+		case ResourceShader::SH_FRAGMENT:
+			sh = glCreateShader(GL_FRAGMENT_SHADER);
+			break;
+		case ResourceShader::SH_GEOMETRY:
+			sh = glCreateShader(GL_GEOMETRY_SHADER);
+			break;
+		default:
+			_LOG(LOG_WARN, "Invalid shader type passed.");
+			break;
+		}
+
+		if (sh != 0)
+		{
+			glShaderSource(sh, 1, &code, NULL);
+			glCompileShader(sh);
+
+			if (CheckCompileErrors(sh, type)) ret = sh;
+		}
+	}
+
+	return ret;
+}
+
+bool ResourceShader::LinkShader(uint vertex, uint fragment, uint geometry)
+{
+	int program = glCreateProgram();
+
+	glAttachShader(program, vertex);
+	glAttachShader(program, fragment);
+	if (geometry != 0) glAttachShader(program, geometry);
+
+	glLinkProgram(program);
+
+	GLint succes = 0;
+	GLchar infoLog[1024];
+
+	glGetProgramiv(program, GL_LINK_STATUS, &succes);
+	if (!succes)
+	{
+		glGetProgramInfoLog(program, 1024, NULL, infoLog);
+		_LOG(LOG_ERROR, "Shader link error: %s.", infoLog);
+	}
+
+	glDetachShader(program, vertex);
+	glDetachShader(program, fragment);
+	if (geometry != 0) glDetachShader(program, geometry);
+
+	glDeleteShader(vertex);
+	glDeleteShader(fragment);
+	if (geometry != 0) glDeleteShader(geometry);
+
+	if (succes != 0)
+	{
+		_LOG(LOG_INFO, "Just compiled and linked succesfully [%s] shader.", name.c_str());
+		shaderID = program;
+		usable = true;
+		return true;
 	}
 	else
 	{
-		shaderID = retID;
-		usable = true;
-		_LOG(LOG_INFO, "Shader %s compiled and linked successfully.", name.c_str());
+		_LOG(LOG_ERROR, "Could not link [%s] shader.", name.c_str());
+		shaderID = 0;
+		usable = false;
+		return false;
 	}
-
-	glDetachShader(retID, v);
-	glDetachShader(retID, f);
-	glDeleteShader(v);
-	glDeleteShader(f);
-
-	return usable;
 }
 
 void ResourceShader::OnSave(JsonFile & file)
 {
-	file.AddString("vertex_file_full_path", vertexFile.GetFullPath());
-	file.AddString("fragment_file_full_path", fragmentFile.GetFullPath());
+	file.AddString("shader_file_full_path", shaderFile.GetFullPath());
 }
 
 void ResourceShader::OnLoad(JsonFile & file)
 {
-	vertexFile.SetFullPath(file.GetString("vertex_file_full_path", "???"));
-	fragmentFile.SetFullPath(file.GetString("fragment_file_full_path", "???"));
+	shaderFile.SetFullPath(file.GetString("shader_file_full_path", "???"));
 
-	CompileShader();
+	LoadInMemory();
 }
 
-uint ResourceShader::CompileVertex()
+bool ResourceShader::CheckCompileErrors(uint shader, SHADER_TYPE type)
 {
-	char* buffer = nullptr;
-	uint size = app->fs->Load(vertexFile.GetFullPath(), &buffer);
+	GLint succes = 0;
+	GLchar infoLog[1024];
 
-	uint ret = 0;
-
-	if (buffer && size > 0)
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &succes);
+	if (!succes)
 	{
-		//I dont really like this but cant modify directly the char buffer to avoid errors on release 
-		//and cant pass directly the string.c_str as parameter.
-
-		std::string tmp = buffer;
-		tmp[size] = '\0';
-		const GLchar* str = (const GLchar*)tmp.c_str();
-		//_LOG("Vertex shader:\n%s", str);
-		//------------------------------------------------
-
-		GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertex, 1, &str, nullptr);
-		glCompileShader(vertex);
-
-		GLint succes;
-		glGetShaderiv(vertex, GL_COMPILE_STATUS, &succes);
-		if (succes == 0)
+		glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+		std::string typeStr = "Unknown";
+		switch (type)
 		{
-			GLchar infoLog[512];
-			glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
-			_LOG(LOG_ERROR, "Vertex shader compilation error: %s.", infoLog);
+		case ResourceShader::SH_VERTEX:
+			typeStr = "Vertex";
+			break;
+		case ResourceShader::SH_FRAGMENT:
+			typeStr = "Fragment";
+			break;
+		case ResourceShader::SH_GEOMETRY:
+			typeStr = "Geometry";
+			break;
 		}
-		else
-		{
-			ret = vertex;
-		}
+
+		_LOG(LOG_ERROR, "%s shader compilation error: %s.", typeStr.c_str(), infoLog);
+	}
+
+	return succes != 0;
+}
+
+bool ResourceShader::LoadCode()
+{
+	bool ret = false;
+
+	if (shaderFile.Empty())
+	{
+		_LOG(LOG_WARN, "No shader shader file.");
+		codeIsLoaded = false;
+		return ret;
+	}
+
+	char* buffer = nullptr;
+	uint fileSize = app->fs->Load(shaderFile.GetFullPath(), &buffer);
+
+	if (buffer && fileSize > 0)
+	{
+		JsonFile codeFile(buffer);
+
+		vertexCode = codeFile.GetString("vertex_shader", "");
+		fragmentCode = codeFile.GetString("fragment_shader", "");
+		geometryCode = codeFile.GetString("geometry_shader", "");
+
+		_LOG(LOG_INFO, "Shader code from [%s] loaded.", shaderFile.GetFile());
+
+		codeIsLoaded = true;
+		ret = true;
+	}
+	else
+	{
+		codeIsLoaded = false;
+		_LOG(LOG_ERROR, "Could not load shader file.");
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -125,43 +219,3 @@ uint ResourceShader::CompileVertex()
 	return ret;
 }
 
-uint ResourceShader::CompileFragment()
-{
-	char* buffer = nullptr;
-	uint size = app->fs->Load(fragmentFile.GetFullPath(), &buffer);
-
-	uint ret = 0;
-
-	if (buffer && size > 0)
-	{
-		//I dont really like this but cant modify directly the char buffer to avoid errors on release 
-		//and cant pass directly the string.c_str as parameter.
-
-		std::string tmp = buffer;
-		tmp[size] = '\0';
-		const GLchar* str = (const GLchar*)tmp.c_str();
-		//_LOG("Fragment shader:\n%s", str);
-		//------------------------------------------------
-
-		GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragment, 1, &str, nullptr);
-		glCompileShader(fragment);
-
-		GLint succes;
-		glGetShaderiv(fragment, GL_COMPILE_STATUS, &succes);
-		if (succes == 0)
-		{
-			GLchar infoLog[512];
-			glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
-			_LOG(LOG_ERROR, "Fragment shader compilation error: %s.", infoLog);
-		}
-		else
-		{
-			ret = fragment;
-		}
-	}
-
-	RELEASE_ARRAY(buffer);
-
-	return ret;
-}

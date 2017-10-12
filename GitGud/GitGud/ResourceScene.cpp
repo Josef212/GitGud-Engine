@@ -11,6 +11,7 @@ ResourceScene::ResourceScene(UID uuid) : Resource(uuid, RES_SCENE)
 
 ResourceScene::~ResourceScene()
 {
+	RemoveFromMemory();
 }
 
 bool ResourceScene::LoadInMemory()

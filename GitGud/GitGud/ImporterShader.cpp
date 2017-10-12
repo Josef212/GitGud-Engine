@@ -15,13 +15,39 @@ ImporterShader::~ImporterShader()
 
 bool ImporterShader::LoadResource(Resource * resource)
 {
-	return false;
+	bool ret = false;
+
+	if (!resource) return ret;
+
+	ResourceShader* res = (ResourceShader*)resource;
+
+	if (res->LoadCode())
+	{
+		uint vertex = res->CompileCode(ResourceShader::SHADER_TYPE::SH_VERTEX);
+		uint fragment = res->CompileCode(ResourceShader::SHADER_TYPE::SH_FRAGMENT);
+		uint geometry = 0;
+		if(!res->geometryCode.empty()) 
+			geometry = res->CompileCode(ResourceShader::SHADER_TYPE::SH_GEOMETRY);
+
+		if (res->LinkShader(vertex, fragment, geometry))
+		{
+			ret = true;
+		}
+	}
+	else
+	{
+		_LOG(LOG_ERROR, "Could not load shader code.");
+	}
+
+	return ret;
 }
 
 bool ImporterShader::PrepareDefaultShader(ResourceShader * sh)
 {
 	if (sh)
 	{
+		sh->name = "default_simple_shader";
+
 		static const char* v =
 			"#version 330 core\n"
 			"layout(location = 0) in vec3 position;\n"
@@ -57,69 +83,10 @@ bool ImporterShader::PrepareDefaultShader(ResourceShader * sh)
 			"}\n"
 			;
 
-		bool suc = true;
+		GLuint vertex = sh->CompileCode(ResourceShader::SHADER_TYPE::SH_VERTEX, v);
+		GLuint fragment = sh->CompileCode(ResourceShader::SHADER_TYPE::SH_FRAGMENT, f);
 
-		GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertex, 1, &v, nullptr);
-		glCompileShader(vertex);
-
-		GLint succes;
-		glGetShaderiv(vertex, GL_COMPILE_STATUS, &succes);
-		if (succes == 0)
-		{
-			GLchar infoLog[512];
-			glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
-			_LOG(LOG_ERROR, "Vertex shader compilation error: %s.", infoLog);
-			suc = false;
-		}
-
-		GLuint fragment;
-		if (suc)
-		{
-			fragment = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(fragment, 1, &f, nullptr);
-			glCompileShader(fragment);
-
-			GLint succes;
-			glGetShaderiv(fragment, GL_COMPILE_STATUS, &succes);
-			if (succes == 0)
-			{
-				GLchar infoLog[512];
-				glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
-				_LOG(LOG_ERROR, "Fragment shader compilation error: %s.", infoLog);
-				suc = false;
-			}
-		}
-
-		GLuint retID = 0;
-
-		if (suc)
-		{
-			retID = glCreateProgram();
-			glAttachShader(retID, vertex);
-			glAttachShader(retID, fragment);
-			glLinkProgram(retID);
-
-			GLint success;
-			glGetProgramiv(retID, GL_LINK_STATUS, &success);
-			if (success == 0)
-			{
-				GLchar infoLog[512];
-				glGetProgramInfoLog(retID, 512, nullptr, infoLog);
-				_LOG(LOG_ERROR, "Shader link error: %s.", infoLog);
-			}
-			else
-			{
-				 sh->shaderID = retID;
-				sh->usable = true;
-				_LOG(LOG_INFO, "Default shader compiled and linked successfully.", );
-			}
-		}
-
-		glDetachShader(retID, vertex);
-		glDetachShader(retID, fragment);
-		glDeleteShader(vertex);
-		glDeleteShader(fragment);
+		sh->LinkShader(vertex, fragment);
 
 		return sh->usable;
 	}

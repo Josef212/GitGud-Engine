@@ -15,6 +15,7 @@ ResourceMaterial::ResourceMaterial(UID uuid) : Resource(uuid, RES_MATERIAL)
 
 ResourceMaterial::~ResourceMaterial()
 {
+	RemoveFromMemory();
 }
 
 bool ResourceMaterial::LoadInMemory()

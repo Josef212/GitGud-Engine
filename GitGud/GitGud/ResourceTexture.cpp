@@ -13,6 +13,7 @@ ResourceTexture::ResourceTexture(UID uuid) : Resource(uuid, RES_TEXTURE)
 
 ResourceTexture::~ResourceTexture()
 {
+	RemoveFromMemory();
 }
 
 /** LoadInMemory: Overloaded method. Actually loads the texture resource using the texture importer.

@@ -23,7 +23,6 @@ public:
 
 	virtual ~Resource()
 	{
-		FreeResource();
 	}
 
 	/** GetType: Return the resource type. */

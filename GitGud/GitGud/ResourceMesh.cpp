@@ -15,6 +15,7 @@ ResourceMesh::ResourceMesh(UID uuid) : Resource(uuid, RES_MESH)
 
 ResourceMesh::~ResourceMesh()
 {
+	RemoveFromMemory();
 }
 
 /** LoadInMemory: Overloaded method. Actually loads the mesh resource using the mesh importer.

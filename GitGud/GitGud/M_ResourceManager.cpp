@@ -89,6 +89,12 @@ bool M_ResourceManager::CleanUp()
 	SaveResources();
 	//TODO: Once all resources are saved, should cleanup all the resources.
 
+	for (auto it : resources)
+	{
+		RELEASE(it.second);
+	}
+	resources.erase(resources.begin(), resources.end());
+
 	return true;
 }
 
