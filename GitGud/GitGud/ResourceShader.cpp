@@ -32,6 +32,9 @@ bool ResourceShader::RemoveFromMemory()
 	if (!fragmentCode.empty()) fragmentCode.clear();
 	if (!geometryCode.empty()) geometryCode.clear();
 
+	usable = false;
+	codeIsLoaded = false;
+
 	return true;
 }
 
@@ -53,10 +56,10 @@ uint ResourceShader::CompileCode(SHADER_TYPE type, const char * code)
 			code = vertexCode.c_str();
 			break;
 		case ResourceShader::SH_FRAGMENT:
-			code = vertexCode.c_str();
+			code = fragmentCode.c_str();
 			break;
 		case ResourceShader::SH_GEOMETRY:
-			code = vertexCode.c_str();
+			code = geometryCode.c_str();
 			break;
 		default:
 			_LOG(LOG_ERROR, "No shader code passed to compile.");
@@ -140,45 +143,24 @@ bool ResourceShader::LinkShader(uint vertex, uint fragment, uint geometry)
 	}
 }
 
-void ResourceShader::OnSave(JsonFile & file)
+bool ResourceShader::CompileAndLink()
 {
-	file.AddString("shader_file_full_path", shaderFile.GetFullPath());
-}
+	bool ret = false;
 
-void ResourceShader::OnLoad(JsonFile & file)
-{
-	shaderFile.SetFullPath(file.GetString("shader_file_full_path", "???"));
+	if (!codeIsLoaded)
+		LoadCode();
 
-	LoadInMemory();
-}
-
-bool ResourceShader::CheckCompileErrors(uint shader, SHADER_TYPE type)
-{
-	GLint succes = 0;
-	GLchar infoLog[1024];
-
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &succes);
-	if (!succes)
+	if (codeIsLoaded)
 	{
-		glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-		std::string typeStr = "Unknown";
-		switch (type)
-		{
-		case ResourceShader::SH_VERTEX:
-			typeStr = "Vertex";
-			break;
-		case ResourceShader::SH_FRAGMENT:
-			typeStr = "Fragment";
-			break;
-		case ResourceShader::SH_GEOMETRY:
-			typeStr = "Geometry";
-			break;
-		}
+		uint v = CompileCode(SH_VERTEX);
+		uint f = CompileCode(SH_FRAGMENT);
+		uint g = 0;
+		if (!geometryCode.empty()) g = CompileCode(SH_GEOMETRY);
 
-		_LOG(LOG_ERROR, "%s shader compilation error: %s.", typeStr.c_str(), infoLog);
+		ret = LinkShader(v, f, g);
 	}
 
-	return succes != 0;
+	return ret;
 }
 
 bool ResourceShader::LoadCode()
@@ -218,4 +200,110 @@ bool ResourceShader::LoadCode()
 
 	return ret;
 }
+
+void ResourceShader::OnSave(JsonFile & file)
+{
+	file.AddString("shader_file_full_path", shaderFile.GetFullPath());
+}
+
+void ResourceShader::OnLoad(JsonFile & file)
+{
+	shaderFile.SetFullPath(file.GetString("shader_file_full_path", "???"));
+
+	LoadInMemory();
+}
+
+void ResourceShader::OnCreation()
+{
+	shaderFile.Set(SHADER_SAVE_PATH, name.c_str(), "json");
+
+	static const char* v =
+		"#version 330 core\n"
+		"layout(location = 0) in vec3 position;\n"
+		"layout(location = 1) in vec3 normal;\n"
+		"layout(location = 2) in vec2 uv;\n"
+		"layout(location = 3) in vec3 color;\n"
+		"uniform mat4 model;\n"
+		"uniform mat4 view;\n"
+		"uniform mat4 projection;\n"
+		"out vec3 outNormal;\n"
+		"out vec2 outUv; \n"
+		"out vec3 outColor;\n"
+		"void main()\n"
+		"{\n"
+		"	gl_Position = projection * view * model * vec4(position, 1.0);\n"
+		"	outNormal = normal;\n"
+		"	outUv = uv;\n"
+		"	outColor = color;\n"
+		"}\n"
+		;
+
+	static const char* f =
+		"#version 330 core\n"
+		"in vec3 outNormal;\n"
+		"in vec2 outUv; \n"
+		"in vec3 outColor;\n"
+		"out vec4 FragColor;\n"
+		"void main()\n"
+		"{\n"
+		"	//FragColor = vec4(outColor, 1.0);\n"
+		"	//FragColor = vec4(0.7, 0.7, 0.7, 1.0); \n"
+		"	FragColor = vec4(abs(outNormal), 1.0); \n"
+		"}\n"
+		;
+
+	JsonFile code;
+
+	JsonFile uniforms = code.AddSection("uniforms");
+	JsonFile uniform1Example = uniforms.AddSection("uniform1");
+	uniform1Example.AddString("type", "sampler2D/int/float/vec3/mat4/...");
+	uniform1Example.AddString("name", "unifrom name");
+
+	code.AddString("vertex_shader", v);
+	code.AddString("fragment_shader", f);
+	code.AddString("geometry_shader", "");
+
+	char* buffer = nullptr;
+	uint jSize = code.WriteJson(&buffer, false);
+
+	if (jSize > 0 && buffer)
+	{
+		uint size = app->fs->Save(shaderFile.GetFullPath(), buffer, jSize);
+
+		if (size != jSize)
+		{
+			_LOG(LOG_WARN, "Could not create a new shader file. [%s]", shaderFile.GetFile());
+		}
+	}
+}
+
+bool ResourceShader::CheckCompileErrors(uint shader, SHADER_TYPE type)
+{
+	GLint succes = 0;
+	GLchar infoLog[1024];
+
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &succes);
+	if (!succes)
+	{
+		glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+		std::string typeStr = "Unknown";
+		switch (type)
+		{
+		case ResourceShader::SH_VERTEX:
+			typeStr = "Vertex";
+			break;
+		case ResourceShader::SH_FRAGMENT:
+			typeStr = "Fragment";
+			break;
+		case ResourceShader::SH_GEOMETRY:
+			typeStr = "Geometry";
+			break;
+		}
+
+		_LOG(LOG_ERROR, "%s shader compilation error: %s.", typeStr.c_str(), infoLog);
+	}
+
+	return succes != 0;
+}
+
 

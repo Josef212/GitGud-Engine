@@ -24,6 +24,10 @@ public:
 	uint CompileCode(SHADER_TYPE type, const char* code = nullptr);
 	bool LinkShader(uint vertex, uint fragment, uint geometry = 0);
 
+	bool CompileAndLink();
+
+	bool LoadCode();
+
 	uint GetShaderID()const { return shaderID; }
 	bool IsUsable()const { return usable; }
 	bool IsCodeLoaded()const { return codeIsLoaded; }
@@ -31,9 +35,18 @@ public:
 	void OnSave(JsonFile& file)override;
 	void OnLoad(JsonFile& file)override;
 
+	const char* GetVertexCodeStr()const { return vertexCode.c_str(); }
+	const char* GetFragmentCodeStr()const { return fragmentCode.c_str(); }
+	const char* GetGeometryCodeStr()const { return geometryCode.c_str(); }
+
+	int GetVertexCodeSize()const { return vertexCode.size(); }
+	int GetFragmentCodeSize()const { return fragmentCode.size(); }
+	int GetGeometryCodeSize()const { return geometryCode.size(); }
+
+	void OnCreation();
+
 private:
 	bool CheckCompileErrors(uint shader, SHADER_TYPE type);
-	bool LoadCode();
 
 public:
 	Path shaderFile;

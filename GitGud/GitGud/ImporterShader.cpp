@@ -83,6 +83,10 @@ bool ImporterShader::PrepareDefaultShader(ResourceShader * sh)
 			"}\n"
 			;
 
+		sh->vertexCode = v;
+		sh->fragmentCode = f;
+		sh->codeIsLoaded = true;
+
 		GLuint vertex = sh->CompileCode(ResourceShader::SHADER_TYPE::SH_VERTEX, v);
 		GLuint fragment = sh->CompileCode(ResourceShader::SHADER_TYPE::SH_FRAGMENT, f);
 

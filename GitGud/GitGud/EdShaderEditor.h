@@ -9,6 +9,13 @@ class ResourceShader;
 
 class EdShaderEditor : public EdWin
 {
+	enum SHADER_TYPE
+	{
+		SH_VERTEX = 0,
+		SH_FRAGMENT,
+		SH_GEOMETRY
+	};
+
 public:
 	EdShaderEditor(bool startEnabled = false);
 	virtual ~EdShaderEditor();
@@ -27,17 +34,11 @@ private:
 	void LoadShaderMenu();
 	void CreateShaderMenu();
 
-	void ResizeBuffer(char** buffer, int newSize);
-
 private:
-	std::string vertexFile = "";
-	std::string fragmentFile = "";
-	unsigned int vertexBufferSize = 0;
-	unsigned int fragBufferSize = 0;
-
 	ResourceShader* currentShader = nullptr;
 
-	bool editingVertex = true; //Else edit fragment
+	SHADER_TYPE editingShader = SH_VERTEX;
+
 	bool shaderLoaded = false;
 
 	bool loadMenu = false;

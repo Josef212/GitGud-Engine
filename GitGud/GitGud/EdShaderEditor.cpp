@@ -15,16 +15,11 @@
 
 EdShaderEditor::EdShaderEditor(bool startEnabled) : EdWin(startEnabled)
 {
-	//vertexFile = new char[256];
-	//fragmentFile = new char[256];
-	//currentShader = new ResourceShader(11);
 }
 
 
 EdShaderEditor::~EdShaderEditor()
 {
-	//RELEASE_ARRAY(vertexFile);
-	//RELEASE_ARRAY(fragmentFile);
 }
 
 void EdShaderEditor::Draw()
@@ -38,38 +33,39 @@ void EdShaderEditor::Draw()
 	ImGui::SetNextWindowPos(pos);
 	ImGui::SetNextWindowSize(size);
 
-	if (ImGui::Begin("ShaderEditor", &active, ImGuiWindowFlags_MenuBar))
+	if (ImGui::Begin("ShaderViewer", &active, ImGuiWindowFlags_MenuBar))
 	{
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				//if (ImGui::MenuItem("Create new shader")) 
-				//{
-				//	if (SaveCurrentShader())
-				//		createMenu = true;
-				//}
-				//ImGui::MenuItem("Load shader", nullptr, &loadMenu);
-				//if (ImGui::MenuItem("Save shader")) SaveCurrentShader();
-				//if (ImGui::MenuItem("Force Compile"))
-				//{
-				//	if (SaveCurrentShader()) currentShader->CompileShader();
-				//}
+				if (ImGui::MenuItem("Create new shader")) 
+				{
+					if (SaveCurrentShader())
+						createMenu = true;
+				}
+				ImGui::MenuItem("Load shader", nullptr, &loadMenu);
+				if (ImGui::MenuItem("Save shader")) SaveCurrentShader();
+				if (ImGui::MenuItem("Force Compile"))
+				{
+					if (SaveCurrentShader()) currentShader->CompileAndLink();
+				}
 
 				ImGui::EndMenu();
 			}
 
 			if (ImGui::BeginMenu("Edit"))
 			{
-				if (ImGui::MenuItem("Edit vertex")) editingVertex = true;
-				if (ImGui::MenuItem("Edit fragment")) editingVertex = false;
+				if (ImGui::MenuItem("Edit vertex")) editingShader = SH_VERTEX;
+				if (ImGui::MenuItem("Edit fragment")) editingShader = SH_FRAGMENT;
+				if (ImGui::MenuItem("Edit geometry")) editingShader = SH_GEOMETRY;
 				ImGui::EndMenu();
 			}
 
 			ImGui::EndMenuBar();
 		}
 
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "This feature is still in revision so is normal if its bugged, for now is in read only so edit shaders in a text extern editor.");
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "This is only a read tool so edit shaders in a text extern editor. Save option will do nothing.");
 
 		if (currentShader)
 		{
@@ -94,45 +90,26 @@ void EdShaderEditor::Draw()
 
 			if (shaderLoaded)
 			{
-				if (editingVertex)
+				if (editingShader == SH_VERTEX)
 				{
-					//ImGui::SameLine();
-					//ImGui::Text("\tVertex file length: %d, vertex buffer size: %d.", strlen(vertexFile.c_str()), vertexBufferSize);
-
-					ImGui::InputTextMultiline("###vertex_code", (char*)vertexFile.c_str(), vertexBufferSize, ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
-
-					//if (strlen(vertexFile.c_str()) >= vertexBufferSize - 16)
-					//{
-					//	//Resize vertex file
-					//	vertexBufferSize = strlen(vertexFile.c_str()) + BUFFER_APPEND_SIZE;
-					//	_LOG("Resizing vertex buffer from %d to %d.", strlen(vertexFile.c_str()), vertexBufferSize);
-					//	vertexFile.resize(vertexBufferSize);
-					//}
+					ImGui::InputTextMultiline("###vertex_code", (char*)currentShader->GetVertexCodeStr(), currentShader->GetVertexCodeSize(), ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
 				}
-				else
+				else if(editingShader == SH_FRAGMENT)
 				{
-					//ImGui::SameLine();
-					//ImGui::Text("\tFragment file length: %d, fragment buffer size: %d.", fragmentFile.size(), fragBufferSize);
-
-					ImGui::InputTextMultiline("###fragment_code", (char*)fragmentFile.c_str(), fragBufferSize, ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
-
-					//if (strlen(fragmentFile.c_str()) >= fragBufferSize - 16)
-					//{
-					//	//Resize fragment file
-					//	fragBufferSize = strlen(fragmentFile.c_str()) + BUFFER_APPEND_SIZE;
-					//	_LOG("Resizing fragment buffer from %d to %d.", strlen(fragmentFile.c_str()), fragBufferSize);
-					//	fragmentFile.resize(fragBufferSize);
-					//}
+					ImGui::InputTextMultiline("###fragment_code", (char*)currentShader->GetFragmentCodeStr(), currentShader->GetFragmentCodeSize(), ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
+				}
+				else if (editingShader == SH_GEOMETRY)
+				{
+					ImGui::InputTextMultiline("###geometry_code", (char*)currentShader->GetGeometryCodeStr(), currentShader->GetGeometryCodeSize(), ImVec2(-1.f, -1.f), ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly | 0);
 				}
 			}
 
-
-
-			ImGui::End();
 		}
 
 		if (loadMenu) LoadShaderMenu();
 		if (createMenu) CreateShaderMenu();
+
+		ImGui::End();
 	}
 }
 
@@ -171,6 +148,8 @@ bool EdShaderEditor::SaveCurrentShader()
 		//if (app->fs->Save(currentShader->fragmentFile.GetFullPath(), fragmentFile.c_str(), fragBufferSize) != fragBufferSize)
 		//	_LOG(LOG_ERROR, "Could not save fragment shader into [%s].", currentShader->fragmentFile.GetFullPath());
 		
+		/// Not functionality since you cant edit shaders.
+
 		return true;
 	}
 
@@ -179,50 +158,19 @@ bool EdShaderEditor::SaveCurrentShader()
 
 bool EdShaderEditor::LoadCurrentShader()
 {
-	//if (!currentShader) return false;
-	//
-	//if(currentShader->vertexFile.Empty() || currentShader->fragmentFile.Empty()) return false;
-	//
-	//vertexFile.clear();
-	//fragmentFile.clear();
-	//
-	////RELEASE_ARRAY(vertexFile);
-	////RELEASE_ARRAY(fragmentFile);
-	//
-	//char* v = nullptr;
-	//char* f = nullptr;
-	//
-	//uint vSize = app->fs->Load(currentShader->vertexFile.GetFullPath(), &v);
-	//uint fSize = app->fs->Load(currentShader->fragmentFile.GetFullPath(), &f);
-	//
-	//if (vSize > 0 && fSize > 0)
-	//{
-	//	//vertexFile[vSize] = '\0';
-	//	vertexFile = v;
-	//	vertexBufferSize = vSize;
-	//	//fragmentFile[fSize] = '\0';
-	//	fragmentFile = f;
-	//	fragBufferSize = fSize;
-	//	shaderLoaded = true;
-	//}
-	//else
-	//{
-	//	shaderLoaded = false;
-	//}
-	//
-	//RELEASE_ARRAY(v);
-	//RELEASE_ARRAY(f);
+	if (!currentShader) return false;
+	
+	if(currentShader->shaderFile.Empty()) return false;
+	
+	if (!currentShader->IsCodeLoaded()) currentShader->LoadCode();
+	
+	shaderLoaded = currentShader->IsCodeLoaded();
 
 	return shaderLoaded;
 }
 
 void EdShaderEditor::LoadNewShaderFile(ResourceShader* sh)
 {
-	//RELEASE_ARRAY(vertexFile);
-	//RELEASE_ARRAY(fragmentFile);
-
-	vertexFile.clear();
-	fragmentFile.clear();
 
 	static const char* v =
 		"#version 330 core\n"
@@ -258,21 +206,6 @@ void EdShaderEditor::LoadNewShaderFile(ResourceShader* sh)
 		"	FragColor = vec4(outNormal, 1.0); \n"
 		"}\n"
 		;
-
-	vertexFile = v;
-	fragmentFile = f;
-
-	vertexBufferSize = strlen(v);
-	fragBufferSize = strlen(f);
-
-	//vertexBufferSize = strlen(v) + 1;
-	//fragBufferSize = strlen(f) + 1;
-
-	//vertexFile = new char[vertexBufferSize];
-	//fragmentFile = new char[fragBufferSize];
-	
-	//sprintf_s(vertexFile, vertexBufferSize, v);
-	//sprintf_s(fragmentFile, fragBufferSize, f);
 
 	shaderLoaded = true;
 }
@@ -331,20 +264,12 @@ void EdShaderEditor::CreateShaderMenu()
 		{
 			currentShader = (ResourceShader*)app->resources->CreateResource(RES_SHADER);
 			currentShader->name = newName;
-			//LoadNewShaderFile(); //TODO: Do this
-			SaveCurrentShader();
+			currentShader->OnCreation();
+			LoadCurrentShader();
 
 			createMenu = false;
 		}
 
 		ImGui::End();
 	}
-}
-
-void EdShaderEditor::ResizeBuffer(char** buffer, int newSize)
-{
-	char* tmp = new char[newSize];
-	sprintf_s(tmp, newSize, *buffer);
-	RELEASE_ARRAY(*buffer);
-	*buffer = tmp;
 }
