@@ -375,7 +375,7 @@ void M_ResourceManager::SaveResources()
 	RELEASE_ARRAY(buffer);
 }
 
-/** M_ResourceManager - LoadBasicResources: Create all basci resources such as primitives, checker texture, default shader, etc. */
+/** M_ResourceManager - LoadBasicResources: Create all basic resources such as primitives, checker texture, default shader, etc. */
 bool M_ResourceManager::LoadBasicResources()
 {
 	checkers = (ResourceTexture*)CreateResource(RES_TEXTURE, 1);

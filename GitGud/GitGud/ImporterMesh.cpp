@@ -484,7 +484,7 @@ bool ImporterMesh::LoadQuad(ResourceMesh * res)
 
 	//-----------------------
 
-	res->aabb = AABB(float3(-s, -s, -s), float3(s, s, s));
+	res->aabb = AABB(float3(-s, -s, 0.0f), float3(s, s, 0.0f));
 
 	//-----------------------
 

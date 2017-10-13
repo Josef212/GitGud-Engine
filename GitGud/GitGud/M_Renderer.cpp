@@ -251,7 +251,7 @@ void M_Renderer::DrawObject(GameObject * object, Camera * cam)
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->idIndices);
 
-			glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, NULL);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			glBindVertexArray(0);

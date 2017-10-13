@@ -254,7 +254,7 @@ void ResourceShader::OnCreation()
 
 	JsonFile code;
 
-	JsonFile uniforms = code.AddSection("uniforms");
+	JsonFile uniforms = code.AddSection("uniforms"); //TODO: Prob change uniforms from several objects to object array
 	JsonFile uniform1Example = uniforms.AddSection("uniform1");
 	uniform1Example.AddString("type", "sampler2D/int/float/vec3/mat4/...");
 	uniform1Example.AddString("name", "unifrom name");
