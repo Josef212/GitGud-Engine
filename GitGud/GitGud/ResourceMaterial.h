@@ -45,8 +45,43 @@ enum RENDER_MODE
 	RENDER_TRANSPARENT = 0x2
 };
 
+struct MaterialProperty
+{
+	enum MAT_PROPERY_TYPE
+	{
+		MP_UNKNOWN = -1,
+		MP_INT = 0,
+		MP_FLOAT,
+		MP_TEXTURE_RES,
+		MP_VEC2,
+		MP_VEC3,
+		MP_VEC4,
+		MP_MAT3,
+		MP_MAT4
+	}propertyType = MP_UNKNOWN;
+
+	union
+	{
+		int iProp;
+		float fProp;
+		uint textureResId;
+		float* fPointer;
+
+	}property;
+
+	const char* propertyName = nullptr;
+
+	MaterialProperty(const char* name, int prop);
+	MaterialProperty(const char* name, float prop);
+	MaterialProperty(const char* name, uint prop);
+	MaterialProperty(const char* name, float* prop, MAT_PROPERY_TYPE type);
+
+	void SendInfoToShader(uint shader);
+};
+
 class ResourceMaterial : public Resource
 {
+	friend class ImporterMaterial;
 public:
 	ResourceMaterial(UID uuid);
 	virtual ~ResourceMaterial();
@@ -54,60 +89,28 @@ public:
 	bool LoadInMemory()override;
 	bool RemoveFromMemory()override;
 
+	bool SetShader(uint shaderResource);
+
 	void GetLocations();
+	void SetPropertiesFromShaderFile();
 
 	void SendMaterialToShader(float* model, float* camView, float* camProj);
 
-protected:
-	virtual void OnGetLocations(uint shaderGLID) {}
-	virtual void OnSendInfo(uint shaderGLID) {}
-
+	bool SaveMaterial();
+	
 private:
 
 public:
-	//TODO: Must find a way to organiza properties. For now will hardcode a generic material based on unity standard material shader
 	
-	UID shader = 0;
-
 	uint modelLoc = 0;
 	uint viewLoc = 0;
 	uint projLoc = 0;
 
-	//enum RENDER_MODE renderMode = RENDER_OPAQUE;
-	
-	/*UID ambientTexture = 0;
-	Color ambientColor = White;
+private: 
 
-	UID diffuseTexture = 0;
-	Color diffuseColor = White;
+	UID shader = 0;
 
-	//-----------
-
-	UID metallicTexture = 0;
-	Color metallicColor = White;
-	float metallicValue = 0.0f; //0-1
-	float metallicSmothness = 0.5f;//0-1
-	//TODO: Source: metallic alpha / albedo alpha
-
-	UID specularTexture = 0;
-	Color specularColor = White;
-	float specularSmothness = 0.5f;//0-1
-	//TODO: Source: metallic alpha / albedo alpha
-
-	//------------
-
-	UID normalMap = 0;
-	UID heightMap = 0;
-	UID occlusion = 0;
-	UID emissionTexture = 0;
-	Color emissionColor = Black;
-	float emissionValue = 0;
-	//Global ilumin: none/realtime/baked
-
-	UID detailMask = 0;
-	 //TODO: Tiling/offset
-	//TODO: Secondaty maps
-	*/
+	std::map<std::string, MaterialProperty*> properties;
 
 };
 

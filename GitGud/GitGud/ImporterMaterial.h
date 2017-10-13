@@ -16,6 +16,7 @@ public:
 	bool Import(const aiMaterial* material, Path& exported, UID& resUID, Path* sourcePath);
 
 	bool LoadResource(Resource* resource)override;
+	bool SaveResource(ResourceMaterial* reosurce);
 };
 
 #endif // !__IMPORTER_MATERIAL_H__
