@@ -47,6 +47,7 @@ public:
 	bool AddColor(const char* name, Color col);
 
 	bool AddIntArray(const char* name, int* iArray, uint size);
+	bool AddUnsignedIntArray(const char* name, uint* uiArray, uint size);
 	bool AddFloatArray(const char* name, float* fArray, uint size);
 	bool AddFloatArray(const char* name, const float* fArray, uint size);
 	bool AddBoolArray(const char* name, bool* bArray, uint size);

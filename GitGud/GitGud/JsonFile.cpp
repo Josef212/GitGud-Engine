@@ -189,6 +189,21 @@ bool JsonFile::AddIntArray(const char* name, int* iArray, uint size)
 	return true;
 }
 
+bool JsonFile::AddUnsignedIntArray(const char* name, uint* uiArray, uint size)
+{
+	if (!name || !uiArray || size <= 0)
+		return false;
+
+	JSON_Value* val = json_value_init_array();
+	JSON_Array* ar = json_value_get_array(val);
+	for (uint i = 0; i < size; ++i)
+		json_array_append_number(ar, uiArray[i]);
+
+	json_object_set_value(objRoot, name, val);
+
+	return true;
+}
+
 bool JsonFile::AddFloatArray(const char* name, float* fArray, uint size)
 {
 	if (!name || !fArray || size <= 0)
