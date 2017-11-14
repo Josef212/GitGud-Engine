@@ -4,6 +4,7 @@
 
 #include "M_Window.h"
 #include "M_FileSystem.h"
+#include "M_ResourceManager.h"
 
 #include "EdWin.h"
 #include "EdConfig.h"
@@ -105,12 +106,11 @@ UPDATE_RETURN M_Editor::Update(float dt)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Save scene")) app->goManager->SaveScene(); //TMP
-			if (ImGui::MenuItem("Load scene")) app->goManager->LoadScene();
-			if (ImGui::MenuItem("File explorer"))
-			{
-				if (FileDialog(nullptr, "Data"));
-			}
+			if (ImGui::MenuItem("Load")) FileDialog(nullptr, "Data", CBK_LOAD); //TODO: Must add an extension filter.
+			if (ImGui::MenuItem("Save")) app->goManager->SaveScene();
+			if (ImGui::MenuItem("Save as...")) FileDialog(nullptr, "Data", CBK_SAVE); //TODO: Must add an extension filter.
+			if (ImGui::MenuItem("Import")) FileDialog(nullptr, "Data/Assets", CBK_IMPORT);
+
 			if (ImGui::MenuItem("Quit")) app->quit = true;
 			ImGui::EndMenu();
 		}
@@ -257,10 +257,34 @@ UPDATE_RETURN M_Editor::Update(float dt)
 	if (styleEditor) SetStyleEditorWin();
 
 	if (fileDialog == OPENED)
-		LoadFile(fileDialogFilter.length() > 0 ? fileDialogFilter.c_str() : nullptr, 
-			fileDialogOrigin.length() > 0 ? fileDialogOrigin.c_str() : nullptr);
+		LoadFileDialogue(fileDialogFilter.length() > 0 ? fileDialogFilter.c_str() : nullptr,
+						 fileDialogOrigin.length() > 0 ? fileDialogOrigin.c_str() : nullptr);
 	else
 		inModal = false;
+
+	if (fileDialogueCallback != CBK_NONE && fileDialog == READY_TO_CLOSE)
+	{
+		// Then must do something 
+		const char* file = CloseFileDialog();
+		if(file)
+		{
+			switch (fileDialogueCallback)
+			{
+				case CBK_SAVE:
+					//TODO
+					break;
+				case CBK_LOAD:
+					//TODO
+					break;
+				case CBK_IMPORT:
+					app->resources->ImportFile(file, true);
+					break;
+			}
+
+			fileDialogueCallback = CBK_NONE;
+			_LOG(LOG_CMD, file);
+		}
+	}
 
 	if (showImGuiDemo)
 	{
@@ -300,9 +324,11 @@ void M_Editor::LogFPS(float fps, float ms)
 		config->PushFps(fps, ms);
 }
 
-bool M_Editor::FileDialog(const char * extension, const char * fromFolder)
+bool M_Editor::FileDialog(const char * extension, const char * fromFolder, FILE_DIALGUE_CBK cbk)
 {
 	bool ret = true;
+
+	fileDialogueCallback = cbk;
 
 	switch (fileDialog)
 	{
@@ -500,7 +526,7 @@ void M_Editor::SetStyleEditorWin()
 	}
 }
 
-void M_Editor::LoadFile(const char * filterExt, const char * fromDir)
+void M_Editor::LoadFileDialogue(const char * filterExt, const char * fromDir)
 {
 	ImGui::OpenPopup("Load file");
 	if (ImGui::BeginPopupModal("Load file", nullptr, ImGuiWindowFlags_AlwaysAutoResize))

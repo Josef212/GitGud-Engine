@@ -23,6 +23,14 @@ class EdShaderEditor;
 class EdPlayMenu;
 class EdTimeDisplay;
 
+enum FILE_DIALGUE_CBK
+{
+	CBK_NONE = 0,
+	CBK_SAVE,
+	CBK_LOAD,
+	CBK_IMPORT
+};
+
 class M_Editor : public Module
 {
 public:
@@ -44,7 +52,7 @@ public:
 	bool UsingKeyboard()const { return isUsingKeyboard; }
 	bool UsingMouse()const { return isUsingMouse; }
 
-	bool FileDialog(const char* extension = nullptr, const char* fromFolder = nullptr);
+	bool FileDialog(const char* extension = nullptr, const char* fromFolder = nullptr, FILE_DIALGUE_CBK cbk = CBK_NONE);
 	const char* CloseFileDialog();
 
 
@@ -53,7 +61,7 @@ private:
 	void SaveStyle(ImGuiStyle* style);
 	void SetStyleEditorWin();
 
-	void LoadFile(const char* filterExt = nullptr, const char* fromDir = nullptr);
+	void LoadFileDialogue(const char* filterExt = nullptr, const char* fromDir = nullptr);
 	void DrawDirRec(const char* directory, const char* filterExt);
 
 public:
@@ -67,6 +75,7 @@ public:
 	EdPlayMenu* playMenu = nullptr;
 	EdTimeDisplay* timeDisplay = nullptr;
 
+
 private:
 	std::list<EdWin*> editorWins;
 
@@ -76,6 +85,8 @@ private:
 		OPENED,
 		READY_TO_CLOSE
 	} fileDialog = CLOSED;
+
+	FILE_DIALGUE_CBK fileDialogueCallback = CBK_NONE;  // To handle file dialogues from editor.
 
 	std::string fileDialogFilter;
 	std::string fileDialogOrigin;
