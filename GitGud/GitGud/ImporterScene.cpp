@@ -54,8 +54,6 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 
 		if (scene && scene->HasMeshes())
 		{
-			meshesImported.clear();
-
 			JsonFile metaFile;
 			metaFile.AddString("original_scene_file", originalFile.GetFullPath());
 

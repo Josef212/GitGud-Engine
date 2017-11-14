@@ -47,6 +47,8 @@ bool ImporterShader::PrepareDefaultShader(ResourceShader * sh)
 	if (sh)
 	{
 		sh->name = "default_simple_shader";
+		sh->exportedFile.SetFileName("*default_shader*");
+		sh->originalFile.SetFileName("*default_shader*");
 
 		static const char* v =
 			"#version 330 core\n"

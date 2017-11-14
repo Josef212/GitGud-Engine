@@ -62,8 +62,6 @@ bool M_ResourceManager::Start()
 {
 	_LOG(LOG_INFO, "Resource manager: Start.");
 
-	//ImportFile("Data/Assets/MechaT/MechaT.fbx");
-	//ImportFile("Data/Assets/Brute.fbx");
 	if (!LoadBasicResources())
 	{
 		_LOG(LOG_ERROR, "Error loading basic resources.");
@@ -265,7 +263,7 @@ Resource * M_ResourceManager::FindResourceFromOriginalFullPath(const char * full
 {
 	for (auto it : resources)
 	{
-		if (it.second->originalFile.GetFullPath() == fullpath)
+		if (strcmp(it.second->originalFile.GetFullPath(), fullpath) == 0)
 			return it.second;
 	}
 
