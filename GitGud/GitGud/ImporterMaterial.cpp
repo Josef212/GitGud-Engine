@@ -18,7 +18,7 @@ ImporterMaterial::~ImporterMaterial()
 {
 }
 
-bool ImporterMaterial::Import(const aiMaterial * material, Path& exported, UID & resUID, Path* sourcePath)
+bool ImporterMaterial::ImportMaterial(const aiMaterial * material, Path& exported, UID & resUID, Path* sourcePath)
 {
 	bool ret = false;
 
@@ -36,7 +36,7 @@ bool ImporterMaterial::Import(const aiMaterial * material, Path& exported, UID &
 
 	//Material importing should be done according the default shader and material of the engine.
 
-	
+	ret = true;
 
 	return ret;
 }

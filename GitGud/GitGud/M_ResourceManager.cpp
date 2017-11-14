@@ -193,7 +193,7 @@ UID M_ResourceManager::ImportBuf(const void * buffer, RESOURCE_TYPE type, uint s
 		succes = textureImporter->ImportBuff(buffer, size, output, ret);
 		break;
 	case RES_MATERIAL:
-		succes = materialImporter->Import((const aiMaterial*)buffer, output, ret, sourceFile);
+		succes = materialImporter->ImportMaterial((const aiMaterial*)buffer, output, ret, sourceFile);
 		break;
 	case RES_SCENE:
 		break;
