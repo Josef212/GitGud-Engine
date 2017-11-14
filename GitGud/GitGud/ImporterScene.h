@@ -4,7 +4,7 @@
 #include "Importer.h"
 #include "JsonFile.h"
 #include <string>
-#include <map>
+#include <vector>
 
 struct aiNode;
 struct aiScene;
@@ -37,8 +37,16 @@ public:
 private:
 	void RecImport(const aiScene* scene, const aiNode* node, GameObject* parent, Path& file, JsonFile& metaFile);
 
+	void ImportMeshes(const aiScene* scene, Path& file, JsonFile& metaFile);
+	void ImportMaterials(const aiScene* scene, Path& file, JsonFile& metaFile);
+	void ImportBones(const aiScene* scene, Path& file, JsonFile& metaFile);
+	void ImportAnimations(const aiScene* scene, Path& file, JsonFile& metaFile);
+
+	bool SaveScene(Path& path, JsonFile& scene, JsonFile& metaFile);
+
 private:
-	std::map<int, ResourceMesh*> meshesImported;
+	std::vector<UID> meshesImported;
+	std::vector<UID> materialsImported;
 };
 
 #endif // !__IMPORTER_SCENE_H__

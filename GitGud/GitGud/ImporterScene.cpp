@@ -59,6 +59,11 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 			JsonFile metaFile;
 			metaFile.AddString("original_scene_file", originalFile.GetFullPath());
 
+			//Import all meshes at once
+			ImportMeshes(scene, originalFile, metaFile);
+			//Import all materials at once
+			ImportMaterials(scene, originalFile, metaFile);
+			
 			GameObject* go = app->goManager->CreateGameObject();
 			go->SetName(originalFile.GetFileName());
 
@@ -81,16 +86,12 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 			resUID = app->resources->GetNewUID();
 			exportedFile.Set(PREFABS_SAVE_PATH, std::to_string(resUID).c_str(), PREFAB_EXTENSION);
 
-			char* buff = nullptr;
-			uint s = save.WriteJson(&buff, false); //TODO: Fast
+			ret = SaveScene(exportedFile, save, metaFile);
 
-			if (app->fs->Save(exportedFile.GetFullPath(), buff, s) == s)
-				ret = true;
-
-			//TODO: save meta json file
-
-			RELEASE_ARRAY(buff);
 			//go->Destroy();	//TODO
+
+			meshesImported.clear();
+			materialsImported.clear();
 		}
 	}
 	else
@@ -202,13 +203,13 @@ void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameOb
 		//TODO: Material
 		if (scene->HasMaterials())
 		{
-			aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 			Material* cMat = (Material*)childGo->CreateComponent(CMP_MATERIAL);
-			//cMat->SetResource(app->resources->ImportBuf(mat, RES_MATERIAL, 0, &file));
+			//cMat->SetResource(materialsImported[mesh->mMaterialIndex]);
 		}
 
 		Mesh* cMesh = (Mesh*)childGo->CreateComponent(CMP_MESH);
-		cMesh->SetResource(app->resources->ImportBuf(mesh, RES_MESH, 0, &file));
+		cMesh->SetResource(meshesImported[node->mMeshes[i]]);
+
 		//TODO: Resource instances??
 	}
 
@@ -216,6 +217,63 @@ void ImporterScene::RecImport(const aiScene * scene, const aiNode * node, GameOb
 		RecImport(scene, node->mChildren[i], go, file, metaFile);
 	
 
+}
+
+void ImporterScene::ImportMeshes(const aiScene* scene, Path& file, JsonFile& metaFile)
+{
+	meshesImported.clear();
+	
+	for(int i = 0; i < scene->mNumMeshes; ++i)
+	{
+		aiMesh* mesh = scene->mMeshes[i];
+		if(mesh) meshesImported.push_back(app->resources->ImportBuf(mesh, RES_MESH, 0, &file));
+	}
+
+	metaFile.AddUnsignedIntArray("meshes_ids", meshesImported.data(), meshesImported.size());
+}
+
+void ImporterScene::ImportMaterials(const aiScene* scene, Path& file, JsonFile& metaFile)
+{
+	materialsImported.clear();
+
+	for(int i = 0; i < scene->mNumMaterials; ++i)
+	{
+		aiMaterial* material = scene->mMaterials[i];
+		if (material) materialsImported.push_back(app->resources->ImportBuf(material, RES_MATERIAL, 0, &file));
+	}
+
+	metaFile.AddUnsignedIntArray("materials_ids", materialsImported.data(), materialsImported.size());
+}
+
+void ImporterScene::ImportBones(const aiScene* scene, Path& file, JsonFile& metaFile)
+{
+	
+}
+
+void ImporterScene::ImportAnimations(const aiScene* scene, Path& file, JsonFile& metaFile)
+{
+	
+}
+
+bool ImporterScene::SaveScene(Path& path, JsonFile& scene, JsonFile& metaFile)
+{
+	bool ret = false;
+
+	char* buffer = nullptr;
+	uint size = scene.WriteJson(&buffer, false); // TODO: Set to true
+
+	if (app->fs->Save(path.GetFullPath(), buffer, size) == size) ret = true;
+
+	RELEASE_ARRAY(buffer);
+
+
+	std::string metaPath = std::string(path.GetFullPath()) + std::string(".meta");
+	uint metaSize = metaFile.WriteJson(&buffer, false); // TODO: Set to true
+	if (app->fs->Save(metaPath.c_str(), buffer, metaSize) != metaSize) ret = false;
+
+	RELEASE_ARRAY(buffer);
+
+	return ret;
 }
 
 bool ImporterScene::LoadResource(Resource * resource)
