@@ -100,10 +100,9 @@ enum DATA_TYPE
 #define MESH_SAVE_PATH "Data/Library/Meshes/"
 #define TEXTURE_SAVE_PATH "Data/Library/Textures/"
 #define MATERIAL_SAVE_PATH "Data/Library/Materials/"
-#define SHADER_SAVE_PATH "Data/Library/Shaders/"
+#define SHADER_SAVE_PATH "Data/Library/Shaders/" //TODO: Shaders should be an asset file. I could import some how to have a faster way to load it.
 
-#define SCENE_SAVE_PATH "Data/Assets/Scenes/"
-#define PREFABS_SAVE_PATH "Data/Prefabs/"	//TODO: Prefabs should be inside assets root dir and let user place them whereber u want
+#define SCENE_SAVE_PATH "Data/Assets/Scenes/" //TODO: Scenes should be assets resources that users can create and organize as they want.
 
 #define CONFIG_PATH "Data/Configuration/"
 #define RESOURCES_PATH "Data/Resources/"

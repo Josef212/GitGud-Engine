@@ -82,7 +82,7 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 			}
 
 			resUID = app->resources->GetNewUID();
-			exportedFile.Set(PREFABS_SAVE_PATH, std::to_string(resUID).c_str(), PREFAB_EXTENSION);
+			exportedFile.Set(ASSETS_PATH, std::to_string(resUID).c_str(), PREFAB_EXTENSION);
 
 			ret = SaveScene(exportedFile, save, metaFile);
 

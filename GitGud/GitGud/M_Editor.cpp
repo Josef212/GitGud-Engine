@@ -106,9 +106,9 @@ UPDATE_RETURN M_Editor::Update(float dt)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Load")) FileDialog(nullptr, "Data", CBK_LOAD); //TODO: Must add an extension filter.
-			if (ImGui::MenuItem("Save")) app->goManager->SaveScene();
-			if (ImGui::MenuItem("Save as...")) FileDialog(nullptr, "Data", CBK_SAVE); //TODO: Must add an extension filter.
+			if (ImGui::MenuItem("Load")) FileDialog(SCENE_EXTENSION, "Data/Assets", CBK_LOAD); //TODO: Must add an extension filter.
+			if (ImGui::MenuItem("Save")) app->goManager->SaveScene(); //TODO: Check if there is actually a scene in memory.
+			if (ImGui::MenuItem("Save as...")) FileDialog(SCENE_EXTENSION, "Data/Assets", CBK_SAVE); //TODO: Must add an extension filter.
 			if (ImGui::MenuItem("Import")) FileDialog(nullptr, "Data/Assets", CBK_IMPORT);
 
 			if (ImGui::MenuItem("Quit")) app->quit = true;

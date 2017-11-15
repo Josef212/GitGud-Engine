@@ -123,19 +123,25 @@ void EdInspector::DrawTrans(GameObject * selected)
 
 		ImGui::Separator();
 
-		ImGui::DragFloat3("Global pos", (float*)&trans->GetGlobalPosition());
-		ImGui::Separator();
-		ImGui::Text("Global transform");
-		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[0]);
-		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[1]);
-		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[2]);
-		ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[3]);
-		ImGui::Text("Local transform");
-		ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[0]);
-		ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[1]);
-		ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[2]);
-		ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[3]);
-		
+		static bool expandInfo = false;
+		ImGui::Checkbox("Expand transform information", &expandInfo);
+
+		if (expandInfo)
+		{
+			ImGui::DragFloat3("Global pos", (float*)&trans->GetGlobalPosition());
+			ImGui::Separator();
+			ImGui::Text("Global transform");
+			ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[0]);
+			ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[1]);
+			ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[2]);
+			ImGui::DragFloat4("", (float*)&trans->GetGlobalTransform()[3]);
+			ImGui::Text("Local transform");
+			ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[0]);
+			ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[1]);
+			ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[2]);
+			ImGui::DragFloat4("", (float*)&trans->GetLocalTransform()[3]);
+		}
+
 	}
 }
 
