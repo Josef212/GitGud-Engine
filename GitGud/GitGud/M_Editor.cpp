@@ -528,8 +528,13 @@ void M_Editor::SetStyleEditorWin()
 
 void M_Editor::LoadFileDialogue(const char * filterExt, const char * fromDir)
 {
-	ImGui::OpenPopup("Load file");
-	if (ImGui::BeginPopupModal("Load file", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	std::string name = "File dialogue";
+	if (fileDialogueCallback == CBK_IMPORT) name = "Import file";
+	if (fileDialogueCallback == CBK_LOAD) name = "Load scene";
+	if (fileDialogueCallback == CBK_SAVE) name = "Save scene";
+
+	ImGui::OpenPopup(name.c_str());
+	if (ImGui::BeginPopupModal(name.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		inModal = true;
 
