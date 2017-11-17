@@ -24,7 +24,10 @@ public:
 	}
 
 	~GGOctreeNode()
-	{}
+	{
+		for (unsigned int i = 0; i < 8; ++i)
+			if (childs[i]) delete childs[i];
+	}
 
 	void Insert(GameObject* obj)
 	{
