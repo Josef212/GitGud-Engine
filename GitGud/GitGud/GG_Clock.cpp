@@ -73,7 +73,8 @@ void GG_Clock::OnSceneLoaded()
 
 void GG_Clock::Pause()
 {
-	msGameTimer->Stop();
+	//TODO: Check this, make sense to stop the time even if u pause?? (Scene since level started should continue even if u pause)
+	//msGameTimer->Stop();
 }
 
 void GG_Clock::UnPause()
