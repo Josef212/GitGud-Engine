@@ -33,6 +33,8 @@ M_ResourceManager::M_ResourceManager(const char* name, bool startEnabled) : Modu
 	materialImporter = new ImporterMaterial();
 	sceneImporter = new ImporterScene();
 	shaderImporter = new ImporterShader();
+
+	configuration = M_INIT | M_START | M_CLEAN_UP | M_SAVE_CONFIG;
 }
 
 /** ~M_ResourceManager: Destroy all importers. */

@@ -56,6 +56,8 @@ M_Editor::M_Editor(const char* name, bool startEnabled) : Module(name, startEnab
 	editorWins.push_back(timeDisplay);
 	editorWins.push_back(materialCreator);
 	editorWins.push_back(shaderEditor);
+
+	configuration = M_INIT | M_PRE_UPDATE | M_UPDATE | M_CLEAN_UP;
 }
 
 

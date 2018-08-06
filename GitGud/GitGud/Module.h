@@ -30,6 +30,7 @@ typedef enum
 
 class Module
 {
+	friend class App;
 public:
 	Module(const char* name, bool startEnabled = true) : name(name), enabled(startEnabled) {}
 	virtual ~Module() {}
@@ -79,6 +80,7 @@ public:
 	virtual bool Load(JsonFile* file) { return true; }
 
 	virtual void DrawDebug() {}
+	virtual void OnResize(uint w, uint h) {}
 
 private:
 

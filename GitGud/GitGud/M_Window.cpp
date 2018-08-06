@@ -8,6 +8,8 @@
 M_Window::M_Window(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
 	_LOG(LOG_INFO, "Window: Creation.");
+
+	configuration = M_INIT | M_CLEAN_UP | M_SAVE_CONFIG | M_RESIZE_EVENT;
 }
 
 

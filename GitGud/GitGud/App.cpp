@@ -109,13 +109,14 @@ bool App::Init()
 
 	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 	{
+		if((*it)->configuration & M_INIT)
 		ret = (*it)->Init(&config.GetSection((*it)->name.c_str()));
 	}
 
 	_LOG(LOG_INFO, "App: Start  =======================");
 	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 	{
-		if((*it)->IsEnable())
+		if((*it)->configuration & M_START && (*it)->IsEnable())
 			ret = (*it)->Start();
 	}
 
@@ -141,7 +142,7 @@ UpdateReturn App::Update()
 	std::vector<Module*>::iterator it;
 	for (it = modules.begin(); it != modules.end() && ret == UPDT_CONTINUE; ++it)
 	{
-		if ((*it)->IsEnable())
+		if ((*it)->configuration & M_PRE_UPDATE && (*it)->IsEnable())
 			ret = (*it)->PreUpdate(clock->DT()); //TODO: Dont pass dt, let each module get each dt
 	}
 
@@ -150,7 +151,7 @@ UpdateReturn App::Update()
 
 	for (it = modules.begin(); it != modules.end() && ret == UPDT_CONTINUE; ++it)
 	{
-		if ((*it)->IsEnable())
+		if ((*it)->configuration & M_UPDATE && (*it)->IsEnable())
 			ret = (*it)->Update(clock->DT()); //TODO: Dont pass dt, let each module get each dt
 	}
 
@@ -159,7 +160,7 @@ UpdateReturn App::Update()
 
 	for (it = modules.begin(); it != modules.end() && ret == UPDT_CONTINUE; ++it)
 	{
-		if ((*it)->IsEnable())
+		if ((*it)->configuration & M_POST_UPDATE && (*it)->IsEnable())
 			ret = (*it)->PostUpdate(clock->DT()); //TODO: Dont pass dt, let each module get each dt
 	}
 
@@ -187,7 +188,8 @@ bool App::CleanUp()
 
 	for (std::vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
 	{
-		ret = (*it)->CleanUp();
+		if((*it)->configuration & M_CLEAN_UP)
+			ret = (*it)->CleanUp();
 	}
 
 	return ret;
@@ -201,8 +203,17 @@ void App::DrawDebug()
 {
 	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
 	{
-		if((*it)->IsEnable())
+		if((*it)->configuration & M_DRAW_DEBUG && (*it)->IsEnable())
 			(*it)->DrawDebug();
+	}
+}
+
+void App::OnResize(uint w, uint h)
+{
+	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
+	{
+		if ((*it)->configuration & M_RESIZE_EVENT && (*it)->IsEnable())
+			(*it)->OnResize(w, h);
 	}
 }
 
@@ -483,7 +494,8 @@ bool App::SaveNow()
 
 	for (auto mod : modules)
 	{
-		ret = mod->Save(&file.AddSection(mod->name.c_str()));
+		if(mod->configuration & M_SAVE_CONFIG)
+			ret = mod->Save(&file.AddSection(mod->name.c_str()));
 	}
 	
 	char* buffer = nullptr;
@@ -524,7 +536,8 @@ bool App::LoadNow()
 
 		for (auto mod : modules)
 		{
-			ret = mod->Load(&file.AddSection(mod->name.c_str()));
+			if (mod->configuration & M_SAVE_CONFIG)
+				ret = mod->Load(&file.AddSection(mod->name.c_str()));
 		}
 	}
 

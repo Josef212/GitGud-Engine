@@ -31,6 +31,8 @@
 M_Renderer::M_Renderer(const char* name, bool startEnabled) : Module(name, startEnabled)
 {
 	_LOG(LOG_INFO, "Renderer: Creation.");
+
+	configuration = M_INIT | M_START | M_PRE_UPDATE | M_POST_UPDATE | M_CLEAN_UP | M_SAVE_CONFIG | M_RESIZE_EVENT | M_DRAW_DEBUG;
 }
 
 

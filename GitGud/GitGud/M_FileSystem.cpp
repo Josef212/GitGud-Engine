@@ -20,6 +20,8 @@ M_FileSystem::M_FileSystem(const char* name, bool startEnabled) : Module(name, s
 	AddPath("Data");
 
 	SDL_free(basePath);
+
+	configuration = M_INIT;
 }
 
 M_FileSystem::~M_FileSystem()

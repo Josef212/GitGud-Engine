@@ -39,6 +39,7 @@ public:
 	bool CleanUp();
 
 	void DrawDebug();
+	void OnResize(uint w, uint h);
 
 	const char* GetTitle()const;
 	const char* GetOrganitzation()const;

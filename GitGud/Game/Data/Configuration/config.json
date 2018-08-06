@@ -7,7 +7,7 @@
 
   "module_window": {
     "fullscreen": false,
-    "resizable": false,
+    "resizable": true,
     "borderless": false,
     "fullscreen_desktop": false,
     "width": 1920,

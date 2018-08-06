@@ -24,6 +24,8 @@ M_Camera3D::M_Camera3D(const char* name, bool startEnabled) : Module(name, start
 		editorCamera->Look(float3::zero, float3(-5, 5, 7));
 		editorCamera->SetBackground(DarkGrey);
 	}
+
+	configuration = M_UPDATE | M_CLEAN_UP | M_SAVE_CONFIG | M_RESIZE_EVENT;
 }
 
 

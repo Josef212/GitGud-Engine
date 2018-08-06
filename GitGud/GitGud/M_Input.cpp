@@ -16,6 +16,8 @@ M_Input::M_Input(const char* name, bool startEnabled) : Module(name, startEnable
 	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
 	memset(mouse, KEY_IDLE, sizeof(KEY_STATE) * MAX_MOUSE_BUTTONS);
+
+	configuration = M_INIT | M_PRE_UPDATE | M_CLEAN_UP;
 }
 
 
@@ -122,7 +124,9 @@ UpdateReturn M_Input::PreUpdate(float dt)
 			case SDL_WINDOWEVENT_RESIZED:
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
 				//TODO:Send event 
-				;
+				app->OnResize(e.window.data1, e.window.data2);
+
+				break;
 			}
 		}
 		break;

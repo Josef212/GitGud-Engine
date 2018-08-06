@@ -24,6 +24,8 @@ M_GoManager::M_GoManager(const char* name, bool startEnabled) : Module(name, sta
 
 	root = new GameObject(nullptr, 0);
 	root->SetName("SceneRoot");
+
+	configuration = M_INIT | M_START | M_PRE_UPDATE | M_UPDATE | M_CLEAN_UP | M_SAVE_CONFIG | M_RESIZE_EVENT | M_DRAW_DEBUG;
 }
 
 
