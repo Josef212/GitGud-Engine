@@ -74,7 +74,7 @@ void EdConsole::Draw()
 	}
 }
 
-void EdConsole::PushMessage(const char * str, LOG_TYPE type)
+void EdConsole::PushMessage(const char * str, LogType type)
 {
 	if (str)
 	{

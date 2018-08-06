@@ -15,8 +15,8 @@ public:
 
 	bool Init(JsonFile* file)override;
 	bool Start()override;
-	UPDATE_RETURN PreUpdate(float dt)override;
-	UPDATE_RETURN PostUpdate(float dt)override;
+	UpdateReturn PreUpdate(float dt)override;
+	UpdateReturn PostUpdate(float dt)override;
 	bool CleanUp()override;
 
 	bool GetVSync()const;

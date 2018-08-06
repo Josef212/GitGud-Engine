@@ -17,7 +17,7 @@ void EdTimeDisplay::Draw()
 {
 	ImGui::Begin("Time", &active);
 	{
-		APP_STATE state = app->GetState();
+		AppState state = app->GetState();
 
 		ImGui::Text("Game state: ");
 		ImGui::SameLine();

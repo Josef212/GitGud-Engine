@@ -132,9 +132,9 @@ bool App::Init()
 *	- Call modules preupdate, update and postupdate.
 *	- Check for exit.
 */
-UPDATE_RETURN App::Update()
+UpdateReturn App::Update()
 {
-	UPDATE_RETURN ret = UPDT_CONTINUE;
+	UpdateReturn ret = UPDT_CONTINUE;
 
 	PrepareUpdate();
 
@@ -169,7 +169,9 @@ UPDATE_RETURN App::Update()
 	FinishUpdate();
 
 	if (quit)
+	{
 		ret = UPDT_STOP;
+	}
 
 	return ret;
 }
@@ -269,7 +271,7 @@ void App::SetMaxFPS(uint _fps)
 /**
 *	- Log: Log to editor. 
 */
-void App::Log(const char * str, LOG_TYPE type)
+void App::Log(const char * str, LogType type)
 {
 	if (editor)
 		editor->Log(str, type);
@@ -339,50 +341,50 @@ void App::ResetConfig()
 	currentConfigSaveFileDir = (CONFIG_PATH + std::string("default_config.json"));
 }
 
-APP_STATE App::GetState() const
+AppState App::GetState() const
 {
 	return state;
 }
 
 bool App::IsPlay() const
 {
-	return state == APP_STATE::PLAY;
+	return state == AppState::PLAY;
 }
 
 bool App::IsPause() const
 {
-	return state == APP_STATE::PAUSE;
+	return state == AppState::PAUSE;
 }
 
 bool App::IsStop() const
 {
-	return state == APP_STATE::STOP;
+	return state == AppState::STOP;
 }
 
 void App::Play()
 {
-	if (state == APP_STATE::STOP)
-		state = APP_STATE::WAITING_TO_PLAY;
-	else if (state == APP_STATE::PAUSE)
+	if (state == AppState::STOP)
+		state = AppState::WAITING_TO_PLAY;
+	else if (state == AppState::PAUSE)
 		UnPause();
 }
 
 void App::Pause()
 {
-	if (state == APP_STATE::PLAY)
-		state = APP_STATE::WAITING_TO_PAUSE;
+	if (state == AppState::PLAY)
+		state = AppState::WAITING_TO_PAUSE;
 }
 
 void App::Stop()
 {
-	if (state == APP_STATE::PLAY || state == APP_STATE::PAUSE)
-		state = APP_STATE::WAITING_TO_STOP;
+	if (state == AppState::PLAY || state == AppState::PAUSE)
+		state = AppState::WAITING_TO_STOP;
 }
 
 void App::UnPause()
 {
-	if (state == APP_STATE::PAUSE)
-		state = APP_STATE::WAITING_TO_UNPAUSE;
+	if (state == AppState::PAUSE)
+		state = AppState::WAITING_TO_UNPAUSE;
 }
 
 /**
@@ -396,19 +398,19 @@ void App::PrepareUpdate()
 	switch (state)
 	{
 	case WAITING_TO_PLAY:
-		state = APP_STATE::PLAY;
+		state = AppState::PLAY;
 		clock->Play();
 		break;
 	case WAITING_TO_STOP:
-		state = APP_STATE::STOP;
+		state = AppState::STOP;
 		clock->Stop();
 		break;
 	case WAITING_TO_PAUSE:
-		state = APP_STATE::PAUSE;
+		state = AppState::PAUSE;
 		clock->Pause();
 		break;
 	case WAITING_TO_UNPAUSE:
-		state = APP_STATE::PLAY;
+		state = AppState::PLAY;
 
 		break;
 	}

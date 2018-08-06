@@ -4,7 +4,7 @@
 #include <assert.h>
 #include "MathGeoLib\include\Time\Clock.h"
 
-void _log(LOG_TYPE type, const char file[], int line, const char* format, ...)
+void _log(LogType type, const char file[], int line, const char* format, ...)
 {
 	static char tmpString[4096];
 	static char tmpString2[4096];
@@ -29,7 +29,7 @@ void _log(LOG_TYPE type, const char file[], int line, const char* format, ...)
 	}
 }
 
-const char* GetLogTypeStr(LOG_TYPE type)
+const char* GetLogTypeStr(LogType type)
 {
 	static const char* types[] = {
 		"INFO", "WARN", "ERROR", "CMD"
@@ -40,7 +40,7 @@ const char* GetLogTypeStr(LOG_TYPE type)
 	return types[type];
 }
 
-const char* GetAppStateStr(APP_STATE state)
+const char* GetAppStateStr(AppState state)
 {
 	static const char* states[] = {
 		"PLAY", "STOP", "PAUSE", "WAITING_TO_PLAY", "WAITING_TO_STOP", "WAITING_TO_PAUSE", "WAITING_TO_UNPAUSE"

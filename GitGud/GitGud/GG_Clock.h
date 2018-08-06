@@ -11,7 +11,7 @@ public:
 	GG_Clock();
 	virtual ~GG_Clock();
 
-	void OnPrepareUpdate(APP_STATE appState);
+	void OnPrepareUpdate(AppState appState);
 	void OnFinishUpdate();
 
 	void OnSceneLoaded();

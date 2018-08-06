@@ -88,7 +88,7 @@ bool M_Editor::Start()
 	return true;
 }
 
-UPDATE_RETURN M_Editor::PreUpdate(float dt)
+UpdateReturn M_Editor::PreUpdate(float dt)
 {
 	ImGui_ImplSdlGL3_NewFrame(app->win->GetWindow());
 
@@ -99,7 +99,7 @@ UPDATE_RETURN M_Editor::PreUpdate(float dt)
 	return UPDT_CONTINUE;
 }
 
-UPDATE_RETURN M_Editor::Update(float dt)
+UpdateReturn M_Editor::Update(float dt)
 {
 
 	ImGui::BeginMainMenuBar();
@@ -312,7 +312,7 @@ void M_Editor::PassInput(SDL_Event* ev)
 	ImGui_ImplSdlGL3_ProcessEvent(ev);
 }
 
-void M_Editor::Log(const char * str, LOG_TYPE type)
+void M_Editor::Log(const char * str, LogType type)
 {
 	if (console)
 		console->PushMessage(str, type);

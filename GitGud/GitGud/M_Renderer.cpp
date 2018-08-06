@@ -115,7 +115,7 @@ bool M_Renderer::Start()
 	return true;
 }
 
-UPDATE_RETURN M_Renderer::PreUpdate(float dt)
+UpdateReturn M_Renderer::PreUpdate(float dt)
 {
 	Camera* cam = currentCamera ? currentCamera : app->camera->GetEditorCamera();
 	if (cam)
@@ -133,9 +133,9 @@ UPDATE_RETURN M_Renderer::PreUpdate(float dt)
 	return UPDT_CONTINUE;
 }
 
-UPDATE_RETURN M_Renderer::PostUpdate(float dt)
+UpdateReturn M_Renderer::PostUpdate(float dt)
 {
-	UPDATE_RETURN ret = UPDT_CONTINUE;
+	UpdateReturn ret = UPDT_CONTINUE;
 
 	//TMP: Testing compatibility mode vs core
 

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "Path.h"
 
-enum LOG_TYPE
+enum LogType
 {
 	LOG_INFO = 0,
 	LOG_WARN = 1,
@@ -16,9 +16,9 @@ enum LOG_TYPE
 
 #define _LOG(type, format, ...) _log(type, __FILE__, __LINE__, format, __VA_ARGS__);
 
-void _log(LOG_TYPE type, const char file[], int line, const char* format, ...);
+void _log(LogType type, const char file[], int line, const char* format, ...);
 
-const char* GetLogTypeStr(LOG_TYPE type);
+const char* GetLogTypeStr(LogType type);
 
 #define RELEASE( x )\
 	{\
@@ -55,14 +55,14 @@ typedef unsigned __int32 UID;
 
 typedef unsigned int Layer;
 
-enum UPDATE_RETURN
+enum UpdateReturn
 {
 	UPDT_CONTINUE = 0,
 	UPDT_STOP,
 	UPDT_ERROR
 };
 
-enum APP_STATE
+enum AppState
 {
 	PLAY = 0,
 	STOP,
@@ -73,7 +73,7 @@ enum APP_STATE
 	WAITING_TO_UNPAUSE
 };
 
-const char* GetAppStateStr(APP_STATE state);
+const char* GetAppStateStr(AppState state);
 
 enum DATA_TYPE
 {

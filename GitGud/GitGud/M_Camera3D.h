@@ -15,7 +15,7 @@ public:
 
 	bool Init(JsonFile* conf)override;
 	bool Start()override;
-	UPDATE_RETURN Update(float dt)override;
+	UpdateReturn Update(float dt)override;
 	bool CleanUp()override;
 
 

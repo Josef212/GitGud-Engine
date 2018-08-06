@@ -35,7 +35,7 @@ public:
 	virtual ~App();
 
 	bool Init();
-	UPDATE_RETURN Update();
+	UpdateReturn Update();
 	bool CleanUp();
 
 	void DrawDebug();
@@ -48,7 +48,7 @@ public:
 	uint GetMaxFPS()const;
 	void SetMaxFPS(uint _fps);
 
-	void Log(const char* str, LOG_TYPE type);
+	void Log(const char* str, LogType type);
 	void Browse(const char* url);
 
 	void Save(std::string saveFile);
@@ -62,7 +62,7 @@ public:
 
 	//----------------
 
-	APP_STATE GetState()const;
+	AppState GetState()const;
 	bool IsPlay()const;
 	bool IsPause()const;
 	bool IsStop()const;
@@ -120,7 +120,7 @@ private:
 	bool saveNextFrame = false;
 	bool loadNextFrame = false;
 
-	APP_STATE state = APP_STATE::STOP; //TODO: Args??
+	AppState state = AppState::STOP; //TODO: Args??
 	uint32	cappedMs = 0;
 
 

@@ -74,7 +74,7 @@ bool M_ResourceManager::Start()
 }
 
 /** M_ResourceManager - PreUpdate: Nothing for now. */
-UPDATE_RETURN M_ResourceManager::PreUpdate(float dt)
+UpdateReturn M_ResourceManager::PreUpdate(float dt)
 {
 	return UPDT_CONTINUE;
 }

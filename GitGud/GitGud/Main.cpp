@@ -9,7 +9,7 @@
 
 #include "SDL.h"
 
-enum MAIN_STATE
+enum MainState
 {
 	MAIN_CREATION = 0,
 	MAIN_START,
@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 	_LOG(LOG_INFO, "Starting engine %s from 'Josef21296'.", APP_TITLE);
 
 	int mainRet = EXIT_FAILURE;
-	MAIN_STATE state = MAIN_CREATION;
+	MainState state = MAIN_CREATION;
 
 	while (state != MAIN_EXIT)
 	{
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 
 		case MAIN_UPDATE:
 		{
-			UPDATE_RETURN tmp = app->Update();
+			UpdateReturn tmp = app->Update();
 
 			if (tmp == UPDT_ERROR)
 			{

@@ -23,9 +23,9 @@ void EdPlayMenu::Draw()
 	ImGui::Begin("Play bar", &active, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar |
 		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
-	APP_STATE state = app->GetState();
+	AppState state = app->GetState();
 
-	if (state != APP_STATE::PLAY && state != APP_STATE::PAUSE)
+	if (state != AppState::PLAY && state != AppState::PAUSE)
 	{
 		if (ImGui::Button("PLAY"))
 			app->Play();
@@ -38,12 +38,12 @@ void EdPlayMenu::Draw()
 
 	ImGui::SameLine();
 
-	if (state == APP_STATE::PLAY)
+	if (state == AppState::PLAY)
 	{
 		if (ImGui::Button("PAUSE"))
 			app->Pause();
 	}
-	else if (state == APP_STATE::PAUSE)
+	else if (state == AppState::PAUSE)
 	{
 		if (ImGui::Button("CONTINUE"))
 			app->UnPause();

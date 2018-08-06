@@ -22,8 +22,8 @@ public:
 
 	bool Init(JsonFile* conifg)override;
 	bool Start()override;
-	UPDATE_RETURN PreUpdate(float dt)override;
-	UPDATE_RETURN Update(float dt)override;
+	UpdateReturn PreUpdate(float dt)override;
+	UpdateReturn Update(float dt)override;
 	bool CleanUp()override;
 
 	void DrawDebug() override;

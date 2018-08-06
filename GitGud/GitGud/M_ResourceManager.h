@@ -30,7 +30,7 @@ public:
 
 	bool Init(JsonFile* conf)override;
 	bool Start()override;
-	UPDATE_RETURN PreUpdate(float dt)override;
+	UpdateReturn PreUpdate(float dt)override;
 	bool CleanUp()override;
 
 	UID ImportFile(const char* fileName, bool checkFirst = false);

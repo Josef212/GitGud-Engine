@@ -56,7 +56,7 @@ bool M_GoManager::Start()
 	return true;
 }
 
-UPDATE_RETURN M_GoManager::PreUpdate(float dt)
+UpdateReturn M_GoManager::PreUpdate(float dt)
 {
 	if (!objectsToDelete.empty())
 	{
@@ -103,7 +103,7 @@ UPDATE_RETURN M_GoManager::PreUpdate(float dt)
 	return UPDT_CONTINUE;
 }
 
-UPDATE_RETURN M_GoManager::Update(float dt)
+UpdateReturn M_GoManager::Update(float dt)
 {
 	if (root)
 	{

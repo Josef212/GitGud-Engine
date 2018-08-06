@@ -14,7 +14,7 @@ public:
 
 	void Draw()override;
 
-	void PushMessage(const char* str, LOG_TYPE type);
+	void PushMessage(const char* str, LogType type);
 
 private:
 	ImGuiTextBuffer logs;

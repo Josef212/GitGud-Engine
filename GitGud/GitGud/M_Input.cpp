@@ -42,9 +42,9 @@ bool M_Input::Init(JsonFile* file)
 	return ret;
 }
 
-UPDATE_RETURN M_Input::PreUpdate(float dt)
+UpdateReturn M_Input::PreUpdate(float dt)
 {
-	UPDATE_RETURN ret = UPDT_CONTINUE;
+	UpdateReturn ret = UPDT_CONTINUE;
 
 	SDL_PumpEvents();
 

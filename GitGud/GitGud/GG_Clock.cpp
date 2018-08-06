@@ -23,7 +23,7 @@ GG_Clock::~GG_Clock()
 *		- Add one frame to counter.
 *		- If app state is PLAY do the same with the game timer.
 */
-void GG_Clock::OnPrepareUpdate(APP_STATE appState)
+void GG_Clock::OnPrepareUpdate(AppState appState)
 {
 	//1. Add time
 	timeSinceAppStart += realDt;
@@ -35,7 +35,7 @@ void GG_Clock::OnPrepareUpdate(APP_STATE appState)
 	//3. Add a frame
 	++realFrameCount;
 
-	if (appState == APP_STATE::PLAY)
+	if (appState == AppState::PLAY)
 	{
 		gameTimeSinceLevelLoaded += gameDt;
 

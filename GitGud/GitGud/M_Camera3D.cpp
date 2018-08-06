@@ -49,7 +49,7 @@ bool M_Camera3D::Start()
 }
 
 /** M_Camera3D - Update: Check the editor camera input. */
-UPDATE_RETURN M_Camera3D::Update(float dt)
+UpdateReturn M_Camera3D::Update(float dt)
 {
 	if (!app->editor->UsingKeyboard())
 		Move(dt);

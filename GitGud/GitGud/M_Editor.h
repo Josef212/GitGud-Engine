@@ -39,14 +39,14 @@ public:
 
 	bool Init(JsonFile* file)override;
 	bool Start()override;
-	UPDATE_RETURN PreUpdate(float dt)override;
-	UPDATE_RETURN Update(float dt)override;
+	UpdateReturn PreUpdate(float dt)override;
+	UpdateReturn Update(float dt)override;
 	bool CleanUp()override;
 
 	void DrawEditor();
 	void PassInput(SDL_Event* ev);
 
-	void Log(const char* str, LOG_TYPE type);
+	void Log(const char* str, LogType type);
 	void LogFPS(float fps, float ms);
 
 	bool UsingKeyboard()const { return isUsingKeyboard; }

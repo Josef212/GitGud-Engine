@@ -21,7 +21,7 @@ public:
 	virtual ~M_Input();
 
 	bool Init(JsonFile* file)override;
-	UPDATE_RETURN PreUpdate(float dt)override;
+	UpdateReturn PreUpdate(float dt)override;
 	bool CleanUp()override;
 
 	KEY_STATE GetKey(int id)const { return keyboard[id]; }
