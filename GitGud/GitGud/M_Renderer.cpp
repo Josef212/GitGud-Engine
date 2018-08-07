@@ -230,9 +230,9 @@ void M_Renderer::SetCamera(Camera * cam)
 	currentCamera = cam;
 }
 
-void M_Renderer::OnResize(int width, int height)
+void M_Renderer::OnResize(uint w, uint h)
 {
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, w, h);
 }
 
 void M_Renderer::DrawObject(GameObject * object, Camera * cam)

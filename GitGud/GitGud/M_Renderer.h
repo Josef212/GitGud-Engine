@@ -27,7 +27,7 @@ public:
 
 
 private:
-	void OnResize(int width, int height);
+	void OnResize(uint w, uint h) override;
 
 	void DrawObject(GameObject* object, Camera* cam);
 
