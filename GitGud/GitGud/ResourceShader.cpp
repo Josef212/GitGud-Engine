@@ -208,7 +208,7 @@ void ResourceShader::OnSave(JsonFile & file)
 
 void ResourceShader::OnLoad(JsonFile & file)
 {
-	shaderFile.SetFullPath(file.GetString("shader_file_full_path", "???"));
+	shaderFile.SetFullPath(file.GetString("shader_file_full_path", "???").c_str());
 
 	LoadInMemory();
 }
@@ -254,23 +254,25 @@ void ResourceShader::OnCreation()
 
 	JsonFile code;
 
-	JsonFile uniforms = code.AddSection("uniforms"); //TODO: Prob change uniforms from several objects to object array
-	JsonFile uniform1Example = uniforms.AddSection("uniform1");
+	JsonFile uniforms;
+	JsonFile uniform1Example;
 	uniform1Example.AddString("type", "sampler2D/int/float/vec3/mat4/...");
 	uniform1Example.AddString("name", "unifrom name");
+
+	uniforms.AddSection("uniform1", uniform1Example);
+	code.AddSection("uniforms", uniforms); //TODO: Prob change uniforms from several objects to object array
 
 	code.AddString("vertex_shader", v);
 	code.AddString("fragment_shader", f);
 	code.AddString("geometry_shader", "");
 
-	char* buffer = nullptr;
-	uint jSize = code.WriteJson(&buffer, false);
+	auto buffer = code.Write(true);
 
-	if (jSize > 0 && buffer)
+	if (buffer.size() > 0)
 	{
-		uint size = app->fs->Save(shaderFile.GetFullPath(), buffer, jSize);
+		uint size = app->fs->Save(shaderFile.GetFullPath(), buffer.c_str(), buffer.size());
 
-		if (size != jSize)
+		if (size != buffer.size())
 		{
 			_LOG(LOG_WARN, "Could not create a new shader file. [%s]", shaderFile.GetFile());
 		}

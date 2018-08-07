@@ -58,9 +58,6 @@
     <Filter Include="Engine\Editor\Panels">
       <UniqueIdentifier>{d8ddc097-68ef-4a0e-a873-5b9a4430bd05}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdParty\Parson">
-      <UniqueIdentifier>{394b48e8-dc60-4ec1-9e93-452bc3c7f971}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\GamObjects">
       <UniqueIdentifier>{81e61f4d-3283-4904-b07b-10de5ce8d8c1}</UniqueIdentifier>
     </Filter>
@@ -228,12 +225,6 @@
     <ClCompile Include="EdConsole.cpp">
       <Filter>Engine\Editor\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="JsonFile.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="parson-master\parson.c">
-      <Filter>3rdParty\Parson</Filter>
-    </ClCompile>
     <ClCompile Include="Console.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
@@ -365,6 +356,9 @@
     </ClCompile>
     <ClCompile Include="jsoncpp\jsoncpp.cpp">
       <Filter>3rdParty\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonFile.cpp">
+      <Filter>Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -596,12 +590,6 @@
     <ClInclude Include="EdConsole.h">
       <Filter>Engine\Editor\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="JsonFile.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="parson-master\parson.h">
-      <Filter>3rdParty\Parson</Filter>
-    </ClInclude>
     <ClInclude Include="Console.h">
       <Filter>Tools</Filter>
     </ClInclude>
@@ -766,6 +754,9 @@
     </ClInclude>
     <ClInclude Include="jsoncpp\json-forwards.h">
       <Filter>3rdParty\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonFile.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

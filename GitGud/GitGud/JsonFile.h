@@ -1,71 +1,87 @@
 #ifndef __JSONFILE_H__
 #define __JSONFILE_H__
 
-#include "Globals.h"
-#include "MathGeoLib\include\Math\float3.h"
+#include "jsoncpp/json.h"
+#include "MathGeoLib/include/Math/MathAll.h"
 #include "Color.h"
 
-typedef struct json_object_t JSON_Object;
-typedef struct json_value_t  JSON_Value;
-typedef struct json_array_t  JSON_Array;
+typedef long long int64;
+typedef unsigned long long uint64;
 
 class JsonFile
 {
 public:
 	JsonFile();
 	JsonFile(const char* buffer);
-	JsonFile(JSON_Object* section);
+	JsonFile(Json::Value& section);
 	virtual ~JsonFile();
 
+	// -----------------------------------------------------
+
+	int GetArraySize(const char* name);
+	Json::Value Value()const { return objRoot; }
+
+	// -----------------------------------------------------
+
 	JsonFile GetSection(const char* sectionName);
-	JsonFile AddSection(const char* sectionName);
 
-	const char* GetString(const char* name, const char* defaultStr, int index = -1);//TODO
-	bool GetBool(const char* name, bool defaultBool, int index = -1);
-	int GetInt(const char* name, int defaultInt, int index = -1);
-	float GetFloat(const char* name, float defaultFloat, int index = -1);
+	int GetInt(const char* name, int def, int index = -1);
+	unsigned int GetUInt(const char* name, unsigned int def, int index = -1);
+	int64 GetInt64(const char* name, int64 def, int index = -1);
+	uint64 GetUInt64(const char* name, uint64 def, int index = -1);
+	float GetFloat(const char* name, float def, int index = -1);
+	double GetDouble(const char* name, double def, int index = -1);
+	bool GetBool(const char* name, bool def, int index = -1);
+	std::string GetString(const char* name, std::string def, int index = -1);
 
-	double GetDouble(const char* name, double defaultDouble, int index = -1);
-	float* GetFloatArray(const char* name); //Get floats from array  with index
+	float3 GetFloat3(const char* name, float3 def);
+	Quat GetQuaternion(const char* name, Quat def);
+	Color GetColor(const char* name, Color def);
 
-	JsonFile GetArray(const char* name, int index)const;
-	int GetArraySize(const char* name)const;
+	JsonFile GetObjectFromArray(const char* name, unsigned int index);
 
-	float3 GetFloat3(const char* name, float3 default);
-	Color GetColor(const char* name, Color default);
+	// ======
 
-	bool AddString(const char* name, const char* value);
-	bool AddBool(const char* name, bool value);
-	bool AddInt(const char* name, int value);
-	bool AddFloat(const char* name, float value);
-	bool AddDouble(const char* name, double value);
+	void AddSection(const char* name, JsonFile& section);
 
-	bool AddArray(const char* name);
-	bool AddArrayEntry(const JsonFile& file);
+	void AddInt(const char* name, int value);
+	void AddIntArray(const char* name, int* data, unsigned int size);
+	void AddUInt(const char* name, unsigned int value);
+	void AddUIntArray(const char* name, unsigned int* data, unsigned int size);
+	void AddInt64(const char* name, int64 value);
+	void AddInt64Array(const char* name, int64* data, unsigned int size);
+	void AddUInt64(const char* name, uint64 value);
+	void AddUIntArray(const char* name, uint64* data, unsigned int size);
+	void AddFloat(const char* name, float value);
+	void AddFloatArray(const char* name, float* data, unsigned int size);
+	void AddDouble(const char* name, double value);
+	void AddDoubleArray(const char* name, double* data, unsigned int size);
+	void AddBool(const char* name, bool value);
+	void AddBoolArray(const char* name, bool* data, unsigned int size);
+	void AddString(const char* name, const char* value);
+	void AddCStringArray(const char* name, const char** data, unsigned int size);
+	void AddString(const char* name, std::string value);
+	void AddStringArray(const char* name, std::string* data, unsigned int size);
 
-	bool AddFloat3(const char* name, float3 vec);
-	bool AddColor(const char* name, Color col);
+	void AddValue(const char* name, Json::Value value);
+	void AddArrayValue(const char* name, Json::Value value, unsigned int index);
+	void AppendArrayValue(const char* name, Json::Value value);
 
-	bool AddIntArray(const char* name, int* iArray, uint size);
-	bool AddUnsignedIntArray(const char* name, uint* uiArray, uint size);
-	bool AddFloatArray(const char* name, float* fArray, uint size);
-	bool AddFloatArray(const char* name, const float* fArray, uint size);
-	bool AddBoolArray(const char* name, bool* bArray, uint size);
-	bool AddStringArray(const char* name, const char** sArray, uint size);
+	void AddFloat3(const char* name, float3 value);
+	void AddQuaternion(const char* name, Quat value);
+	void AddColor(const char* name, Color value);
 
-	uint WriteJson(char** buffer, bool fastMode = true);
+	// -----------------------------------------------------
+
+	std::string Write(bool styled = false);
+
 
 private:
-	JSON_Value* GetVal(const char* valName, int index);
-	uint WriteStyled(char** buffer);
-	uint WriteFast(char** buffer);
+	void WriteFast(std::string&)const;
+	void WriteStyled(std::string&)const;
 
 private:
-	JSON_Object* objRoot = nullptr;
-	JSON_Value* valRoot = nullptr;
-	JSON_Array* array = nullptr;
-	bool clean = false;
+	Json::Value objRoot = Json::Value::null;
 };
 
-
-#endif // !__JSONFILE_H__
+#endif

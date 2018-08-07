@@ -212,7 +212,6 @@
     <ClCompile Include="M_Renderer.cpp" />
     <ClCompile Include="M_ResourceManager.cpp" />
     <ClCompile Include="M_Window.cpp" />
-    <ClCompile Include="parson-master\parson.c" />
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="RandGen.cpp" />
@@ -346,7 +345,6 @@
     <ClInclude Include="M_ResourceManager.h" />
     <ClInclude Include="M_Window.h" />
     <ClInclude Include="OpenGL.h" />
-    <ClInclude Include="parson-master\parson.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="RandGen.h" />

@@ -408,21 +408,25 @@ void M_Editor::SaveStyle(ImGuiStyle * style)
 {
 	JsonFile file;
 
-	JsonFile colors = file.AddSection("colors");
+	JsonFile colors;
 
 	for (uint i = 0; i < ImGuiCol_COUNT; ++i)
 	{
 		colors.AddFloatArray(ImGui::GetStyleColName(i), (float*)&style->Colors[i], 4);
 	}
+
+	file.AddSection("colors", colors);
 	
-	JsonFile rendering = file.AddSection("rendering");
+	JsonFile rendering;
 	
 	rendering.AddBool("anti_aliased_lines", style->AntiAliasedLines);
 	rendering.AddBool("anti_aliased_shapes", style->AntiAliasedShapes);
 	rendering.AddFloat("curve_tessellation_tolerance", style->CurveTessellationTol);
 	rendering.AddFloat("alpha", style->Alpha);
 
-	JsonFile sizes = file.AddSection("sizes");
+	file.AddSection("rendering", rendering);
+
+	JsonFile sizes;
 
 	sizes.AddFloatArray("win_padding", (float*)&style->WindowPadding, 2);
 	sizes.AddFloat("win_rounding", style->WindowRounding);
@@ -438,13 +442,14 @@ void M_Editor::SaveStyle(ImGuiStyle * style)
 	sizes.AddFloat("grab_min_size", style->GrabMinSize);
 	sizes.AddFloat("grab_rounding", style->GrabRounding);
 
-	char* buffer = nullptr;
-	uint size = file.WriteJson(&buffer, false);
+	file.AddSection("sizes", sizes);
 
-	if (buffer && size > 0)
+	auto buffer = file.Write(true);
+
+	if (buffer.size() > 0)
 	{
 		std::string savePath(CONFIG_PATH + std::string("style.json"));
-		if (app->fs->Save(savePath.c_str(), buffer, size) != size)
+		if (app->fs->Save(savePath.c_str(), buffer.c_str(), buffer.size()) != buffer.size())
 		{
 			_LOG(LOG_WARN, "Could not save style file in [%s].", savePath.c_str());
 		}
@@ -453,8 +458,6 @@ void M_Editor::SaveStyle(ImGuiStyle * style)
 			_LOG(LOG_INFO, "Editor style saved: [%s].", savePath.c_str());
 		}
 	}
-
-	RELEASE_ARRAY(buffer);
 }
 
 void M_Editor::SetStyleEditorWin()

@@ -520,7 +520,6 @@ void M_GoManager::SaveSceneNow()
 	//TODO: Resource scene organitzation!!
 
 	JsonFile scene;
-	scene.AddArray("game_objects");
 
 	for (auto it : root->childs)
 	{
@@ -530,14 +529,13 @@ void M_GoManager::SaveSceneNow()
 
 	if (ret)
 	{
-		char* buffer = nullptr;
-		uint size = scene.WriteJson(&buffer, false); // TODO: fast
-		if (buffer && size > 0)
+		auto buffer = scene.Write(true); // TODO: fast
+		if (buffer.size() > 0)
 		{
 			std::string path(SCENE_SAVE_PATH);
 			path.append("test_scene.json");
 
-			if (app->fs->Save(path.c_str(), buffer, size) != size)
+			if (app->fs->Save(path.c_str(), buffer.c_str(), buffer.size()) != buffer.size())
 			{
 				_LOG(LOG_ERROR, "Error while saving scene.");
 			}
@@ -547,8 +545,6 @@ void M_GoManager::SaveSceneNow()
 				_LOG(LOG_INFO, "Just saved scene into [%s].", path.c_str());
 			}
 		}
-
-		RELEASE_ARRAY(buffer);
 	}
 
 }
@@ -574,7 +570,7 @@ void M_GoManager::LoadSceneNow()
 		for (int i = 0; i < goCount; ++i)
 		{
 			GameObject* go = CreateGameObject();
-			go->OnLoadGo(&scene.GetArray("game_objects", i), relations);
+			go->OnLoadGo(&scene.GetObjectFromArray("game_objects", i), relations);
 		}
 
 		for (auto it : relations)

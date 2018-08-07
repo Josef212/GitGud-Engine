@@ -332,7 +332,7 @@ void M_ResourceManager::LoadResources()
 		uint count = file.GetArraySize("resources");
 		for (uint i = 0; i < count; ++i)
 		{
-			JsonFile r(file.GetArray("resources", i));
+			JsonFile r = file.GetObjectFromArray("resources", i);
 			RESOURCE_TYPE type = (RESOURCE_TYPE)r.GetInt("type", RES_NONE);
 			UID id = r.GetInt("UID", 0);
 
@@ -351,7 +351,6 @@ void M_ResourceManager::LoadResources()
 void M_ResourceManager::SaveResources()
 {
 	JsonFile save;
-	save.AddArray("resources");
 
 	std::map<UID, Resource*>::iterator it = resources.begin();
 	for (; it != resources.end(); ++it)
@@ -360,19 +359,16 @@ void M_ResourceManager::SaveResources()
 		{
 			JsonFile res;
 			it->second->Save(res);
-			save.AddArrayEntry(res);
+			save.AppendArrayValue("resources", res.Value());
 		}
 	}
 
-	char* buffer = nullptr;
-	uint size = save.WriteJson(&buffer, false);
+	auto buffer = save.Write(true);
 
-	if (app->fs->Save((RESOURCES_PATH + resourceFile).c_str(), buffer, size) != size)
+	if (app->fs->Save((RESOURCES_PATH + resourceFile).c_str(), buffer.c_str(), buffer.size()) != buffer.size())
 	{
 		_LOG(LOG_ERROR, "Could not save resources!");
 	}
-
-	RELEASE_ARRAY(buffer);
 }
 
 /** M_ResourceManager - LoadBasicResources: Create all basic resources such as primitives, checker texture, default shader, etc. */

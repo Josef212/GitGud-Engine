@@ -464,8 +464,8 @@ void App::ReadConfig(JsonFile* config)
 	if (!config)return;
 
 	SetMaxFPS(config->GetInt("fps_limit", 0));
-	SetTitle(config->GetString("app_title", "GitGud"));
-	SetOrganitzation(config->GetString("app_organitzation", "Josef21296"));
+	SetTitle(config->GetString("app_title", "GitGud").c_str());
+	SetOrganitzation(config->GetString("app_organitzation", "Josef21296").c_str());
 }
 
 /**
@@ -487,23 +487,27 @@ bool App::SaveNow()
 	bool ret = true;
 
 	JsonFile file;
-	JsonFile app = file.AddSection("app");
+	JsonFile app;
 	app.AddInt("fps_limit", GetMaxFPS());
 	app.AddString("app_title", title.c_str());
 	app.AddString("app_organitzation", organitzation.c_str());
+	file.AddSection("app", app);
 
 	for (auto mod : modules)
 	{
-		if(mod->configuration & M_SAVE_CONFIG)
-			ret = mod->Save(&file.AddSection(mod->name.c_str()));
+		if (mod->configuration & M_SAVE_CONFIG)
+		{
+			JsonFile m;
+			ret = mod->Save(&m);
+			file.AddSection(mod->name.c_str(), m);
+		}
 	}
 	
-	char* buffer = nullptr;
-	uint size = file.WriteJson(&buffer);
+	auto buffer = file.Write(true);
 
-	if (size > 0 && buffer)
+	if (buffer.size() > 0)
 	{
-		if (fs->Save(currentConfigSaveFileDir.c_str(), buffer, size) != size)
+		if (fs->Save(currentConfigSaveFileDir.c_str(), buffer.c_str(), buffer.size()) != buffer.size())
 		{
 			_LOG(LOG_ERROR, "Could not save config.");
 			ret = false;
@@ -513,8 +517,6 @@ bool App::SaveNow()
 	{
 		ret = false;
 	}
-
-	RELEASE_ARRAY(buffer);
 
 	return ret;
 }
@@ -537,7 +539,7 @@ bool App::LoadNow()
 		for (auto mod : modules)
 		{
 			if (mod->configuration & M_SAVE_CONFIG)
-				ret = mod->Load(&file.AddSection(mod->name.c_str()));
+				ret = mod->Load(&file.GetSection(mod->name.c_str()));
 		}
 	}
 

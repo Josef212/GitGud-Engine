@@ -137,8 +137,8 @@ public:
 	void Load(JsonFile& file)
 	{
 		uuid = file.GetInt("UID", 0);
-		originalFile.SetFullPath(file.GetString("original_file", "???"));
-		exportedFile.SetFullPath(file.GetString("exported_file", "???"));
+		originalFile.SetFullPath(file.GetString("original_file", "???").c_str());
+		exportedFile.SetFullPath(file.GetString("exported_file", "???").c_str());
 		name = file.GetString("resource_name", "unamed");
 		OnLoad(file);
 	}

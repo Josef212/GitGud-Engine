@@ -135,7 +135,7 @@ void Transform::OnSaveCmp(JsonFile & sect) const
 
 	sect.AddFloat3("position", transaltion);
 	sect.AddFloat3("scale", scale);
-	sect.AddFloatArray("rotation", (const float*)rotation.ptr(), 4);
+	sect.AddQuaternion("rotation", rotation);
 }
 
 /** Transform - OnLoadCmp: Loads the transform from the GO save file. */
@@ -147,10 +147,5 @@ void Transform::OnLoadCmp(JsonFile * sect)
 
 	SetLocalPosition(sect->GetFloat3("position", float3::zero));
 	SetLocalScale(sect->GetFloat3("scale", float3::one));
-	Quat r;
-	r.x = sect->GetFloat("rotation", 0.f, 0);
-	r.y = sect->GetFloat("rotation", 0.f, 1);
-	r.z = sect->GetFloat("rotation", 0.f, 2);
-	r.w = sect->GetFloat("rotation", 1.f, 3);
-	SetLocalRotation(r);
+	SetLocalRotation(sect->GetQuaternion("rotation", Quat::identity));
 }

@@ -74,7 +74,6 @@ bool ImporterScene::Import(Path originalFile, Path& exportedFile, UID& resUID)
 			aiReleaseImport(scene);
 
 			JsonFile save;
-			save.AddArray("game_objects");
 
 			for (auto child : go->childs)
 			{
@@ -227,7 +226,7 @@ void ImporterScene::ImportMeshes(const aiScene* scene, Path& file, JsonFile& met
 		if(mesh) meshesImported.push_back(app->resources->ImportBuf(mesh, RES_MESH, 0, &file));
 	}
 
-	metaFile.AddUnsignedIntArray("meshes_ids", meshesImported.data(), meshesImported.size());
+	metaFile.AddUIntArray("meshes_ids", meshesImported.data(), meshesImported.size());
 }
 
 void ImporterScene::ImportMaterials(const aiScene* scene, Path& file, JsonFile& metaFile)
@@ -240,7 +239,7 @@ void ImporterScene::ImportMaterials(const aiScene* scene, Path& file, JsonFile& 
 		if (material) materialsImported.push_back(app->resources->ImportBuf(material, RES_MATERIAL, 0, &file));
 	}
 
-	metaFile.AddUnsignedIntArray("materials_ids", materialsImported.data(), materialsImported.size());
+	metaFile.AddUIntArray("materials_ids", materialsImported.data(), materialsImported.size());
 }
 
 void ImporterScene::ImportBones(const aiScene* scene, Path& file, JsonFile& metaFile)
@@ -257,19 +256,14 @@ bool ImporterScene::SaveScene(Path& path, JsonFile& scene, JsonFile& metaFile)
 {
 	bool ret = false;
 
-	char* buffer = nullptr;
-	uint size = scene.WriteJson(&buffer, false); // TODO: Set to true
+	auto buffer = scene.Write(true); // TODO: Set to false
 
-	if (app->fs->Save(path.GetFullPath(), buffer, size) == size) ret = true;
-
-	RELEASE_ARRAY(buffer);
+	if (app->fs->Save(path.GetFullPath(), buffer.c_str(), buffer.size()) == buffer.size()) ret = true;
 
 
 	std::string metaPath = std::string(path.GetFullPath()) + std::string(".meta");
-	uint metaSize = metaFile.WriteJson(&buffer, false); // TODO: Set to true
-	if (app->fs->Save(metaPath.c_str(), buffer, metaSize) != metaSize) ret = false;
-
-	RELEASE_ARRAY(buffer);
+	auto meta = metaFile.Write(true); // TODO: Set to false
+	if (app->fs->Save(metaPath.c_str(), meta.c_str(), meta.size()) != meta.size()) ret = false;
 
 	return ret;
 }

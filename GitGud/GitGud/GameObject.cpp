@@ -515,8 +515,6 @@ bool GameObject::OnSaveGo(JsonFile & sect, std::map<uint, uint>* duplicate) cons
 
 	file.AddString("name", name.c_str());
 
-	file.AddArray("components");
-
 	for (auto it : components)
 	{
 		if (it)
@@ -527,11 +525,11 @@ bool GameObject::OnSaveGo(JsonFile & sect, std::map<uint, uint>* duplicate) cons
 			cmp.AddBool("go_id", it->GetGameObject()->GetUuid());
 
 			it->OnSaveCmp(cmp);
-			file.AddArrayEntry(cmp);
+			file.AppendArrayValue("components", cmp.Value());
 		}
 	}
 
-	sect.AddArrayEntry(file);
+	sect.AppendArrayValue("game_objects", file.Value());
 
 	for (auto it : childs)
 		if (it)
@@ -553,7 +551,7 @@ bool GameObject::OnLoadGo(JsonFile * sect, std::map<GameObject*, uint>& relation
 	int cmpCount = sect->GetArraySize("components");
 	for (uint i = 0; i < cmpCount; ++i)
 	{
-		JsonFile cmp(sect->GetArray("components", i));
+		JsonFile cmp = sect->GetObjectFromArray("components", i);
 		COMPONENT_TYPE type = (COMPONENT_TYPE)cmp.GetInt("cmp_type", 0);
 		if (type != CMP_UNKNOWN)
 		{

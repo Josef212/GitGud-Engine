@@ -1,300 +1,296 @@
 #include "JsonFile.h"
 
-#include "parson-master\parson.h"
+
 
 JsonFile::JsonFile()
+{}
+
+JsonFile::JsonFile(const char * buffer)
 {
-	valRoot = json_value_init_object();
-	if (valRoot)
-	{
-		objRoot = json_value_get_object(valRoot);
-		clean = true;
-	}
+	Json::Reader r;
+	r.parse(buffer, objRoot);
 }
 
-JsonFile::JsonFile(const char* buffer)
-{
-	if (buffer)
-	{
-		valRoot = json_parse_string(buffer);
-		if (valRoot)
-		{
-			objRoot = json_value_get_object(valRoot);
-			clean = true;
-		}
-	}
-}
+JsonFile::JsonFile(Json::Value& section) : objRoot(section)
+{}
 
-JsonFile::JsonFile(JSON_Object* section) : objRoot(section)
-{
-}
 
 JsonFile::~JsonFile()
 {
-	if (clean && valRoot)
-		json_value_free(valRoot);
 }
 
-//------------------------------------------------
-//---------------Getters--------------------------
-//------------------------------------------------
+// -----------------------------------------------------
 
-JSON_Value* JsonFile::GetVal(const char* valName, int index)
+int JsonFile::GetArraySize(const char* name)
 {
-	if (index < 0)
-		return json_object_get_value(objRoot, valName);
-	else
-	{
-		JSON_Array* ary = json_object_get_array(objRoot, valName);
-		return (ary) ? (json_array_get_value(ary, index)) : (nullptr);
-	}
+	Json::Value val = objRoot[name];
+	return val.isArray() ? val.size() : -1;
 }
 
-JsonFile JsonFile::GetSection(const char* sectionName)
+// -----------------------------------------------------
+
+JsonFile JsonFile::GetSection(const char * sectionName)
 {
-	//assert(sectionName);
-	return JsonFile(json_object_get_object(objRoot, sectionName));
+	return JsonFile(objRoot[sectionName]);
 }
 
-const char* JsonFile::GetString(const char* name, const char* defaultStr, int index)
+
+int JsonFile::GetInt(const char * name, int def, int index)
 {
-	JSON_Value* val = GetVal(name, index);
-	return (val) ? (json_value_get_string(val)) : (defaultStr);
+	Json::Value val = objRoot[name];
+	return val.isInt() ? 
+		val.asInt() : 
+		(val.isArray() && index >= 0 && index < val.size()) ? val[index].asInt() : def;
 }
 
-bool JsonFile::GetBool(const char* name, bool defaultBool, int index)
+unsigned int JsonFile::GetUInt(const char * name, unsigned int def, int index)
 {
-	JSON_Value* val = GetVal(name, index);
-	return (val) ? (json_value_get_boolean(val)) : (defaultBool);
+	Json::Value val = objRoot[name];
+	return val.isUInt() ?
+		val.asUInt() :
+		(val.isArray() && index >= 0 && index < val.size()) ? val[index].asUInt() : def;
 }
 
-int JsonFile::GetInt(const char* name, int defaultInt, int index)
+int64 JsonFile::GetInt64(const char * name, int64 def, int index)
 {
-	JSON_Value* val = GetVal(name, index);
-	return (val) ? ((int)json_value_get_number(val)) : (defaultInt);
+	Json::Value val = objRoot[name];
+	return val.isInt64() ?
+		val.asInt64() :
+		(val.isArray() && index >= 0 && index < val.size()) ? val[index].asInt64() : def;
 }
 
-float JsonFile::GetFloat(const char* name, float defaultFloat, int index)
+uint64 JsonFile::GetUInt64(const char * name, uint64 def, int index)
 {
-	JSON_Value* val = GetVal(name, index);
-	return (val) ? ((float)json_value_get_number(val)) : (defaultFloat);
+	Json::Value val = objRoot[name];
+	return val.isUInt64() ?
+		val.asUInt64() :
+		(val.isArray() && index >= 0 && index < val.size()) ? val[index].asUInt64() : def;
 }
 
-double JsonFile::GetDouble(const char* name, double defaultDouble, int index)
+float JsonFile::GetFloat(const char* name, float def, int index)
 {
-	JSON_Value* val = GetVal(name, index);
-	return (val) ? ((double)json_value_get_number(val)) : (defaultDouble);
+	Json::Value val = objRoot[name];
+	return val.isNumeric() ?
+		val.asFloat() :
+		(val.isArray() && index >= 0 && index < val.size()) ? val[index].asFloat() : def;
 }
 
-float* JsonFile::GetFloatArray(const char* name)
+double JsonFile::GetDouble(const char* name, double def, int index)
 {
-	//For now we can get a float or any value type from array using the float getter + index
-	return nullptr;
+	Json::Value val = objRoot[name];
+	return val.isDouble() ?
+		val.asDouble() :
+		(val.isArray() && index >= 0 && index < val.size()) ? val[index].asDouble() : def;
 }
 
-JsonFile JsonFile::GetArray(const char* name, int index)const
+bool JsonFile::GetBool(const char* name, bool def, int index)
 {
-	JSON_Array* array = json_object_get_array(objRoot, name);
-	if (array)
-		return JsonFile(json_array_get_object(array, index));
-	return JsonFile((JSON_Object*)nullptr);
+	Json::Value val = objRoot[name];
+	return val.isBool() ?
+		val.asBool() :
+		(val.isArray() && index >= 0 && index < val.size()) ? val[index].asBool() : def;
 }
 
-int JsonFile::GetArraySize(const char* name)const
+std::string JsonFile::GetString(const char* name, std::string def, int index)
 {
-	int ret = -1;
-	JSON_Array* array = json_object_get_array(objRoot, name);
-	if (array)
-		ret = json_array_get_count(array);
+	Json::Value val = objRoot[name];
+	return val.isString() ?
+		val.asString() :
+		(val.isArray() && index >= 0 && index < val.size()) ? val[index].asString() : def;
+}
+
+
+float3 JsonFile::GetFloat3(const char * name, float3 def)
+{
+	return float3(GetFloat(name, def.x, 0), GetFloat(name, def.y, 1), GetFloat(name, def.z, 2));
+}
+
+Quat JsonFile::GetQuaternion(const char* name, Quat def)
+{
+	Quat q;
+
+	q.x = GetFloat(name, def.x, 0);
+	q.y = GetFloat(name, def.y, 0);
+	q.z = GetFloat(name, def.z, 0);
+	q.w = GetFloat(name, def.w, 0);
+
+	return q;
+}
+
+Color JsonFile::GetColor(const char* name, Color def)
+{
+	return Color(GetFloat(name, def.r, 0), GetFloat(name, def.g, 1), GetFloat(name, def.b, 2), GetFloat(name, def.a, 3));
+}
+
+
+JsonFile JsonFile::GetObjectFromArray(const char* name, unsigned int index)
+{
+	Json::Value val = objRoot[name];
+	return val.isObject() ? JsonFile(val) : JsonFile();
+}
+
+// ======
+
+void JsonFile::AddSection(const char* name, JsonFile& section)
+{
+	objRoot[name] = section.Value();
+}
+
+
+void JsonFile::AddInt(const char* name, int value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddIntArray(const char* name, int* data, unsigned size)
+{
+	for (unsigned int i = 0; i < size; ++i) objRoot[name][i] = data[i];
+}
+
+void JsonFile::AddUInt(const char* name, unsigned value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddUIntArray(const char* name, unsigned* data, unsigned size)
+{
+	for (unsigned int i = 0; i < size; ++i) objRoot[name][i] = data[i];
+}
+
+void JsonFile::AddInt64(const char* name, int64 value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddInt64Array(const char* name, int64* data, unsigned size)
+{
+	for (unsigned int i = 0; i < size; ++i) objRoot[name][i] = data[i];
+}
+
+void JsonFile::AddUInt64(const char* name, uint64 value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddUIntArray(const char* name, uint64* data, unsigned size)
+{
+	for (unsigned int i = 0; i < size; ++i) objRoot[name][i] = data[i];
+}
+
+void JsonFile::AddFloat(const char* name, float value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddFloatArray(const char* name, float* data, unsigned size)
+{
+	for (unsigned int i = 0; i < size; ++i) objRoot[name][i] = data[i];
+}
+
+void JsonFile::AddDouble(const char* name, double value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddDoubleArray(const char* name, double* data, unsigned size)
+{
+	for (unsigned int i = 0; i < size; ++i) objRoot[name][i] = data[i];
+}
+
+void JsonFile::AddBool(const char* name, bool value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddBoolArray(const char* name, bool* data, unsigned size)
+{
+	for (unsigned int i = 0; i < size; ++i) objRoot[name][i] = data[i];
+}
+
+void JsonFile::AddString(const char* name, const char* value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddCStringArray(const char* name, const char** data, unsigned size)
+{
+	for (unsigned int i = 0; i < size; ++i) objRoot[name][i] = data[i];
+}
+
+void JsonFile::AddString(const char* name, std::string value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddStringArray(const char* name, std::string* data, unsigned size)
+{
+	for (unsigned int i = 0; i < size; ++i) objRoot[name][i] = data[i];
+}
+
+
+void JsonFile::AddValue(const char* name, Json::Value value)
+{
+	objRoot[name] = value;
+}
+
+void JsonFile::AddArrayValue(const char* name, Json::Value value, unsigned int index)
+{
+	objRoot[name][index] = value;
+}
+
+/**
+ *	AppendArrayValue: Appends a value to an existing array or create a new array and adds its first value.
+ *
+ */
+void JsonFile::AppendArrayValue(const char* name, Json::Value value)
+{
+	objRoot[name].append(value);
+}
+
+
+void JsonFile::AddFloat3(const char * name, float3 value)
+{
+	objRoot[name][0] = value.x;
+	objRoot[name][1] = value.y;
+	objRoot[name][2] = value.z;
+}
+
+void JsonFile::AddQuaternion(const char* name, Quat value)
+{
+	objRoot[name][0] = value.x;
+	objRoot[name][1] = value.y;
+	objRoot[name][2] = value.z;
+	objRoot[name][3] = value.w;
+}
+
+void JsonFile::AddColor(const char* name, Color value)
+{
+	objRoot[name][0] = value.r;
+	objRoot[name][1] = value.g;
+	objRoot[name][2] = value.b;
+	objRoot[name][3] = value.a;
+}
+
+// -----------------------------------------------------
+
+std::string JsonFile::Write(bool styled)
+{
+	
+	std::string ret;
+	styled ? WriteStyled(ret) : WriteFast(ret);
 	return ret;
 }
 
-float3 JsonFile::GetFloat3(const char* name, float3 default)
+void JsonFile::WriteFast(std::string& val)const
 {
-	return float3(GetFloat(name, default.x, 0), GetFloat(name, default.y, 1), GetFloat(name, default.z, 2));
+	Json::FastWriter fw;
+	val = fw.write(objRoot);
 }
 
-Color JsonFile::GetColor(const char * name, Color default)
+void JsonFile::WriteStyled(std::string& val)const
 {
-	return Color(GetFloat(name, default.r, 0),
-		GetFloat(name, default.g, 1),
-		GetFloat(name, default.b, 2),
-		GetFloat(name, default.a, 3));
+	Json::StyledWriter sw;
+	val = sw.write(objRoot);
 }
 
-//--------------------------------------
-
-//------------------------------------------------
-//---------------Setters--------------------------
-//------------------------------------------------
-
-JsonFile JsonFile::AddSection(const char* sectionName)
-{
-	json_object_set_value(objRoot, sectionName, json_value_init_object());
-	return GetSection(sectionName);
-}
-
-bool JsonFile::AddString(const char* name, const char* value)
-{
-	return json_object_set_string(objRoot, name, value) == JSONSuccess;
-}
-
-bool JsonFile::AddBool(const char* name, bool value)
-{
-	return json_object_set_boolean(objRoot, name, value) == JSONSuccess;
-}
-
-bool JsonFile::AddInt(const char* name, int value)
-{
-	return json_object_set_number(objRoot, name, (double)value) == JSONSuccess;
-}
-
-bool JsonFile::AddFloat(const char* name, float value)
-{
-	return json_object_set_number(objRoot, name, (double)value) == JSONSuccess;
-}
-
-bool JsonFile::AddDouble(const char* name, double value)
-{
-	return json_object_set_number(objRoot, name, value) == JSONSuccess;
-}
-
-bool JsonFile::AddArray(const char* name)
-{
-	JSON_Value* val = json_value_init_array();
-	array = json_value_get_array(val);
-
-	return json_object_set_value(objRoot, name, val) == JSONSuccess;
-}
-
-bool JsonFile::AddArrayEntry(const JsonFile& file)
-{
-	if (array)
-		return json_array_append_value(array, json_value_deep_copy(file.valRoot)) == JSONSuccess;
-	return false;
-}
-
-bool JsonFile::AddIntArray(const char* name, int* iArray, uint size)
-{
-	if (!name || !iArray || size <= 0)
-		return false;
-
-	JSON_Value* val = json_value_init_array();
-	JSON_Array* ar = json_value_get_array(val);
-	for (uint i = 0; i < size; ++i)
-		json_array_append_number(ar, iArray[i]);
-
-	json_object_set_value(objRoot, name, val);
-
-	return true;
-}
-
-bool JsonFile::AddUnsignedIntArray(const char* name, uint* uiArray, uint size)
-{
-	if (!name || !uiArray || size <= 0)
-		return false;
-
-	JSON_Value* val = json_value_init_array();
-	JSON_Array* ar = json_value_get_array(val);
-	for (uint i = 0; i < size; ++i)
-		json_array_append_number(ar, uiArray[i]);
-
-	json_object_set_value(objRoot, name, val);
-
-	return true;
-}
-
-bool JsonFile::AddFloatArray(const char* name, float* fArray, uint size)
-{
-	if (!name || !fArray || size <= 0)
-		return false;
-
-	JSON_Value* val = json_value_init_array();
-	JSON_Array* ar = json_value_get_array(val);
-	for (uint i = 0; i < size; ++i)
-		json_array_append_number(ar, fArray[i]);
-
-	json_object_set_value(objRoot, name, val);
-
-	return true;
-}
-
-bool JsonFile::AddFloatArray(const char* name, const float* fArray, uint size)
-{
-	if (!name || !fArray || size <= 0)
-		return false;
-
-	JSON_Value* val = json_value_init_array();
-	JSON_Array* ar = json_value_get_array(val);
-	for (uint i = 0; i < size; ++i)
-		json_array_append_number(ar, fArray[i]);
-
-	json_object_set_value(objRoot, name, val);
-
-	return true;
-}
-
-bool JsonFile::AddBoolArray(const char* name, bool* bArray, uint size)
-{
-	if (!name || !bArray || size <= 0)
-		return false;
-
-	JSON_Value* val = json_value_init_array();
-	JSON_Array* ar = json_value_get_array(val);
-	for (uint i = 0; i < size; ++i)
-		json_array_append_boolean(ar, bArray[i]);
-
-	json_object_set_value(objRoot, name, val);
-
-	return true;
-}
-
-bool JsonFile::AddStringArray(const char* name, const char** sArray, uint size)
-{
-	if (!name || !sArray || size <= 0)
-		return false;
-
-	JSON_Value* val = json_value_init_array();
-	JSON_Array* ar = json_value_get_array(val);
-	for (uint i = 0; i < size; ++i)
-		json_array_append_string(ar, sArray[i]);
-
-	json_object_set_value(objRoot, name, val);
-
-	return true;
-}
-
-bool JsonFile::AddFloat3(const char* name, float3 vec)
-{
-	return AddFloatArray(name, vec.ptr(), 3);
-}
-
-bool JsonFile::AddColor(const char * name, Color col)
-{
-	return AddFloatArray(name, &col, 4);
-}
-
-//--------------------------------------
-
-uint JsonFile::WriteJson(char** buffer, bool fastMode)
-{
-	return (fastMode) ? (WriteFast(buffer)) : (WriteStyled(buffer));
-}
-
-uint JsonFile::WriteFast(char** buffer)
-{
-	uint ret = json_serialization_size(valRoot);
-	*buffer = new char[ret];
-	json_serialize_to_buffer(valRoot, *buffer, ret);
-
-	return ret;
-}
-
-uint JsonFile::WriteStyled(char** buffer)
-{
-	uint ret = json_serialization_size_pretty(valRoot);
-	*buffer = new char[ret];
-	json_serialize_to_buffer_pretty(valRoot, *buffer, ret);
-
-	return ret;
-}
+// -----------------------------------------------------
