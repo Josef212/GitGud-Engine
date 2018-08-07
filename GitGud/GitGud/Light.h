@@ -5,7 +5,7 @@
 #include "Color.h"
 #include "JsonFile.h"
 
-enum LIGHT_TYPE
+enum LightType
 {
 	L_NONE = -1,
 	L_DIRECTIONAL = 0,
@@ -19,8 +19,8 @@ public:
 	Light(GameObject* object);
 	virtual ~Light();
 
-	void SetType(LIGHT_TYPE _type);
-	LIGHT_TYPE GetType()const;
+	void SetType(LightType _type);
+	LightType GetType()const;
 
 	void OnEnable()override;
 	void OnDisable()override;
@@ -29,7 +29,7 @@ public:
 	void OnLoadCmp(JsonFile* sect)override;
 
 public:
-	LIGHT_TYPE lightType = L_DIRECTIONAL;
+	LightType lightType = L_DIRECTIONAL;
 
 	Color color = White;
 	float intensity = 1.f;

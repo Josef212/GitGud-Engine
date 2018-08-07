@@ -8,7 +8,7 @@
 class Transform;
 class JsonFile;
 
-enum CAM_TYPE
+enum CameraType
 {
 	CAM_PERSPECTIVE = 0,
 	CAM_ORTHOGRAPHIC
@@ -50,8 +50,8 @@ public:
 
 	void OnTransformUpdate(Transform* trans)override;
 
-	CAM_TYPE GetType()const;
-	void SetType(CAM_TYPE type);
+	CameraType GetType()const;
+	void SetType(CameraType type);
 	void SwapType();
 
 	void Look(const float3 spot, const float3 pos);
@@ -73,7 +73,7 @@ private:
 	bool culling = true;
 	float aspectRatio = 16 / 9;
 	float orthoSize = 1;
-	CAM_TYPE camType;
+	CameraType camType;
 };
 
 #endif // !__CAMERA_H__

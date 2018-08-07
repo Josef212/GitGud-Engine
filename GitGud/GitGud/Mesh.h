@@ -22,9 +22,11 @@ public:
 	void OnSaveCmp(JsonFile& sect)const override;
 	void OnLoadCmp(JsonFile* sect)override;
 
-	bool SetResource(UID resUID);
+	void OnResourceChanged()override;
 
 	void OnDebugDraw() override;
+
+	ComponentType GetComponentType()override { return type; }
 
 public:
 	bool renderWirefreame = false;

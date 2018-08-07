@@ -144,19 +144,19 @@ UpdateReturn M_Editor::Update(float dt)
 				{
 					GameObject* go = app->goManager->CreateGameObject();
 					Light* l = (Light*)go->CreateComponent(CMP_LIGHT);
-					l->SetType(LIGHT_TYPE::L_DIRECTIONAL);
+					l->SetType(LightType::L_DIRECTIONAL);
 				}
 				if (ImGui::MenuItem("Point light"))
 				{
 					GameObject* go = app->goManager->CreateGameObject();
 					Light* l = (Light*)go->CreateComponent(CMP_LIGHT);
-					l->SetType(LIGHT_TYPE::L_POINT);
+					l->SetType(LightType::L_POINT);
 				}
 				if (ImGui::MenuItem("Spot light"))
 				{
 					GameObject* go = app->goManager->CreateGameObject();
 					Light* l = (Light*)go->CreateComponent(CMP_LIGHT);
-					l->SetType(LIGHT_TYPE::L_SPOT);
+					l->SetType(LightType::L_SPOT);
 				}
 
 				ImGui::EndMenu();

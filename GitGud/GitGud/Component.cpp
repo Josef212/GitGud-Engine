@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-Component::Component(GameObject * object, COMPONENT_TYPE type) : object(object), type(type)
+Component::Component(GameObject * object, ComponentType type) : object(object), type(type)
 {
 }
 
@@ -54,7 +54,7 @@ void Component::Disable()
 }
 
 /** Component - GetType: Return the component type. */
-COMPONENT_TYPE Component::GetType() const
+ComponentType Component::GetType() const
 {
 	return type;
 }

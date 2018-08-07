@@ -65,30 +65,12 @@ void Mesh::OnLoadCmp(JsonFile * sect)
 	}
 }
 
-//-------------------------------------
-
-/** Mesh - SetResource: Sets the resource used by an UID. */
-bool Mesh::SetResource(UID resUID)
+void Mesh::OnResourceChanged()
 {
-	bool ret = false;
-
-	if (resUID != 0)
-	{
-		Resource* res = app->resources->GetResourceFromUID(resUID);
-		if (res && res->GetType() == RES_MESH)
-		{
-			if (res->LoadToMemory())
-			{
-				ClearMesh(); //Before changing the mesh resource, clear the current one.
-				resource = resUID;
-				object->RecalcBox();
-				ret = true;
-			}
-		}
-	}
-
-	return ret;
+	ClearMesh(); //Before changing the mesh resource, clear the current one.
 }
+
+//-------------------------------------
 
 void Mesh::OnDebugDraw()
 {

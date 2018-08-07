@@ -14,13 +14,13 @@ Light::~Light()
 }
 
 /** Light - SetType: Sets the light type. */
-void Light::SetType(LIGHT_TYPE _type)
+void Light::SetType(LightType _type)
 {
 	lightType = _type;
 }
 
 /** Light - GetType: Returns the light type. */
-LIGHT_TYPE Light::GetType() const
+LightType Light::GetType() const
 {
 	return lightType;
 }
@@ -51,7 +51,7 @@ void Light::OnLoadCmp(JsonFile * sect)
 {
 	if (sect)
 	{
-		lightType = (LIGHT_TYPE)sect->GetInt("light_type", 1);
+		lightType = (LightType)sect->GetInt("light_type", 1);
 		color = sect->GetColor("light_color", White);
 		intensity = sect->GetFloat("intensity", 1.f);
 		range = sect->GetFloat("range", 5.f);

@@ -5,18 +5,22 @@
 
 class Resource;
 class JsonFile;
+enum ComponentType;
 
 class ComponentResource
 {
 public:
 	virtual ~ComponentResource();
 
-	virtual bool SetResource(UID res) = 0;
+	bool SetResource(UID resUID);
 	
 	Resource* GetResource()const;
 	const UID GetResourceUID()const;
 
 protected:
+	virtual void OnResourceChanged() {}
+	virtual ComponentType GetComponentType() = 0;
+
 	void OnSaveRes(JsonFile& file)const;
 	void OnLoadRes(JsonFile* file);
 

@@ -8,7 +8,7 @@ class Transform;
 class JsonFile;
 class GameObject;
 
-enum COMPONENT_TYPE
+enum ComponentType
 {
 	CMP_UNKNOWN = 0,
 	CMP_TRANSFORM = 1,
@@ -21,7 +21,7 @@ enum COMPONENT_TYPE
 class Component
 {
 public:
-	Component(GameObject* object, COMPONENT_TYPE type);
+	Component(GameObject* object, ComponentType type);
 	virtual ~Component();
 
 	//--------------------------
@@ -34,7 +34,7 @@ public:
 
 	//--------------------------
 
-	COMPONENT_TYPE GetType()const;
+	ComponentType GetType()const;
 	GameObject* GetGameObject()const;
 
 	//--------------------------
@@ -78,7 +78,7 @@ public:
 private:
 
 protected:
-	COMPONENT_TYPE type = CMP_UNKNOWN;
+	ComponentType type = CMP_UNKNOWN;
 	GameObject* object = nullptr;
 	bool selfActive = true;
 };

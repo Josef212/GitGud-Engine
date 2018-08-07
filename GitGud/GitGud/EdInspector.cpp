@@ -210,7 +210,7 @@ void EdInspector::DrawCamera(GameObject * selected, Camera * cam)
 			if (ImGui::DragFloat("Far plane:", &farP)) cam->SetFarPlaneDist(farP);
 
 
-			CAM_TYPE type = cam->GetType();
+			CameraType type = cam->GetType();
 
 			int index = 0;
 			if (ImGui::Combo("Type", &index, "Perspective\0Orthographic"))
@@ -258,18 +258,18 @@ void EdInspector::DrawLights(GameObject * selected, Light * light)
 			int lTypeIndex = (int)light->lightType;
 			if (ImGui::Combo("Light type", &lTypeIndex, "Directional\0Point\0Spot"))
 			{
-				light->SetType((LIGHT_TYPE)lTypeIndex);
+				light->SetType((LightType)lTypeIndex);
 			}
 
 			ImGui::ColorEdit4("Light color", (float*)&light->color);
 			ImGui::DragFloat("Intensity", &light->intensity, 0.05f, 0.f);
 
-			if (light->lightType == LIGHT_TYPE::L_POINT)
+			if (light->lightType == LightType::L_POINT)
 			{
 				ImGui::DragFloat("Range", &light->range);
 			}
 
-			if (light->lightType == LIGHT_TYPE::L_SPOT)
+			if (light->lightType == LightType::L_SPOT)
 			{
 				ImGui::DragFloat("Range", &light->range);
 				ImGui::DragFloat("Spot angle", &light->spotAngle);

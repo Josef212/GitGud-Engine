@@ -262,7 +262,7 @@ void EdConfig::Draw()
 				if (ImGui::DragFloat("Far plane:", &farP)) cam->SetFarPlaneDist(farP);
 
 
-				CAM_TYPE type = cam->GetType();
+				CameraType type = cam->GetType();
 
 				static int index = 0;
 				if (ImGui::Combo("Type", &index, "Perspective\0Orthographic"))

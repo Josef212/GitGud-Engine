@@ -32,12 +32,12 @@ public:
 	//--------------------------
 
 	GameObject* CreateChild();
-	Component* CreateComponent(COMPONENT_TYPE type);
+	Component* CreateComponent(ComponentType type);
 
-	Component* GetComponent(COMPONENT_TYPE type);
-	void GetComponents(COMPONENT_TYPE types, std::vector<Component*>& cmps);
-	bool HasComponent(COMPONENT_TYPE type);
-	uint CountComponents(COMPONENT_TYPE type);
+	Component* GetComponent(ComponentType type);
+	void GetComponents(ComponentType types, std::vector<Component*>& cmps);
+	bool HasComponent(ComponentType type);
+	uint CountComponentsOfType(ComponentType type);
 
 	void RemoveChild(GameObject* obj);
 	void RemoveAllChilds();

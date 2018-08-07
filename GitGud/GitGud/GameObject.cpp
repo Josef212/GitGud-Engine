@@ -52,7 +52,7 @@ GameObject * GameObject::CreateChild()
 	return ret;
 }
 
-Component * GameObject::CreateComponent(COMPONENT_TYPE type)
+Component * GameObject::CreateComponent(ComponentType type)
 {
 	Component* ret = nullptr;
 	//TODO: Send error message if already have unique components
@@ -108,7 +108,7 @@ Component * GameObject::CreateComponent(COMPONENT_TYPE type)
 	return ret;
 }
 
-Component * GameObject::GetComponent(COMPONENT_TYPE type)
+Component * GameObject::GetComponent(ComponentType type)
 {
 	for (auto cmp : components)
 	{
@@ -118,7 +118,7 @@ Component * GameObject::GetComponent(COMPONENT_TYPE type)
 	return nullptr;
 }
 
-void GameObject::GetComponents(COMPONENT_TYPE types, std::vector<Component*>& cmps)
+void GameObject::GetComponents(ComponentType types, std::vector<Component*>& cmps)
 {
 	for (auto cmp : components)
 	{
@@ -127,7 +127,7 @@ void GameObject::GetComponents(COMPONENT_TYPE types, std::vector<Component*>& cm
 	}
 }
 
-bool GameObject::HasComponent(COMPONENT_TYPE type)
+bool GameObject::HasComponent(ComponentType type)
 {
 	for (auto cmp : components)
 	{
@@ -137,7 +137,7 @@ bool GameObject::HasComponent(COMPONENT_TYPE type)
 	return false;
 }
 
-uint GameObject::CountComponents(COMPONENT_TYPE type)
+uint GameObject::CountComponentsOfType(ComponentType type)
 {
 	uint ret = 0;
 
@@ -308,11 +308,11 @@ void GameObject::PreUpdate()
 					currentCMPs &= ~CMP_MATERIAL;
 					break;
 				case CMP_CAMERA:
-					if (CountComponents(CMP_CAMERA) == 1)
+					if (CountComponentsOfType(CMP_CAMERA) == 1)
 						currentCMPs &= ~CMP_CAMERA;
 					break;
 				case CMP_LIGHT:
-					if (CountComponents(CMP_LIGHT) == 1)
+					if (CountComponentsOfType(CMP_LIGHT) == 1)
 						currentCMPs &= ~CMP_LIGHT;
 					break;
 				}
@@ -552,7 +552,7 @@ bool GameObject::OnLoadGo(JsonFile * sect, std::map<GameObject*, uint>& relation
 	for (uint i = 0; i < cmpCount; ++i)
 	{
 		JsonFile cmp = sect->GetObjectFromArray("components", i);
-		COMPONENT_TYPE type = (COMPONENT_TYPE)cmp.GetInt("cmp_type", 0);
+		ComponentType type = (ComponentType)cmp.GetInt("cmp_type", 0);
 		if (type != CMP_UNKNOWN)
 		{
 			if (type == CMP_TRANSFORM)

@@ -180,13 +180,13 @@ void Camera::OnTransformUpdate(Transform * trans)
 }
 
 /** Camera - GetType: Return the camera type. */
-CAM_TYPE Camera::GetType() const
+CameraType Camera::GetType() const
 {
 	return camType;
 }
 
 /** Camera - SetType: Set the camera type. */
-void Camera::SetType(CAM_TYPE type)
+void Camera::SetType(CameraType type)
 {
 	if (type != camType)
 		SwapType();
