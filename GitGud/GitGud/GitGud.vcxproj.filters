@@ -82,6 +82,9 @@
     <Filter Include="Tools\Time">
       <UniqueIdentifier>{b397d964-bcfe-4297-8795-4fc80dd73509}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3rdParty\jsoncpp">
+      <UniqueIdentifier>{94ceb64c-a8af-4db1-9ee6-bc70867fd6cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -359,6 +362,9 @@
     </ClCompile>
     <ClCompile Include="DrawDebugTools.cpp">
       <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="jsoncpp\jsoncpp.cpp">
+      <Filter>3rdParty\jsoncpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -754,6 +760,12 @@
     </ClInclude>
     <ClInclude Include="DrawDebugTools.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="jsoncpp\json.h">
+      <Filter>3rdParty\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="jsoncpp\json-forwards.h">
+      <Filter>3rdParty\jsoncpp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
