@@ -5,7 +5,7 @@
 
 class ResourceShader : public Resource
 {
-	enum SHADER_TYPE
+	enum ShaderType
 	{
 		SH_ERROR = -1,
 		SH_VERTEX = 0,
@@ -21,7 +21,7 @@ public:
 	bool LoadInMemory()override;
 	bool RemoveFromMemory()override;
 
-	uint CompileCode(SHADER_TYPE type, const char* code = nullptr);
+	uint CompileCode(ShaderType type, const char* code = nullptr);
 	bool LinkShader(uint vertex, uint fragment, uint geometry = 0);
 
 	bool CompileAndLink();
@@ -46,7 +46,7 @@ public:
 	void OnCreation();
 
 private:
-	bool CheckCompileErrors(uint shader, SHADER_TYPE type);
+	bool CheckCompileErrors(uint shader, ShaderType type);
 
 public:
 	Path shaderFile;

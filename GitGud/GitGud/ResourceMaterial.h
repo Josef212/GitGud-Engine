@@ -11,7 +11,7 @@
 
 class ResourceTexture;
 
-enum SHADING_MODE
+enum ShadingMode
 {
 	SHADING_FLAT = 0x1,
 	SHADING_GOURAUD = 0x2,
@@ -25,7 +25,7 @@ enum SHADING_MODE
 	SHADING_FRESNEL = 0xA
 };
 
-enum BLEND_MODE
+enum BlendMode
 {
 	/**
 	*sourceColor * sourceAlpha + destColor * (1 - sourceAlpha)
@@ -38,7 +38,7 @@ enum BLEND_MODE
 	BLEND_ADDITIVE = 0x1
 };
 
-enum RENDER_MODE
+enum RenderMode
 {
 	RENDER_OPAQUE = 0x0,
 	RENDER_CUTOUT = 0x1,
@@ -47,7 +47,7 @@ enum RENDER_MODE
 
 struct MaterialProperty
 {
-	enum MAT_PROPERY_TYPE
+	enum MatPropertyType
 	{
 		MP_UNKNOWN = -1,
 		MP_INT = 0,
@@ -74,7 +74,7 @@ struct MaterialProperty
 	MaterialProperty(const char* name, int prop);
 	MaterialProperty(const char* name, float prop);
 	MaterialProperty(const char* name, uint prop);
-	MaterialProperty(const char* name, float* prop, MAT_PROPERY_TYPE type);
+	MaterialProperty(const char* name, float* prop, MatPropertyType type);
 
 	void SendInfoToShader(uint shader);
 };

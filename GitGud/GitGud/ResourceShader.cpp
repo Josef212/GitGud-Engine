@@ -38,7 +38,7 @@ bool ResourceShader::RemoveFromMemory()
 	return true;
 }
 
-uint ResourceShader::CompileCode(SHADER_TYPE type, const char * code)
+uint ResourceShader::CompileCode(ShaderType type, const char * code)
 {
 	uint ret = 0;
 
@@ -176,7 +176,7 @@ bool ResourceShader::LoadCode()
 
 	char* buffer = nullptr;
 	uint fileSize = app->fs->Load(shaderFile.GetFullPath(), &buffer);
-
+	// TODO: Refactor this a bit. One json with all files info and single files for each shader.
 	if (buffer && fileSize > 0)
 	{
 		JsonFile codeFile(buffer);
@@ -279,7 +279,7 @@ void ResourceShader::OnCreation()
 	}
 }
 
-bool ResourceShader::CheckCompileErrors(uint shader, SHADER_TYPE type)
+bool ResourceShader::CheckCompileErrors(uint shader, ShaderType type)
 {
 	GLint succes = 0;
 	GLchar infoLog[1024];

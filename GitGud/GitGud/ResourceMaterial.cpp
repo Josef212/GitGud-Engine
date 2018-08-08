@@ -23,7 +23,7 @@ MaterialProperty::MaterialProperty(const char* name, uint prop) : propertyType(M
 	property.textureResId = prop;
 }
 
-MaterialProperty::MaterialProperty(const char* name, float* prop, MAT_PROPERY_TYPE type) : propertyType(type),
+MaterialProperty::MaterialProperty(const char* name, float* prop, MatPropertyType type) : propertyType(type),
                                                                                            propertyName(name)
 {
 	property.fPointer = prop;

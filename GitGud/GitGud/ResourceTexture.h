@@ -3,7 +3,7 @@
 
 #include "Resource.h"
 
-enum TEXTURE_TYPE
+enum TextureType
 {
 	TEX_NONE = 0x0,
 	TEX_DIFFUSE = 0x1,
@@ -19,7 +19,7 @@ enum TEXTURE_TYPE
 	TEX_REFLECTION = 0xB
 };
 
-enum TEXTURE_MAP_MODE
+enum TextureMapMode
 {
 	TEX_WRAP = 0x1,
 	TEX_CLAMP = 0x2,
@@ -27,7 +27,7 @@ enum TEXTURE_MAP_MODE
 	TEX_MIRROR = 0x4
 };
 
-enum TEXTURE_FLAG
+enum TextureFlag
 {
 	TEX_FLAG_INVERT = 0x1,
 	TEX_FLAG_USE_ALPHA = 0x2,
@@ -37,7 +37,7 @@ enum TEXTURE_FLAG
 class ResourceTexture : public Resource
 {
 public:
-	enum FORMAT
+	enum Format
 	{
 		COLOR_INDEX = 0,
 		RGB,
@@ -67,8 +67,8 @@ public:
 
 	uint texID = 0;
 
-	FORMAT format = UNKNOWN;
-	TEXTURE_TYPE textureType = TEX_NONE;
+	Format format = UNKNOWN;
+	TextureType textureType = TEX_NONE;
 };
 
 #endif // !__RESOURCE_TEXTURE_H__

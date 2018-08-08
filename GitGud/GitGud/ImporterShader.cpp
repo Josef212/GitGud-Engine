@@ -23,11 +23,11 @@ bool ImporterShader::LoadResource(Resource * resource)
 
 	if (res->LoadCode())
 	{
-		uint vertex = res->CompileCode(ResourceShader::SHADER_TYPE::SH_VERTEX);
-		uint fragment = res->CompileCode(ResourceShader::SHADER_TYPE::SH_FRAGMENT);
+		uint vertex = res->CompileCode(ResourceShader::ShaderType::SH_VERTEX);
+		uint fragment = res->CompileCode(ResourceShader::ShaderType::SH_FRAGMENT);
 		uint geometry = 0;
 		if(!res->geometryCode.empty()) 
-			geometry = res->CompileCode(ResourceShader::SHADER_TYPE::SH_GEOMETRY);
+			geometry = res->CompileCode(ResourceShader::ShaderType::SH_GEOMETRY);
 
 		if (res->LinkShader(vertex, fragment, geometry))
 		{
@@ -89,8 +89,8 @@ bool ImporterShader::PrepareDefaultShader(ResourceShader * sh)
 		sh->fragmentCode = f;
 		sh->codeIsLoaded = true;
 
-		GLuint vertex = sh->CompileCode(ResourceShader::SHADER_TYPE::SH_VERTEX, v);
-		GLuint fragment = sh->CompileCode(ResourceShader::SHADER_TYPE::SH_FRAGMENT, f);
+		GLuint vertex = sh->CompileCode(ResourceShader::ShaderType::SH_VERTEX, v);
+		GLuint fragment = sh->CompileCode(ResourceShader::ShaderType::SH_FRAGMENT, f);
 
 		sh->LinkShader(vertex, fragment);
 

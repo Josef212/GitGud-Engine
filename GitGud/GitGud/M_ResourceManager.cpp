@@ -130,7 +130,7 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 			return tmp->GetUID();
 	}
 
-	RESOURCE_TYPE type = GetTypeFromExtension(source.GetExtension());
+	ResourceType type = GetTypeFromExtension(source.GetExtension());
 
 	bool success = false;
 	Path exportedPath;
@@ -174,7 +174,7 @@ UID M_ResourceManager::ImportFile(const char * fileName, bool checkFirst)
 						Size nad source file parameter is not always needed but has to be passed.
 						Return the resource UID or 0 if fail.
 						*/
-UID M_ResourceManager::ImportBuf(const void * buffer, RESOURCE_TYPE type, uint size, Path* sourceFile)
+UID M_ResourceManager::ImportBuf(const void * buffer, ResourceType type, uint size, Path* sourceFile)
 {
 	UID ret = 0;
 
@@ -228,7 +228,7 @@ Resource * M_ResourceManager::GetResourceFromUID(UID uuid)
 										already used UID a new one is randomly generated. 
 										The new resource is added to the resource map.
 										Return the created resource. */
-Resource * M_ResourceManager::CreateResource(RESOURCE_TYPE type, UID forceUID)
+Resource * M_ResourceManager::CreateResource(ResourceType type, UID forceUID)
 {
 	Resource* ret = nullptr;
 
@@ -273,9 +273,9 @@ Resource * M_ResourceManager::FindResourceFromOriginalFullPath(const char * full
 }
 
 /** M_ResourceManager - GetTypeFromExtension: Return the reource type from a extension string. Res_none if not identified. */
-RESOURCE_TYPE M_ResourceManager::GetTypeFromExtension(const char * ext) const
+ResourceType M_ResourceManager::GetTypeFromExtension(const char * ext) const
 {
-	RESOURCE_TYPE ret = RES_NONE;
+	ResourceType ret = RES_NONE;
 
 	if (strcmp(ext, "png") == 0)
 		ret = RES_TEXTURE;
@@ -310,7 +310,7 @@ UID M_ResourceManager::GetNewUID() const
 }
 
 /** M_ResourceManager - GetResourcesOfType: Fill a passed vector with all resources of type. Sveral types can be passed at once. */
-void M_ResourceManager::GetResourcesOfType(std::vector<Resource*>& res, RESOURCE_TYPE type) const
+void M_ResourceManager::GetResourcesOfType(std::vector<Resource*>& res, ResourceType type) const
 {
 	for (auto it : resources)
 	{
@@ -333,7 +333,7 @@ void M_ResourceManager::LoadResources()
 		for (uint i = 0; i < count; ++i)
 		{
 			JsonFile r = file.GetObjectFromArray("resources", i);
-			RESOURCE_TYPE type = (RESOURCE_TYPE)r.GetInt("type", RES_NONE);
+			ResourceType type = (ResourceType)r.GetInt("type", RES_NONE);
 			UID id = r.GetInt("UID", 0);
 
 			if (GetResourceFromUID(id))

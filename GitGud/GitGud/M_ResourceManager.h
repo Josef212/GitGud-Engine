@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 
-enum RESOURCE_TYPE;
+enum ResourceType;
 
 class Resource;
 class ResourceMesh;
@@ -34,18 +34,18 @@ public:
 	bool CleanUp()override;
 
 	UID ImportFile(const char* fileName, bool checkFirst = false);
-	UID ImportBuf(const void* buffer, RESOURCE_TYPE type, uint size = 0, Path* sourceFile = nullptr);
+	UID ImportBuf(const void* buffer, ResourceType type, uint size = 0, Path* sourceFile = nullptr);
 
 	Resource* GetResourceFromUID(UID uuid);
-	Resource* CreateResource(RESOURCE_TYPE type, UID forceUID = 0);
+	Resource* CreateResource(ResourceType type, UID forceUID = 0);
 
 	Resource* FindResourceFromOriginalFullPath(const char* fullpath);
 
-	RESOURCE_TYPE GetTypeFromExtension(const char* ext)const;
+	ResourceType GetTypeFromExtension(const char* ext)const;
 
 	UID GetNewUID()const;
 
-	void GetResourcesOfType(std::vector<Resource*>& res, RESOURCE_TYPE type)const;
+	void GetResourcesOfType(std::vector<Resource*>& res, ResourceType type)const;
 
 private:
 	void LoadResources();

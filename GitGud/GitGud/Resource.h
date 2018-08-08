@@ -5,7 +5,7 @@
 #include <string>
 #include "JsonFile.h"
 
-enum RESOURCE_TYPE
+enum ResourceType
 {
 	RES_NONE = 0,
 	RES_MESH = 1,
@@ -18,7 +18,7 @@ enum RESOURCE_TYPE
 class Resource
 {
 public:
-	Resource(UID uuid, RESOURCE_TYPE resType) : uuid(uuid), type(resType)
+	Resource(UID uuid, ResourceType resType) : uuid(uuid), type(resType)
 	{}
 
 	virtual ~Resource()
@@ -26,7 +26,7 @@ public:
 	}
 
 	/** GetType: Return the resource type. */
-	RESOURCE_TYPE GetType()const
+	ResourceType GetType()const
 	{
 		return type;
 	}
@@ -160,7 +160,7 @@ public:
 	std::string name = "resource";
 
 protected:
-	RESOURCE_TYPE type;
+	ResourceType type;
 	UID uuid;
 
 	uint instancesLoaded = 0;
